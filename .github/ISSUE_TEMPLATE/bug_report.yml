@@ -1,0 +1,63 @@
+name: Bug report
+description: Report a gameplay, save, build, or integration problem
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for reproducible defects in gameplay, save compatibility, build/install flow, or mod integration.
+  - type: input
+    id: version
+    attributes:
+      label: Mod version
+      description: Commit, tag, or local build identifier
+      placeholder: "0.1.0-dev / 9f8b8e0"
+    validations:
+      required: true
+  - type: input
+    id: rimworld_version
+    attributes:
+      label: RimWorld version
+      placeholder: "1.6.4633"
+    validations:
+      required: true
+  - type: textarea
+    id: enabled_mods
+    attributes:
+      label: Enabled mods
+      description: Include Harmony and any mods that may affect maps, pathing, jobs, or world objects
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Provide a minimal, deterministic sequence
+      placeholder: |
+        1. Start a new colony
+        2. Trigger floor creation
+        3. Switch floors
+        4. Observe incorrect behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, screenshots, or save references
+      description: Paste HugsLib/log output or attach screenshots if available
+    validations:
+      required: false

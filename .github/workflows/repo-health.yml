@@ -1,0 +1,80 @@
+name: Repo Health
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "README.md"
+            "LICENSE"
+            "About/About.xml"
+            "DeepRim.Vertical.csproj"
+            "1.6/Defs"
+            "Source"
+            "Languages"
+            "docs"
+          )
+
+          for path in "${required_paths[@]}"; do
+            if [[ ! -e "$path" ]]; then
+              echo "Missing required path: $path" >&2
+              exit 1
+            fi
+          done
+
+      - name: Check ignored build artifacts are not committed
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -d "obj" ]] && find obj -type f | grep -q .; then
+            echo "Tracked files found under obj/. Remove build artifacts from the repository." >&2
+            exit 1
+          fi
+
+          if [[ -d "1.6/Assemblies" ]] && find 1.6/Assemblies -type f \( -name "*.dll" -o -name "*.pdb" \) | grep -q .; then
+            echo "Tracked assembly artifacts found under 1.6/Assemblies/. Keep only source-controlled content." >&2
+            exit 1
+          fi
+
+      - name: Check metadata values
+        shell: python
+        run: |
+          import pathlib
+          import sys
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse("About/About.xml").getroot()
+          name = (root.findtext("name") or "").strip()
+          package_id = (root.findtext("packageId") or "").strip()
+          versions = [el.text.strip() for el in root.findall("./supportedVersions/li") if el.text]
+
+          if not name:
+            sys.exit("About/About.xml is missing <name>.")
+          if not package_id or "." not in package_id:
+            sys.exit("About/About.xml must contain a dotted packageId.")
+          if "1.6" not in versions:
+            sys.exit("About/About.xml must declare RimWorld 1.6 support.")
+
+          readme = pathlib.Path("README.md").read_text(encoding="utf-8")
+          if "RimWorld 1.6" not in readme:
+            sys.exit("README.md should mention the RimWorld target version.")
+
+      - name: Note about full build
+        run: |
+          echo "Full compilation is intentionally not executed in GitHub Actions because the project depends on local RimWorld and Harmony assemblies that are not redistributable in CI."

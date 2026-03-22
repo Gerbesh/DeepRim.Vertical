@@ -1,0 +1,58 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+template: |
+  ## Changes
+
+  $CHANGES
+
+  ## Notes
+
+  - RimWorld target: 1.6
+  - This project depends on local RimWorld and Harmony assemblies for full compilation.
+categories:
+  - title: "Features"
+    labels:
+      - enhancement
+      - feature
+  - title: "Fixes"
+    labels:
+      - bug
+      - fix
+  - title: "Maintenance"
+    labels:
+      - chore
+      - docs
+      - ci
+change-template: "- $TITLE (#$NUMBER)"
+change-title-escapes: "\\<*_&"
+version-resolver:
+  major:
+    labels:
+      - breaking
+  minor:
+    labels:
+      - enhancement
+      - feature
+  patch:
+    labels:
+      - bug
+      - fix
+      - chore
+      - docs
+      - ci
+  default: patch
+autolabeler:
+  - label: ci
+    files:
+      - ".github/**"
+  - label: docs
+    files:
+      - "docs/**"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "RELEASE_NOTES.md"
+  - label: feature
+    files:
+      - "Source/**"
+      - "1.6/Defs/**"
+      - "Languages/**"

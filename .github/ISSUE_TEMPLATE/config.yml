@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Project documentation
+    url: https://github.com/Gerbesh/DeepRim.Vertical/tree/main/docs
+    about: Review architecture, schema, known issues, and test notes before filing
