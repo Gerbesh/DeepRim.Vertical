@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DeepRimVertical.SettingsCategory>DeepRim Vertical</DeepRimVertical.SettingsCategory>
+  <DeepRimVertical.Settings.Foundation>Основа</DeepRimVertical.Settings.Foundation>
+  <DeepRimVertical.Settings.ShowNavigator>Показывать навигатор этажей</DeepRimVertical.Settings.ShowNavigator>
+  <DeepRimVertical.Settings.EnableDevButtons>Показывать кнопки создания этажей в навигаторе</DeepRimVertical.Settings.EnableDevButtons>
+  <DeepRimVertical.Settings.AdoptSurfaceMap>Автоматически привязывать текущую карту к vertical site при первом использовании</DeepRimVertical.Settings.AdoptSurfaceMap>
+  <DeepRimVertical.Settings.FloorBounds>Настроенные пределы этажей: вверх {0}, вниз {1}</DeepRimVertical.Settings.FloorBounds>
+  <DeepRimVertical.Settings.Temperature>Температурный профиль глубины</DeepRimVertical.Settings.Temperature>
+  <DeepRimVertical.Settings.EnableDepthThermalProfile>Включить температурный профиль глубины</DeepRimVertical.Settings.EnableDepthThermalProfile>
+  <DeepRimVertical.Settings.ColdDepthLevel>Уровень холодной точки: {0}</DeepRimVertical.Settings.ColdDepthLevel>
+  <DeepRimVertical.Settings.ColdDepthTemp>Целевая температура холодной точки: {0}</DeepRimVertical.Settings.ColdDepthTemp>
+  <DeepRimVertical.Settings.HotDepthLevel>Уровень горячей точки: {0}</DeepRimVertical.Settings.HotDepthLevel>
+  <DeepRimVertical.Settings.HotDepthTemp>Целевая температура горячей точки: {0}</DeepRimVertical.Settings.HotDepthTemp>
+  <DeepRimVertical.Settings.ShaftHeatExchangeMultiplier>Теплообмен открытой шахты: {0}</DeepRimVertical.Settings.ShaftHeatExchangeMultiplier>
+  <DeepRimVertical.Settings.ClosedPortalHeatLeakMultiplier>Утечка тепла через закрытый портал: {0}</DeepRimVertical.Settings.ClosedPortalHeatLeakMultiplier>
+  <DeepRimVertical.Settings.Jobs>Политика межуровневых работ</DeepRimVertical.Settings.Jobs>
+  <DeepRimVertical.Settings.AllowCrossLevelBills>Разрешить искать ингредиенты биллов на других уровнях</DeepRimVertical.Settings.AllowCrossLevelBills>
+  <DeepRimVertical.Settings.AllowCrossLevelHauling>Разрешить межуровневую переноску</DeepRimVertical.Settings.AllowCrossLevelHauling>
+  <DeepRimVertical.Settings.PreferSameLevelWork>Предпочитать работу на текущем уровне</DeepRimVertical.Settings.PreferSameLevelWork>
+  <DeepRimVertical.Settings.BillRangeByFloor>Дальность поиска ингредиентов по этажам: {0}</DeepRimVertical.Settings.BillRangeByFloor>
+  <DeepRimVertical.Settings.HaulMaxFloorDistance>Максимальная этажность для hauling: {0}</DeepRimVertical.Settings.HaulMaxFloorDistance>
+  <DeepRimVertical.Settings.ResetDefaults>Сбросить настройки</DeepRimVertical.Settings.ResetDefaults>
+
+  <DeepRimVertical.Navigator.Title>Вертикальный site</DeepRimVertical.Navigator.Title>
+  <DeepRimVertical.Navigator.CurrentFloor>Текущий уровень: {0}</DeepRimVertical.Navigator.CurrentFloor>
+  <DeepRimVertical.Navigator.CreateAbove>Создать +1 под курсором</DeepRimVertical.Navigator.CreateAbove>
+  <DeepRimVertical.Navigator.CreateBelow>Создать -1 под курсором</DeepRimVertical.Navigator.CreateBelow>
+  <DeepRimVertical.Navigator.FloorList>Известные уровни</DeepRimVertical.Navigator.FloorList>
+  <DeepRimVertical.Navigator.FloorButton>Перейти на уровень {0}</DeepRimVertical.Navigator.FloorButton>
+  <DeepRimVertical.Navigator.FloorButtonCurrent>Уровень {0} (текущий)</DeepRimVertical.Navigator.FloorButtonCurrent>
+  <DeepRimVertical.Navigator.PortalsAtCell>Зарегистрированные вертикальные связи в {0}</DeepRimVertical.Navigator.PortalsAtCell>
+  <DeepRimVertical.Navigator.PortalLink>{0} -> {1}</DeepRimVertical.Navigator.PortalLink>
+
+  <DeepRimVertical.Messages.CouldNotCreateSite>DeepRim Vertical не смог инициализировать vertical site для этой карты.</DeepRimVertical.Messages.CouldNotCreateSite>
+  <DeepRimVertical.Messages.FloorOutOfRange>Запрошенный уровень {0} выходит за текущие пределы мода.</DeepRimVertical.Messages.FloorOutOfRange>
+  <DeepRimVertical.Messages.CreatedFloor>Создан уровень {0}.</DeepRimVertical.Messages.CreatedFloor>
+  <DeepRimVertical.Messages.NoFloorAbove>Над текущим уровнем нет связанного этажа.</DeepRimVertical.Messages.NoFloorAbove>
+  <DeepRimVertical.Messages.NoFloorBelow>Под текущим уровнем нет связанного этажа.</DeepRimVertical.Messages.NoFloorBelow>
+</LanguageData>

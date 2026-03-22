@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <BiomeDef>
+    <defName>DeepRimVertical_UndergroundBiome</defName>
+    <label>deep underground</label>
+    <description>Internal biome used by DeepRim Vertical for sealed underground floors.</description>
+    <generatesNaturally>false</generatesNaturally>
+    <animalDensity>0</animalDensity>
+    <plantDensity>0</plantDensity>
+    <wildAnimalsCanWanderInto>false</wildAnimalsCanWanderInto>
+    <diseaseMtbDays>0</diseaseMtbDays>
+    <forageability>0</forageability>
+    <movementDifficulty>1</movementDifficulty>
+    <baseWeatherCommonalities>
+      <Clear>1</Clear>
+    </baseWeatherCommonalities>
+  </BiomeDef>
+</Defs>

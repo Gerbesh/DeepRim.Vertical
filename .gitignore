@@ -1,0 +1,30 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET build outputs
+[Bb]in/
+[Oo]bj/
+TestResults/
+*.cache
+*.pdb
+
+# RimWorld local build artifacts
+1.6/Assemblies/*.dll
+1.6/Assemblies/*.pdb
+
+# NuGet
+packages/
+*.nupkg
+
+# Logs
+*.log

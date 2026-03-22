@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>DeepRim Vertical</name>
+  <author>Codex + user workspace</author>
+  <packageId>gerbe.deeprim.vertical</packageId>
+  <modVersion>0.1.0-dev</modVersion>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Production-oriented vertical colony framework for RimWorld 1.6 with linked floors, site registry, floor switching UI, save-safe floor metadata and foundation systems for vertical pathing, combat, utilities and logistics.</description>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <downloadUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077</downloadUrl>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+</ModMetaData>

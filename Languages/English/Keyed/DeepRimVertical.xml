@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DeepRimVertical.SettingsCategory>DeepRim Vertical</DeepRimVertical.SettingsCategory>
+  <DeepRimVertical.Settings.Foundation>Foundation</DeepRimVertical.Settings.Foundation>
+  <DeepRimVertical.Settings.ShowNavigator>Show floor navigator</DeepRimVertical.Settings.ShowNavigator>
+  <DeepRimVertical.Settings.EnableDevButtons>Show floor creation buttons in navigator</DeepRimVertical.Settings.EnableDevButtons>
+  <DeepRimVertical.Settings.AdoptSurfaceMap>Adopt current map into a vertical site on first use</DeepRimVertical.Settings.AdoptSurfaceMap>
+  <DeepRimVertical.Settings.FloorBounds>Configured floor bounds: above {0}, below {1}</DeepRimVertical.Settings.FloorBounds>
+  <DeepRimVertical.Settings.Temperature>Depth temperature profile</DeepRimVertical.Settings.Temperature>
+  <DeepRimVertical.Settings.EnableDepthThermalProfile>Enable depth thermal profile</DeepRimVertical.Settings.EnableDepthThermalProfile>
+  <DeepRimVertical.Settings.ColdDepthLevel>Cold depth level: {0}</DeepRimVertical.Settings.ColdDepthLevel>
+  <DeepRimVertical.Settings.ColdDepthTemp>Cold depth target: {0}</DeepRimVertical.Settings.ColdDepthTemp>
+  <DeepRimVertical.Settings.HotDepthLevel>Hot depth level: {0}</DeepRimVertical.Settings.HotDepthLevel>
+  <DeepRimVertical.Settings.HotDepthTemp>Hot depth target: {0}</DeepRimVertical.Settings.HotDepthTemp>
+  <DeepRimVertical.Settings.ShaftHeatExchangeMultiplier>Open shaft heat exchange: {0}</DeepRimVertical.Settings.ShaftHeatExchangeMultiplier>
+  <DeepRimVertical.Settings.ClosedPortalHeatLeakMultiplier>Closed portal heat leak: {0}</DeepRimVertical.Settings.ClosedPortalHeatLeakMultiplier>
+  <DeepRimVertical.Settings.Jobs>Cross-level work policy</DeepRimVertical.Settings.Jobs>
+  <DeepRimVertical.Settings.AllowCrossLevelBills>Allow cross-level bill ingredient search</DeepRimVertical.Settings.AllowCrossLevelBills>
+  <DeepRimVertical.Settings.AllowCrossLevelHauling>Allow cross-level hauling</DeepRimVertical.Settings.AllowCrossLevelHauling>
+  <DeepRimVertical.Settings.PreferSameLevelWork>Prefer same-level work when possible</DeepRimVertical.Settings.PreferSameLevelWork>
+  <DeepRimVertical.Settings.BillRangeByFloor>Bill ingredient range per floor: {0}</DeepRimVertical.Settings.BillRangeByFloor>
+  <DeepRimVertical.Settings.HaulMaxFloorDistance>Max haul floor distance: {0}</DeepRimVertical.Settings.HaulMaxFloorDistance>
+  <DeepRimVertical.Settings.ResetDefaults>Reset defaults</DeepRimVertical.Settings.ResetDefaults>
+
+  <DeepRimVertical.Navigator.Title>Vertical site</DeepRimVertical.Navigator.Title>
+  <DeepRimVertical.Navigator.CurrentFloor>Current floor: {0}</DeepRimVertical.Navigator.CurrentFloor>
+  <DeepRimVertical.Navigator.CreateAbove>Create +1 at cursor</DeepRimVertical.Navigator.CreateAbove>
+  <DeepRimVertical.Navigator.CreateBelow>Create -1 at cursor</DeepRimVertical.Navigator.CreateBelow>
+  <DeepRimVertical.Navigator.FloorList>Known floors</DeepRimVertical.Navigator.FloorList>
+  <DeepRimVertical.Navigator.FloorButton>Jump to floor {0}</DeepRimVertical.Navigator.FloorButton>
+  <DeepRimVertical.Navigator.FloorButtonCurrent>Floor {0} (current)</DeepRimVertical.Navigator.FloorButtonCurrent>
+  <DeepRimVertical.Navigator.PortalsAtCell>Registered vertical links at {0}</DeepRimVertical.Navigator.PortalsAtCell>
+  <DeepRimVertical.Navigator.PortalLink>{0} -> {1}</DeepRimVertical.Navigator.PortalLink>
+
+  <DeepRimVertical.Messages.CouldNotCreateSite>DeepRim Vertical could not initialize a vertical site for this map.</DeepRimVertical.Messages.CouldNotCreateSite>
+  <DeepRimVertical.Messages.FloorOutOfRange>Requested floor {0} exceeds current mod bounds.</DeepRimVertical.Messages.FloorOutOfRange>
+  <DeepRimVertical.Messages.CreatedFloor>Created floor {0}.</DeepRimVertical.Messages.CreatedFloor>
+  <DeepRimVertical.Messages.NoFloorAbove>No linked floor above the current level.</DeepRimVertical.Messages.NoFloorAbove>
+  <DeepRimVertical.Messages.NoFloorBelow>No linked floor below the current level.</DeepRimVertical.Messages.NoFloorBelow>
+</LanguageData>

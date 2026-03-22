@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorldObjectDef ParentName="Settlement">
+    <defName>DeepRimVertical_FloorSite</defName>
+    <label>vertical floor</label>
+    <description>Internal world object used by DeepRim Vertical to represent a non-surface floor bound to the same world tile as the surface colony.</description>
+    <worldObjectClass>DeepRim.Vertical.VerticalWorld.VerticalSiteMapParent</worldObjectClass>
+    <texture>World/WorldObjects/TribalSettlement</texture>
+    <expandingIcon>false</expandingIcon>
+    <canBePlayerHome>true</canBePlayerHome>
+  </WorldObjectDef>
+</Defs>
