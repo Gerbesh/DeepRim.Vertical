@@ -99,3 +99,35 @@
   - `DeepRimVertical_UndergroundBiome` `BiomeDef`
 - Switched underground floor creation to this dedicated generator path.
 - Added a direct fallback in `DepthTemperatureUtility` to read `VerticalSiteMapParent.LevelIndex` so depth temperature does not depend only on registry timing.
+
+## 2026-03-22 - Underground generator redesign implemented
+
+- Replaced the remaining underground post-process rewrite path with a true lightweight underground gen-step pipeline.
+- New underground generator path now runs only mod-owned steps:
+  - layout
+  - materialization
+  - fog initialization
+- Removed dependence on:
+  - `Underground_RocksFromGrid`
+  - mutator post steps
+  - generic `Fog`
+  - wipe-and-respawn generation flow
+- Underground generation now:
+  - prepares context before content generation
+  - computes masks in memory
+  - materializes the sealed map directly
+  - explicitly establishes underground fog visibility around the entry
+- Rock selection was tightened to deterministic local geology rather than broad random global natural rock sampling.
+
+## 2026-03-22 - Underground tuning pass from in-game verification
+
+- In-game verification confirmed:
+  - underground floors create quickly
+  - underground visibility is correct
+  - depth thermal profile behaves as expected
+- Follow-up tuning changes:
+  - increased resource density with depth
+  - increased deposit size with depth
+  - changed lava activation to explicit depth gating
+  - ensured lava rivers appear on the configured hot-depth band such as `-15` and deeper
+- User verification after tuning confirmed the underground floors now behave as intended.

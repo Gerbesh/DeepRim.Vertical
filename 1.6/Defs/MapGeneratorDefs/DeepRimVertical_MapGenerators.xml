@@ -11,13 +11,27 @@
       <temperature>0</temperature>
     </pocketMapProperties>
     <genSteps>
-      <li>ElevationFertility</li>
-      <li>MutatorPostElevationFertility</li>
-      <li>Underground_RocksFromGrid</li>
-      <li>Terrain</li>
-      <li>MutatorPostTerrain</li>
-      <li>MutatorFinal</li>
-      <li>Fog</li>
+      <li>DeepRimVertical_UndergroundLayout</li>
+      <li>DeepRimVertical_UndergroundMaterialize</li>
+      <li>DeepRimVertical_UndergroundFog</li>
     </genSteps>
   </MapGeneratorDef>
+
+  <GenStepDef>
+    <defName>DeepRimVertical_UndergroundLayout</defName>
+    <order>100</order>
+    <genStep Class="DeepRim.Vertical.VerticalMaps.GenStep_DeepRimVerticalUndergroundLayout" />
+  </GenStepDef>
+
+  <GenStepDef>
+    <defName>DeepRimVertical_UndergroundMaterialize</defName>
+    <order>200</order>
+    <genStep Class="DeepRim.Vertical.VerticalMaps.GenStep_DeepRimVerticalUndergroundMaterialize" />
+  </GenStepDef>
+
+  <GenStepDef>
+    <defName>DeepRimVertical_UndergroundFog</defName>
+    <order>1500</order>
+    <genStep Class="DeepRim.Vertical.VerticalMaps.GenStep_DeepRimVerticalUndergroundFog" />
+  </GenStepDef>
 </Defs>

@@ -42,16 +42,21 @@
   - no open map-edge lanes
 - Hot deep floors soft-enable lava river generation when a lava terrain exists in loaded defs.
   - Current soft-compat target is Odyssey-style lava terrain such as `LavaDeep`.
-- Generation is now mask-driven rather than destructive multi-pass.
+- Generation now uses a dedicated lightweight underground generator path.
+  - The underground `MapGeneratorDef` runs only mod-owned gen steps.
+  - Surface and DLC special gen steps are no longer used as the base path for underground floors.
+- Generation is mask-driven rather than destructive multi-pass.
   - The generator computes open cells, resource cells and lava cells in memory first.
-  - It then applies the final map state in one pass.
+  - It then materializes the final underground state directly.
   - This avoids repeated spawn/destroy cycles on the same cells.
 - Underground empty space is still cavern space, not open sky.
   - Current underground generator keeps `RoofRockThick` over carved pockets and caverns.
   - Roofless vertical openings are reserved for explicit portal/shaft objects later.
-- Underground floors now use a dedicated mod `MapGeneratorDef` instead of inheriting the surface map generator.
+- Underground floors use a dedicated mod `MapGeneratorDef` instead of inheriting the surface map generator.
   - This prevents surface-specific gen steps and special content from leaking into underground floors.
   - It also marks underground floors as `isUnderground=true` for vanilla systems that key off generator metadata.
+- Resource density now scales upward by depth.
+- Lava rivers are explicitly depth-gated and start appearing on the configured hot-depth band such as `-15` and deeper.
 
 ## Rejected alternatives
 
@@ -68,4 +73,4 @@
 - RimWorld world object APIs are not designed around many player-home `MapParent`s on one tile.
 - Same-tile multi-map pathing is not provided by vanilla; cross-level movement will require a dedicated route planner layer.
 - Cross-level combat cannot be solved by a single `GenSight` patch; it needs a targeted extension pipeline.
-- Underground generation still post-processes its generated map into the final sealed-rock shape, even though it now starts from a dedicated underground generator def.
+- Underground biome and temperature semantics for non-pocket same-tile floors still rely on targeted runtime handling rather than true pocket-map biome ownership.

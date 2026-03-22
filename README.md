@@ -1,16 +1,19 @@
 # DeepRim Vertical
 
-DeepRim Vertical is a RimWorld 1.6 mod workspace for a production-oriented vertical colony framework. The current milestone establishes the save-safe world and map persistence layer, floor creation flow, floor navigation UI, bilingual settings, and the documentation baseline for continuing implementation.
+DeepRim Vertical is a RimWorld 1.6 mod workspace for a production-oriented vertical colony framework. The current milestone includes a working underground floor generation path, save-safe world and map persistence, floor creation flow, floor navigation UI, bilingual settings, and the engineering documentation baseline for continued implementation.
 
 ## Status
 
-This repository is an active development snapshot, not a release build. It currently includes:
+This repository is an active development snapshot, not a final release build. It currently includes:
 
 - verified RimWorld `1.6.4633 rev1260` research notes
 - vertical site registry and floor persistence records
 - custom vertical `MapParent` and floor creation services
 - floor navigation UI and hotkeys
-- initial depth temperature utilities
+- working underground floor generation redesign
+- depth-based underground resource scaling
+- hot-depth lava river generation
+- depth temperature utilities
 - English and Russian localization
 
 Planned but not yet implemented:

@@ -12,5 +12,10 @@
 - Added floor creation service using confirmed `MapGenerator.GenerateMap(...)` and `Current.Game.AddMap(...)`.
 - Added in-game floor navigator UI with PageUp/PageDown hotkeys.
 - Added bilingual settings and initial depth thermal profile utility.
+- Reworked underground floor generation into a dedicated lightweight generator path with custom gen steps.
+- Removed the underground wipe-and-respawn generation cycle.
+- Fixed sealed underground fog initialization and entry visibility.
+- Locked underground geology to deterministic local rock selection.
+- Increased deep-floor resource density and enabled explicit lava-river generation on hot depths.
 - Wrote research and architecture docs for stage 0 and partial stage 1.
 - Added `DeepRim.Vertical.sln` and verified clean Release build output.

@@ -31,6 +31,8 @@ public static class VerticalMapCreationService
             return false;
         }
 
+        anchorCell = targetLevel < 0 ? ClampUndergroundAnchor(sourceMap, anchorCell) : anchorCell;
+
         var existing = site.FloorAt(targetLevel);
         if (existing?.Map != null)
         {
@@ -43,8 +45,22 @@ public static class VerticalMapCreationService
         component.RegisterGeneratedFloor(site, mapParent, targetLevel, sourceMap);
         Find.WorldObjects.Add(mapParent);
 
-        targetMap = MapGenerator.GenerateMap(sourceMap.Size, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null, false, false);
-        PrepareGeneratedFloor(targetMap, anchorCell, targetLevel);
+        if (targetLevel < 0)
+        {
+            targetMap = MapGenerator.GenerateMap(
+                sourceMap.Size,
+                mapParent,
+                mapParent.MapGeneratorDef,
+                mapParent.ExtraGenStepDefs,
+                map => UndergroundGenerationService.PrepareForGeneration(map, sourceMap, anchorCell, targetLevel),
+                false,
+                false);
+        }
+        else
+        {
+            targetMap = MapGenerator.GenerateMap(sourceMap.Size, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null, false, false);
+            PrepareGeneratedFloor(targetMap, anchorCell, targetLevel);
+        }
 
         component.RegisterPortal(sourceMap, currentFloor.levelIndex, targetLevel, anchorCell);
         var mapComponent = targetMap.GetComponent<VerticalMapComponent>();
@@ -69,11 +85,23 @@ public static class VerticalMapCreationService
         return Mathf.Abs(targetLevel) <= VerticalRuntime.Settings.maxUndergroundFloors;
     }
 
+    private static IntVec3 ClampUndergroundAnchor(Map map, IntVec3 anchorCell)
+    {
+        if (map == null)
+        {
+            return anchorCell;
+        }
+
+        return new IntVec3(
+            Mathf.Clamp(anchorCell.x, 6, map.Size.x - 7),
+            0,
+            Mathf.Clamp(anchorCell.z, 6, map.Size.z - 7));
+    }
+
     private static void PrepareGeneratedFloor(Map map, IntVec3 anchorCell, int levelIndex)
     {
         if (levelIndex < 0)
         {
-            UndergroundGenerationService.Generate(map, anchorCell, levelIndex);
             return;
         }
 

@@ -21,90 +21,247 @@ public static class UndergroundGenerationService
         "MineableJade"
     };
 
-    public static void Generate(Map map, IntVec3 anchorCell, int levelIndex)
+    private static readonly Dictionary<int, UndergroundGenerationContext> PendingContexts = new();
+
+    public static void PrepareForGeneration(Map map, Map sourceMap, IntVec3 anchorCell, int levelIndex)
     {
-        WipeMapFast(map);
-
-        var primaryRock = ChoosePrimaryRockDef();
-        var cellCount = map.cellIndices.NumGridCells;
-        var openMask = new bool[cellCount];
-        var lavaMask = new bool[cellCount];
-        var volcanicMask = new bool[cellCount];
-        var resourceMask = new ThingDef[cellCount];
-
-        MarkEntryPocket(map, anchorCell, openMask);
-
-        if (levelIndex >= -2)
+        if (map == null || sourceMap == null || levelIndex >= 0)
         {
-            MarkEarlyDepthCaverns(map, anchorCell, levelIndex, openMask);
+            return;
         }
 
-        MarkLavaRivers(map, levelIndex, openMask, lavaMask, volcanicMask);
-        MarkResourceDeposits(map, anchorCell, levelIndex, openMask, lavaMask, resourceMask);
-        ApplyFinalState(map, primaryRock, openMask, lavaMask, volcanicMask, resourceMask);
+        var primaryRock = ChoosePrimaryRockDef(sourceMap);
+        var baseTerrain = ResolveBaseTerrain(primaryRock);
+        var context = new UndergroundGenerationContext(
+            map.cellIndices.NumGridCells,
+            anchorCell,
+            levelIndex,
+            primaryRock,
+            baseTerrain,
+            DefDatabase<TerrainDef>.GetNamedSilentFail("VolcanicRock") ?? baseTerrain,
+            DefDatabase<TerrainDef>.GetNamedSilentFail("LavaDeep"));
+
+        PendingContexts[map.uniqueID] = context;
     }
 
-    private static void WipeMapFast(Map map)
+    public static void GenerateLayout(Map map)
     {
-        var things = map.listerThings.AllThings.ToList();
-        for (var i = 0; i < things.Count; i++)
+        var context = GetContext(map);
+        if (context == null)
         {
-            var thing = things[i];
-            if (thing is Pawn)
+            return;
+        }
+
+        MarkEntryPocket(map, context);
+
+        if (context.LevelIndex >= -2)
+        {
+            MarkEarlyDepthCaverns(map, context);
+        }
+
+        MarkLavaRivers(map, context);
+        MarkResourceDeposits(map, context);
+        SealMapEdges(map, context);
+    }
+
+    public static void Materialize(Map map)
+    {
+        var context = GetContext(map);
+        if (context == null)
+        {
+            return;
+        }
+
+        map.regionAndRoomUpdater.Enabled = false;
+        try
+        {
+            using (map.pathing.DisableIncrementalScope())
+            {
+                foreach (var cell in map.AllCells)
+                {
+                    var index = map.cellIndices.CellToIndex(cell);
+                    var roof = context.OpenMask[index] || context.LavaMask[index]
+                        ? RoofDefOf.RoofRockThick
+                        : RoofDefOf.RoofRockThick;
+
+                    map.roofGrid.SetRoof(cell, roof);
+                    map.terrainGrid.SetTerrain(cell, ResolveTerrainForCell(context, index));
+
+                    if (context.OpenMask[index] || context.LavaMask[index])
+                    {
+                        continue;
+                    }
+
+                    var thingDef = context.ResourceMask[index] ?? context.PrimaryRock;
+                    GenSpawn.Spawn(thingDef, cell, map, WipeMode.Vanish);
+                }
+            }
+        }
+        finally
+        {
+            map.regionAndRoomUpdater.Enabled = true;
+        }
+    }
+
+    public static void InitializeFog(Map map)
+    {
+        var context = GetContext(map);
+        if (context == null)
+        {
+            return;
+        }
+
+        MapGenerator.PlayerStartSpot = context.EntryCell;
+        map.fogGrid.Refog(new CellRect(0, 0, map.Size.x, map.Size.z));
+
+        foreach (var cell in CellRect.CenteredOn(context.EntryCell, 3).ClipInsideMap(map).Cells)
+        {
+            var index = map.cellIndices.CellToIndex(cell);
+            if (context.LavaMask[index])
             {
                 continue;
             }
 
-            thing.Destroy(DestroyMode.Vanish);
+            map.fogGrid.Unfog(cell);
+        }
+
+        PendingContexts.Remove(map.uniqueID);
+    }
+
+    private static UndergroundGenerationContext GetContext(Map map)
+    {
+        if (map == null)
+        {
+            return null;
+        }
+
+        if (PendingContexts.TryGetValue(map.uniqueID, out var context))
+        {
+            return context;
+        }
+
+        Log.Error($"[DeepRim Vertical] Missing underground generation context for map {map.uniqueID}.");
+        return null;
+    }
+
+    private static ThingDef ChoosePrimaryRockDef(Map sourceMap)
+    {
+        var localRock = sourceMap.listerThings.AllThings
+            .Where(thing => IsPrimaryNaturalRock(thing.def))
+            .GroupBy(thing => thing.def)
+            .OrderByDescending(group => group.Count())
+            .Select(group => group.Key)
+            .FirstOrDefault();
+
+        if (localRock != null)
+        {
+            return localRock;
+        }
+
+        if (sourceMap.Biome?.forceRockTypes != null && sourceMap.Biome.forceRockTypes.Count > 0)
+        {
+            return sourceMap.Biome.forceRockTypes
+                .Where(IsPrimaryNaturalRock)
+                .OrderBy(def => def.defName)
+                .FirstOrDefault();
+        }
+
+        var candidates = DefDatabase<ThingDef>.AllDefsListForReading
+            .Where(IsPrimaryNaturalRock)
+            .OrderBy(def => def.defName)
+            .ToList();
+
+        if (candidates.Count == 0)
+        {
+            throw new InvalidOperationException("No natural rock defs available for underground generation.");
+        }
+
+        return candidates[Mathf.Abs(sourceMap.Tile.GetHashCode()) % candidates.Count];
+    }
+
+    private static bool IsPrimaryNaturalRock(ThingDef def)
+    {
+        return def?.building != null
+               && def.building.isNaturalRock
+               && !def.building.isResourceRock
+               && def.defName != "CollapsedRocks"
+               && !def.defName.StartsWith("Smoothed", StringComparison.Ordinal);
+    }
+
+    private static TerrainDef ResolveBaseTerrain(ThingDef primaryRock)
+    {
+        var naturalTerrain = primaryRock?.building?.naturalTerrain;
+        if (naturalTerrain != null)
+        {
+            return naturalTerrain;
+        }
+
+        return DefDatabase<TerrainDef>.AllDefsListForReading.FirstOrDefault(def =>
+                   def.affordances != null
+                   && def.affordances.Contains(TerrainAffordanceDefOf.SmoothableStone)
+                   && def.fertility <= 0f)
+               ?? TerrainDefOf.Soil;
+    }
+
+    private static TerrainDef ResolveTerrainForCell(UndergroundGenerationContext context, int index)
+    {
+        if (context.LavaMask[index] && context.LavaTerrain != null)
+        {
+            return context.LavaTerrain;
+        }
+
+        if (context.VolcanicMask[index] && context.VolcanicTerrain != null)
+        {
+            return context.VolcanicTerrain;
+        }
+
+        return context.BaseTerrain;
+    }
+
+    private static void MarkEntryPocket(Map map, UndergroundGenerationContext context)
+    {
+        foreach (var cell in CellRect.CenteredOn(context.EntryCell, 2).ClipInsideMap(map).Cells)
+        {
+            if (cell.DistanceTo(context.EntryCell) <= 3.1f)
+            {
+                MarkOpen(map, context, cell);
+            }
         }
     }
 
-    private static ThingDef ChoosePrimaryRockDef()
+    private static void MarkEarlyDepthCaverns(Map map, UndergroundGenerationContext context)
     {
-        var candidates = DefDatabase<ThingDef>.AllDefs
-            .Where(def => def?.building != null
-                          && def.building.isNaturalRock
-                          && !def.building.isResourceRock
-                          && def.defName != "CollapsedRocks"
-                          && !def.defName.StartsWith("Smoothed", StringComparison.Ordinal))
-            .ToList();
-
-        return candidates.RandomElement();
-    }
-
-    private static void MarkEntryPocket(Map map, IntVec3 anchorCell, bool[] openMask)
-    {
-        MarkOpen(map, openMask, anchorCell);
-    }
-
-    private static void MarkEarlyDepthCaverns(Map map, IntVec3 anchorCell, int levelIndex, bool[] openMask)
-    {
-        var cavernCount = levelIndex == -1 ? 3 : 2;
-        var radius = levelIndex == -1 ? 6 : 4;
+        var cavernCount = context.LevelIndex == -1 ? 3 : 2;
+        var radius = context.LevelIndex == -1 ? 6 : 4;
 
         for (var i = 0; i < cavernCount; i++)
         {
-            if (!TryFindInteriorSolidCell(map, anchorCell, openMask, out var center, 220))
+            if (!TryFindInteriorSolidCell(map, context, out var center, 220))
             {
                 continue;
             }
 
-            MarkBlob(map, openMask, center, radius + Rand.RangeInclusive(0, 3));
+            MarkBlob(map, context, center, radius + Rand.RangeInclusive(0, 3));
         }
     }
 
-    private static void MarkResourceDeposits(Map map, IntVec3 anchorCell, int levelIndex, bool[] openMask, bool[] lavaMask, ThingDef[] resourceMask)
+    private static void MarkResourceDeposits(Map map, UndergroundGenerationContext context)
     {
-        var depositCount = Math.Max(6, 10 + (-levelIndex * 2));
+        var depth = -context.LevelIndex;
+        var mapFactor = Mathf.Max(1f, map.cellIndices.NumGridCells / 14000f);
+        var depositCount = Mathf.RoundToInt((8f + depth * 3.5f) * mapFactor);
+        var depositSizeMin = Mathf.Clamp(4 + depth / 2, 4, 14);
+        var depositSizeMax = Mathf.Clamp(10 + depth, 10, 26);
+
         for (var i = 0; i < depositCount; i++)
         {
-            if (!TryFindResourceStart(map, anchorCell, openMask, lavaMask, resourceMask, out var start, 320))
+            if (!TryFindResourceStart(map, context, out var start, 320))
             {
                 continue;
             }
 
-            var def = PickResourceDef(levelIndex);
-            MarkResourceBlob(map, start, def, Rand.RangeInclusive(4, 12), openMask, lavaMask, resourceMask);
+            var def = PickResourceDef(context.LevelIndex);
+            MarkResourceBlob(map, context, start, def, Rand.RangeInclusive(depositSizeMin, depositSizeMax));
         }
     }
 
@@ -135,7 +292,7 @@ public static class UndergroundGenerationService
         return DefDatabase<ThingDef>.GetNamed(ResourceRockDefNames[0]);
     }
 
-    private static void MarkResourceBlob(Map map, IntVec3 start, ThingDef def, int size, bool[] openMask, bool[] lavaMask, ThingDef[] resourceMask)
+    private static void MarkResourceBlob(Map map, UndergroundGenerationContext context, IntVec3 start, ThingDef def, int size)
     {
         var frontier = new Queue<IntVec3>();
         var visited = new HashSet<IntVec3>();
@@ -144,18 +301,18 @@ public static class UndergroundGenerationService
         while (frontier.Count > 0 && visited.Count < size)
         {
             var cell = frontier.Dequeue();
-            if (!cell.InBounds(map) || !visited.Add(cell))
+            if (!cell.InBounds(map) || !visited.Add(cell) || cell.DistanceToEdge(map) <= 1)
             {
                 continue;
             }
 
             var index = map.cellIndices.CellToIndex(cell);
-            if (openMask[index] || lavaMask[index])
+            if (context.OpenMask[index] || context.LavaMask[index])
             {
                 continue;
             }
 
-            resourceMask[index] = def;
+            context.ResourceMask[index] = def;
 
             foreach (var next in GenAdjFast.AdjacentCellsCardinal(cell))
             {
@@ -167,110 +324,86 @@ public static class UndergroundGenerationService
         }
     }
 
-    private static void MarkLavaRivers(Map map, int levelIndex, bool[] openMask, bool[] lavaMask, bool[] volcanicMask)
+    private static void MarkLavaRivers(Map map, UndergroundGenerationContext context)
     {
-        var target = DepthTemperatureUtility.EvaluateGeologicalTarget(levelIndex);
-        if (target < VerticalRuntime.Settings.hotDepthTemp - 0.01f)
+        if (context.LavaTerrain == null || context.LevelIndex > VerticalRuntime.Settings.hotDepthLevel)
         {
             return;
         }
 
-        var lavaDeep = DefDatabase<TerrainDef>.GetNamedSilentFail("LavaDeep");
-        if (lavaDeep == null)
-        {
-            return;
-        }
+        var depthPastThreshold = Mathf.Max(0, -context.LevelIndex - -VerticalRuntime.Settings.hotDepthLevel);
+        var riverCount = 2 + depthPastThreshold / 3;
+        var halfWidth = 1 + depthPastThreshold / 4;
 
-        var riverCount = 2;
         for (var i = 0; i < riverCount; i++)
         {
             var z = Rand.RangeInclusive(12, map.Size.z - 12);
-            var current = new IntVec3(0, 0, z);
-            while (current.x < map.Size.x - 1)
+            var current = new IntVec3(6, 0, z);
+            while (current.x < map.Size.x - 7)
             {
-                for (var width = -1; width <= 1; width++)
+                for (var width = -halfWidth; width <= halfWidth; width++)
                 {
                     var cell = new IntVec3(current.x, 0, current.z + width);
-                    if (!cell.InBounds(map))
+                    if (!IsInteriorCell(cell, map, 1))
                     {
                         continue;
                     }
 
                     var index = map.cellIndices.CellToIndex(cell);
-                    openMask[index] = true;
-                    lavaMask[index] = true;
+                    context.OpenMask[index] = true;
+                    context.LavaMask[index] = true;
                 }
 
                 foreach (var side in GenAdjFast.AdjacentCells8Way(current))
                 {
-                    if (!side.InBounds(map))
+                    if (!IsInteriorCell(side, map, 1))
                     {
                         continue;
                     }
 
                     var index = map.cellIndices.CellToIndex(side);
-                    if (!lavaMask[index])
+                    if (!context.LavaMask[index])
                     {
-                        volcanicMask[index] = true;
+                        context.VolcanicMask[index] = true;
                     }
                 }
 
                 current.x += 1;
-                current.z += Rand.RangeInclusive(-1, 1);
-                current.z = Mathf.Clamp(current.z, 6, map.Size.z - 7);
+                current.z += Rand.RangeInclusive(-2, 2);
+                current.z = Mathf.Clamp(current.z, 8, map.Size.z - 9);
             }
         }
     }
 
-    private static void ApplyFinalState(Map map, ThingDef primaryRock, bool[] openMask, bool[] lavaMask, bool[] volcanicMask, ThingDef[] resourceMask)
+    private static void SealMapEdges(Map map, UndergroundGenerationContext context)
     {
-        var lavaDeep = DefDatabase<TerrainDef>.GetNamedSilentFail("LavaDeep");
-        var volcanicRock = DefDatabase<TerrainDef>.GetNamedSilentFail("VolcanicRock");
-
         foreach (var cell in map.AllCells)
         {
+            if (cell.DistanceToEdge(map) > 0)
+            {
+                continue;
+            }
+
             var index = map.cellIndices.CellToIndex(cell);
-
-            if (lavaMask[index])
-            {
-                map.roofGrid.SetRoof(cell, RoofDefOf.RoofRockThick);
-                if (lavaDeep != null)
-                {
-                    map.terrainGrid.SetTerrain(cell, lavaDeep);
-                }
-
-                continue;
-            }
-
-            if (volcanicMask[index] && volcanicRock != null)
-            {
-                map.terrainGrid.SetTerrain(cell, volcanicRock);
-            }
-
-            if (openMask[index])
-            {
-                map.roofGrid.SetRoof(cell, RoofDefOf.RoofRockThick);
-                continue;
-            }
-
-            map.roofGrid.SetRoof(cell, RoofDefOf.RoofRockThick);
-            var thingDef = resourceMask[index] ?? primaryRock;
-            GenSpawn.Spawn(thingDef, cell, map, WipeMode.Vanish);
+            context.OpenMask[index] = false;
+            context.LavaMask[index] = false;
+            context.VolcanicMask[index] = false;
+            context.ResourceMask[index] = null;
         }
     }
 
-    private static bool TryFindInteriorSolidCell(Map map, IntVec3 anchorCell, bool[] openMask, out IntVec3 result, int tries)
+    private static bool TryFindInteriorSolidCell(Map map, UndergroundGenerationContext context, out IntVec3 result, int tries)
     {
         for (var i = 0; i < tries; i++)
         {
             var cell = new IntVec3(Rand.RangeInclusive(8, map.Size.x - 9), 0, Rand.RangeInclusive(8, map.Size.z - 9));
-            if (cell.DistanceTo(anchorCell) <= 14f)
+            if (cell.DistanceTo(context.EntryCell) <= 14f)
             {
                 continue;
             }
 
             var index = map.cellIndices.CellToIndex(cell);
-            if (!openMask[index])
+            if (!context.OpenMask[index] && !context.LavaMask[index])
             {
                 result = cell;
                 return true;
@@ -281,18 +414,18 @@ public static class UndergroundGenerationService
         return false;
     }
 
-    private static bool TryFindResourceStart(Map map, IntVec3 anchorCell, bool[] openMask, bool[] lavaMask, ThingDef[] resourceMask, out IntVec3 result, int tries)
+    private static bool TryFindResourceStart(Map map, UndergroundGenerationContext context, out IntVec3 result, int tries)
     {
         for (var i = 0; i < tries; i++)
         {
             var cell = new IntVec3(Rand.RangeInclusive(4, map.Size.x - 5), 0, Rand.RangeInclusive(4, map.Size.z - 5));
-            if (cell.DistanceTo(anchorCell) <= 10f)
+            if (cell.DistanceTo(context.EntryCell) <= 10f)
             {
                 continue;
             }
 
             var index = map.cellIndices.CellToIndex(cell);
-            if (!openMask[index] && !lavaMask[index] && resourceMask[index] == null)
+            if (!context.OpenMask[index] && !context.LavaMask[index] && context.ResourceMask[index] == null)
             {
                 result = cell;
                 return true;
@@ -303,24 +436,103 @@ public static class UndergroundGenerationService
         return false;
     }
 
-    private static void MarkBlob(Map map, bool[] openMask, IntVec3 center, int radius)
+    private static void MarkBlob(Map map, UndergroundGenerationContext context, IntVec3 center, int radius)
     {
         foreach (var cell in CellRect.CenteredOn(center, radius).ClipInsideMap(map).Cells)
         {
-            if (cell.DistanceTo(center) <= radius + Rand.Value * 1.5f)
+            if (cell.DistanceToEdge(map) > 0 && cell.DistanceTo(center) <= radius + Rand.Value * 1.5f)
             {
-                MarkOpen(map, openMask, cell);
+                MarkOpen(map, context, cell);
             }
         }
     }
 
-    private static void MarkOpen(Map map, bool[] openMask, IntVec3 cell)
+    private static void MarkOpen(Map map, UndergroundGenerationContext context, IntVec3 cell)
     {
-        if (!cell.InBounds(map))
+        if (!IsInteriorCell(cell, map, 1))
         {
             return;
         }
 
-        openMask[map.cellIndices.CellToIndex(cell)] = true;
+        context.OpenMask[map.cellIndices.CellToIndex(cell)] = true;
+    }
+
+    private static bool IsInteriorCell(IntVec3 cell, Map map, int minDistanceToEdge)
+    {
+        return cell.InBounds(map) && cell.DistanceToEdge(map) >= minDistanceToEdge;
+    }
+
+    private sealed class UndergroundGenerationContext
+    {
+        public UndergroundGenerationContext(
+            int cellCount,
+            IntVec3 entryCell,
+            int levelIndex,
+            ThingDef primaryRock,
+            TerrainDef baseTerrain,
+            TerrainDef volcanicTerrain,
+            TerrainDef lavaTerrain)
+        {
+            EntryCell = entryCell;
+            LevelIndex = levelIndex;
+            PrimaryRock = primaryRock;
+            BaseTerrain = baseTerrain;
+            VolcanicTerrain = volcanicTerrain;
+            LavaTerrain = lavaTerrain;
+            OpenMask = new bool[cellCount];
+            LavaMask = new bool[cellCount];
+            VolcanicMask = new bool[cellCount];
+            ResourceMask = new ThingDef[cellCount];
+        }
+
+        public IntVec3 EntryCell { get; }
+
+        public int LevelIndex { get; }
+
+        public ThingDef PrimaryRock { get; }
+
+        public TerrainDef BaseTerrain { get; }
+
+        public TerrainDef VolcanicTerrain { get; }
+
+        public TerrainDef LavaTerrain { get; }
+
+        public bool[] OpenMask { get; }
+
+        public bool[] LavaMask { get; }
+
+        public bool[] VolcanicMask { get; }
+
+        public ThingDef[] ResourceMask { get; }
+    }
+}
+
+public sealed class GenStep_DeepRimVerticalUndergroundLayout : GenStep
+{
+    public override int SeedPart => 421503301;
+
+    public override void Generate(Map map, GenStepParams parms)
+    {
+        UndergroundGenerationService.GenerateLayout(map);
+    }
+}
+
+public sealed class GenStep_DeepRimVerticalUndergroundMaterialize : GenStep
+{
+    public override int SeedPart => 421503302;
+
+    public override void Generate(Map map, GenStepParams parms)
+    {
+        UndergroundGenerationService.Materialize(map);
+    }
+}
+
+public sealed class GenStep_DeepRimVerticalUndergroundFog : GenStep
+{
+    public override int SeedPart => 421503303;
+
+    public override void Generate(Map map, GenStepParams parms)
+    {
+        UndergroundGenerationService.InitializeFog(map);
     }
 }

@@ -1,18 +1,31 @@
 # Release Notes
 
-This workspace snapshot is a foundation build, not a release candidate. It is intended to establish the verified API baseline, persistence model and first functional vertical floor creation path for continued implementation.
+This workspace snapshot now includes a working underground floor generation redesign for DeepRim Vertical on RimWorld `1.6.4633`.
 
 ## Included
 
-- Verified RimWorld 1.6.4633 source-of-truth documentation.
-- Compilable project structure.
-- Save-safe vertical site registry and floor records.
-- Initial floor creation and switching UI.
+- verified RimWorld 1.6.4633 source-of-truth documentation
+- compilable mod workspace and install script
+- save-safe vertical site registry and floor records
+- floor creation and switching UI
+- depth thermal profile runtime handling
+- dedicated lightweight underground generator path
+- sealed underground map generation with explicit fog initialization
+- depth-scaled resource generation
+- hot-depth lava river generation
 
-## Not yet included
+## Confirmed in local game testing
 
-- Cross-level pathfinding and reservations.
-- Cross-level hauling and bill ingredient search patches.
-- Utility transfer graphs.
-- Vertical combat and LOS resolver.
-- Non-debug construction UX for stairs/shafts.
+- underground floors create quickly
+- underground visibility behaves correctly
+- underground temperatures behave correctly with the thermal profile enabled
+- deep floors now provide stronger resource yield
+- lava rivers appear on hot-depth floors such as `-15`
+
+## Still not included
+
+- cross-level pathfinding and reservations
+- cross-level hauling and bill ingredient search patches
+- utility transfer graphs
+- vertical combat and LOS resolver
+- non-debug construction UX for stairs/shafts
