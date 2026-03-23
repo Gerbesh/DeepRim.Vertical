@@ -20,6 +20,14 @@
   <DeepRimVertical.Settings.PreferSameLevelWork>Предпочитать работу на текущем уровне</DeepRimVertical.Settings.PreferSameLevelWork>
   <DeepRimVertical.Settings.BillRangeByFloor>Дальность поиска ингредиентов по этажам: {0}</DeepRimVertical.Settings.BillRangeByFloor>
   <DeepRimVertical.Settings.HaulMaxFloorDistance>Максимальная этажность для hauling: {0}</DeepRimVertical.Settings.HaulMaxFloorDistance>
+  <DeepRimVertical.Settings.UpperFloors>Верхние этажи: ghost-слои и опоры</DeepRimVertical.Settings.UpperFloors>
+  <DeepRimVertical.Settings.EnableUpperFloorOverlay>Включить ghost overlay верхних этажей</DeepRimVertical.Settings.EnableUpperFloorOverlay>
+  <DeepRimVertical.Settings.UpperFloorMaxOverhang>Максимальный вылет от опоры: {0}</DeepRimVertical.Settings.UpperFloorMaxOverhang>
+  <DeepRimVertical.Settings.UpperFloorOverlayMode>Режим overlay: {0}</DeepRimVertical.Settings.UpperFloorOverlayMode>
+  <DeepRimVertical.Settings.CycleUpperFloorOverlayMode>Переключить режим overlay</DeepRimVertical.Settings.CycleUpperFloorOverlayMode>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>Включить debug-логирование upper overlay</DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>Показывать debug-информацию upper overlay в навигаторе</DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>Включить подробное debug-логирование upper overlay</DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>
   <DeepRimVertical.Settings.ResetDefaults>Сбросить настройки</DeepRimVertical.Settings.ResetDefaults>
 
   <DeepRimVertical.Navigator.Title>Вертикальный site</DeepRimVertical.Navigator.Title>
@@ -29,6 +37,10 @@
   <DeepRimVertical.Navigator.FloorList>Известные уровни</DeepRimVertical.Navigator.FloorList>
   <DeepRimVertical.Navigator.FloorButton>Перейти на уровень {0}</DeepRimVertical.Navigator.FloorButton>
   <DeepRimVertical.Navigator.FloorButtonCurrent>Уровень {0} (текущий)</DeepRimVertical.Navigator.FloorButtonCurrent>
+  <DeepRimVertical.Navigator.ToggleOverlay>Ghost overlay: {0}</DeepRimVertical.Navigator.ToggleOverlay>
+  <DeepRimVertical.Navigator.CycleOverlayMode>Режим overlay: {0}</DeepRimVertical.Navigator.CycleOverlayMode>
+  <DeepRimVertical.Navigator.SupportInfo>Клетка {0}: {1} (макс. вылет {2})</DeepRimVertical.Navigator.SupportInfo>
+  <DeepRimVertical.Navigator.DebugCell>Overlay debug {0}: terrain={1}, lower={2}, upperTerrain={3}, upperThing={4}, showLower={5}, neutralBase={6}, blocked={7}, source={8}</DeepRimVertical.Navigator.DebugCell>
   <DeepRimVertical.Navigator.PortalsAtCell>Зарегистрированные вертикальные связи в {0}</DeepRimVertical.Navigator.PortalsAtCell>
   <DeepRimVertical.Navigator.PortalLink>{0} -> {1}</DeepRimVertical.Navigator.PortalLink>
 
@@ -37,4 +49,19 @@
   <DeepRimVertical.Messages.CreatedFloor>Создан уровень {0}.</DeepRimVertical.Messages.CreatedFloor>
   <DeepRimVertical.Messages.NoFloorAbove>Над текущим уровнем нет связанного этажа.</DeepRimVertical.Messages.NoFloorAbove>
   <DeepRimVertical.Messages.NoFloorBelow>Под текущим уровнем нет связанного этажа.</DeepRimVertical.Messages.NoFloorBelow>
+  <DeepRimVertical.Messages.SupportBlocked>Здесь нельзя строить: снизу нет валидной опоры.</DeepRimVertical.Messages.SupportBlocked>
+  <DeepRimVertical.Messages.NoPortalRoute>Здесь нет доступного вертикального маршрута.</DeepRimVertical.Messages.NoPortalRoute>
+  <DeepRimVertical.Messages.CannotReachPortal>Выбранная пешка не может добраться до точки вертикального перехода.</DeepRimVertical.Messages.CannotReachPortal>
+
+  <DeepRimVertical.FloatMenu.UsePortal>Использовать вертикальный переход на {0}</DeepRimVertical.FloatMenu.UsePortal>
+
+  <DeepRimVertical.Overlay.Mode.Supports>Опоры</DeepRimVertical.Overlay.Mode.Supports>
+  <DeepRimVertical.Overlay.Mode.Structure>Структура</DeepRimVertical.Overlay.Mode.Structure>
+  <DeepRimVertical.Overlay.Mode.Full>Полный ghost</DeepRimVertical.Overlay.Mode.Full>
+  <DeepRimVertical.Overlay.State.On>Вкл</DeepRimVertical.Overlay.State.On>
+  <DeepRimVertical.Overlay.State.Off>Выкл</DeepRimVertical.Overlay.State.Off>
+
+  <DeepRimVertical.Support.Status.NotRequired>опора не требуется</DeepRimVertical.Support.Status.NotRequired>
+  <DeepRimVertical.Support.Status.Supported>поддерживается</DeepRimVertical.Support.Status.Supported>
+  <DeepRimVertical.Support.Status.Unsupported>без опоры</DeepRimVertical.Support.Status.Unsupported>
 </LanguageData>

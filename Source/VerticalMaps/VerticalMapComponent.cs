@@ -1,3 +1,9 @@
+using DeepRim.Vertical.VerticalOverlay;
+using DeepRim.Vertical.VerticalRouting;
+using DeepRim.Vertical.VerticalState;
+using DeepRim.Vertical.VerticalSupports;
+using DeepRim.Vertical.VerticalTemperature;
+using DeepRim.Vertical.VerticalRendering;
 using DeepRim.Vertical.VerticalWorld;
 using System.Linq;
 using UnityEngine;
@@ -37,6 +43,13 @@ public sealed class VerticalMapComponent : MapComponent
     {
         base.MapGenerated();
         RefreshFromRegistry();
+    }
+
+    public override void MapComponentTick()
+    {
+        base.MapComponentTick();
+        UpperFloorClimateService.SyncFromGround(map);
+        VerticalTransferService.ProcessPendingTransfers(map);
     }
 
     public override void MapComponentOnGUI()
@@ -143,7 +156,39 @@ public sealed class VerticalMapComponent : MapComponent
         listing.GapLine();
         listing.Label("DeepRimVertical.Navigator.FloorList".Translate());
 
-        var viewRect = new Rect(listingRect.x, listingRect.y + 140f, listingRect.width, Mathf.Min(Mathf.Max(90f, navigatorRect.height - 196f), floors.Count * 28f + 5f));
+        var listTopOffset = 140f;
+        if (currentFloor.levelIndex > 0)
+        {
+            listing.GapLine();
+            if (listing.ButtonText("DeepRimVertical.Navigator.ToggleOverlay".Translate(VerticalOverlayLabels.TranslateEnabledState(VerticalRuntime.Settings.enableUpperFloorOverlay))))
+            {
+                VerticalRuntime.Settings.enableUpperFloorOverlay = !VerticalRuntime.Settings.enableUpperFloorOverlay;
+                VerticalOverlayDebugService.Log($"Overlay toggled to {(VerticalRuntime.Settings.enableUpperFloorOverlay ? "On" : "Off")} on map {map.uniqueID}.");
+                VerticalMapInvalidationService.MarkSiteDirty(map);
+            }
+
+            if (listing.ButtonText("DeepRimVertical.Navigator.CycleOverlayMode".Translate(VerticalOverlayLabels.TranslateMode((VerticalOverlayMode)VerticalRuntime.Settings.upperFloorOverlayMode))))
+            {
+                VerticalRuntime.Settings.upperFloorOverlayMode = (int)VerticalOverlayLabels.NextMode((VerticalOverlayMode)VerticalRuntime.Settings.upperFloorOverlayMode);
+                VerticalOverlayDebugService.Log($"Overlay mode switched to {(VerticalOverlayMode)VerticalRuntime.Settings.upperFloorOverlayMode} on map {map.uniqueID}.");
+                VerticalMapInvalidationService.MarkSiteDirty(map);
+            }
+
+            listing.Label("DeepRimVertical.Navigator.SupportInfo".Translate(
+                focusCell.ToString(),
+                VerticalSupportService.DescribeCellSupport(map, focusCell) + " / " + DescribeCellState(focusCell),
+                VerticalRuntime.Settings.upperFloorMaxOverhang));
+            DrawUpperOverlayDebugInfo(listing, focusCell);
+
+            listTopOffset += 102f;
+            if (VerticalRuntime.Settings.enableUpperOverlayDebugOverlay)
+            {
+                listTopOffset += 58f;
+            }
+        }
+
+        var availableHeight = Mathf.Max(90f, navigatorRect.height - (listTopOffset + 56f));
+        var viewRect = new Rect(listingRect.x, listingRect.y + listTopOffset, listingRect.width, Mathf.Min(availableHeight, floors.Count * 28f + 5f));
         var innerRect = new Rect(0f, 0f, viewRect.width - 16f, floors.Count * 28f + 5f);
         Widgets.BeginScrollView(viewRect, ref scrollPosition, innerRect, true);
         var y = 0f;
@@ -156,7 +201,7 @@ public sealed class VerticalMapComponent : MapComponent
 
             if (Widgets.ButtonText(row, label))
             {
-                CameraJumper.TryJump(focusCell, floor.Map, CameraJumper.MovementMode.Cut);
+                VerticalCameraSyncService.JumpPreservingView(map, floor.Map, focusCell);
             }
 
             y += 28f;
@@ -194,7 +239,52 @@ public sealed class VerticalMapComponent : MapComponent
         }
 
         var focusCell = UI.MouseCell().InBounds(map) ? UI.MouseCell() : map.Center;
-        CameraJumper.TryJump(focusCell, targetFloor.Map, CameraJumper.MovementMode.Cut);
+        VerticalCameraSyncService.JumpPreservingView(map, targetFloor.Map, focusCell);
+    }
+
+    private string DescribeCellState(IntVec3 cell)
+    {
+        return cell.InBounds(map)
+            ? UpperFloorStateService.GetState(map, cell).ToString()
+            : "OutOfBounds";
+    }
+
+    private void DrawUpperOverlayDebugInfo(Listing_Standard listing, IntVec3 focusCell)
+    {
+        if (VerticalRuntime.Settings.enableUpperOverlayDebugOverlay != true
+            || !focusCell.InBounds(map)
+            || levelIndex <= 0)
+        {
+            return;
+        }
+
+        var mask = UpperOverlayVisibilityMask.GetFor(map);
+        if (mask == null)
+        {
+            return;
+        }
+
+        var overlayEnabled = VerticalRuntime.Settings.enableUpperFloorOverlay;
+        var cellState = mask.GetCellState(focusCell, overlayEnabled);
+        var lowerMap = VerticalRenderContextService.LowerMap(map);
+        var sample = LowerLevelCellSampler.Sample(lowerMap, focusCell);
+        VerticalOverlayDebugService.DrawCursorCell(map, focusCell, cellState);
+        VerticalOverlayDebugService.LogVerbose(
+            $"Cell {focusCell} map={map.uniqueID} level={levelIndex} terrain={map.terrainGrid.TerrainAt(focusCell)?.defName ?? "null"} " +
+            $"upperTerrain={cellState.HasUpperTerrain} upperThing={cellState.HasUpperThing} showLower={cellState.ShowLower} neutral={cellState.ShowNeutralBase} " +
+            $"source={VerticalOverlayDebugService.DescribeLowerSource(cellState, sample)} sourceLevel={(sample.SourceMap == null ? "none" : sample.SourceLevel.ToString())}");
+
+        listing.Gap(4f);
+        listing.Label("DeepRimVertical.Navigator.DebugCell".Translate(
+            focusCell.ToString(),
+            map.terrainGrid.TerrainAt(focusCell)?.label ?? "null",
+            sample.SourceMap == null ? "none" : VerticalFloorLabel.Format(sample.SourceLevel),
+            cellState.HasUpperTerrain.ToString(),
+            cellState.HasUpperThing.ToString(),
+            cellState.ShowLower.ToString(),
+            cellState.ShowNeutralBase.ToString(),
+            cellState.BlockLowerCompletely.ToString(),
+            VerticalOverlayDebugService.DescribeLowerSource(cellState, sample)));
     }
 
 }

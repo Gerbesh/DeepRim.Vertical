@@ -1,3 +1,4 @@
+using DeepRim.Vertical.VerticalOverlay;
 using Verse;
 
 namespace DeepRim.Vertical.Settings;
@@ -21,6 +22,12 @@ public sealed class VerticalModSettings : ModSettings
     public bool allowCrossLevelHauling = true;
     public int crossLevelHaulMaxFloorDistance = 6;
     public bool preferSameLevelWork;
+    public bool enableUpperFloorOverlay = true;
+    public int upperFloorOverlayMode = (int)VerticalOverlayMode.Full;
+    public int upperFloorMaxOverhang = 5;
+    public bool enableUpperOverlayDebugLogging;
+    public bool enableUpperOverlayDebugOverlay;
+    public bool enableUpperOverlayDebugVerbose;
 
     public override void ExposeData()
     {
@@ -41,6 +48,12 @@ public sealed class VerticalModSettings : ModSettings
         Scribe_Values.Look(ref allowCrossLevelHauling, "allowCrossLevelHauling", true);
         Scribe_Values.Look(ref crossLevelHaulMaxFloorDistance, "crossLevelHaulMaxFloorDistance", 6);
         Scribe_Values.Look(ref preferSameLevelWork, "preferSameLevelWork", false);
+        Scribe_Values.Look(ref enableUpperFloorOverlay, "enableUpperFloorOverlay", true);
+        Scribe_Values.Look(ref upperFloorOverlayMode, "upperFloorOverlayMode", (int)VerticalOverlayMode.Full);
+        Scribe_Values.Look(ref upperFloorMaxOverhang, "upperFloorMaxOverhang", 5);
+        Scribe_Values.Look(ref enableUpperOverlayDebugLogging, "enableUpperOverlayDebugLogging", false);
+        Scribe_Values.Look(ref enableUpperOverlayDebugOverlay, "enableUpperOverlayDebugOverlay", false);
+        Scribe_Values.Look(ref enableUpperOverlayDebugVerbose, "enableUpperOverlayDebugVerbose", false);
     }
 
     public void ResetToDefaults()
@@ -62,5 +75,11 @@ public sealed class VerticalModSettings : ModSettings
         allowCrossLevelHauling = true;
         crossLevelHaulMaxFloorDistance = 6;
         preferSameLevelWork = false;
+        enableUpperFloorOverlay = true;
+        upperFloorOverlayMode = (int)VerticalOverlayMode.Full;
+        upperFloorMaxOverhang = 5;
+        enableUpperOverlayDebugLogging = false;
+        enableUpperOverlayDebugOverlay = false;
+        enableUpperOverlayDebugVerbose = false;
     }
 }

@@ -1,3 +1,4 @@
+using DeepRim.Vertical.VerticalOverlay;
 using UnityEngine;
 using Verse;
 
@@ -47,6 +48,19 @@ public sealed class DeepRimVerticalMod : Mod
         listing.CheckboxLabeled("DeepRimVertical.Settings.PreferSameLevelWork".Translate(), ref settings.preferSameLevelWork);
         settings.crossLevelBillIngredientSearchRangeByFloor = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.BillRangeByFloor".Translate(settings.crossLevelBillIngredientSearchRangeByFloor), settings.crossLevelBillIngredientSearchRangeByFloor, 10f, 150f));
         settings.crossLevelHaulMaxFloorDistance = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.HaulMaxFloorDistance".Translate(settings.crossLevelHaulMaxFloorDistance), settings.crossLevelHaulMaxFloorDistance, 1f, 25f));
+        listing.GapLine();
+        listing.Label("DeepRimVertical.Settings.UpperFloors".Translate());
+        listing.CheckboxLabeled("DeepRimVertical.Settings.EnableUpperFloorOverlay".Translate(), ref settings.enableUpperFloorOverlay);
+        settings.upperFloorMaxOverhang = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.UpperFloorMaxOverhang".Translate(settings.upperFloorMaxOverhang), settings.upperFloorMaxOverhang, 1f, 8f));
+        listing.Label("DeepRimVertical.Settings.UpperFloorOverlayMode".Translate(VerticalOverlayLabels.TranslateMode((VerticalOverlayMode)settings.upperFloorOverlayMode)));
+        if (listing.ButtonText("DeepRimVertical.Settings.CycleUpperFloorOverlayMode".Translate()))
+        {
+            settings.upperFloorOverlayMode = (int)VerticalOverlayLabels.NextMode((VerticalOverlayMode)settings.upperFloorOverlayMode);
+        }
+        listing.CheckboxLabeled("DeepRimVertical.Settings.EnableUpperOverlayDebugLogging".Translate(), ref settings.enableUpperOverlayDebugLogging);
+        listing.CheckboxLabeled("DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay".Translate(), ref settings.enableUpperOverlayDebugOverlay);
+        listing.CheckboxLabeled("DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose".Translate(), ref settings.enableUpperOverlayDebugVerbose);
+
         listing.GapLine();
         if (listing.ButtonText("DeepRimVertical.Settings.ResetDefaults".Translate()))
         {

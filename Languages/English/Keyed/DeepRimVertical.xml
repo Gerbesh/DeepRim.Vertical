@@ -20,6 +20,14 @@
   <DeepRimVertical.Settings.PreferSameLevelWork>Prefer same-level work when possible</DeepRimVertical.Settings.PreferSameLevelWork>
   <DeepRimVertical.Settings.BillRangeByFloor>Bill ingredient range per floor: {0}</DeepRimVertical.Settings.BillRangeByFloor>
   <DeepRimVertical.Settings.HaulMaxFloorDistance>Max haul floor distance: {0}</DeepRimVertical.Settings.HaulMaxFloorDistance>
+  <DeepRimVertical.Settings.UpperFloors>Upper floor overlay and supports</DeepRimVertical.Settings.UpperFloors>
+  <DeepRimVertical.Settings.EnableUpperFloorOverlay>Enable upper-floor ghost overlay</DeepRimVertical.Settings.EnableUpperFloorOverlay>
+  <DeepRimVertical.Settings.UpperFloorMaxOverhang>Max supported overhang: {0}</DeepRimVertical.Settings.UpperFloorMaxOverhang>
+  <DeepRimVertical.Settings.UpperFloorOverlayMode>Overlay mode: {0}</DeepRimVertical.Settings.UpperFloorOverlayMode>
+  <DeepRimVertical.Settings.CycleUpperFloorOverlayMode>Cycle overlay mode</DeepRimVertical.Settings.CycleUpperFloorOverlayMode>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>Enable upper overlay debug logging</DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>Show upper overlay debug info in navigator</DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>Enable verbose upper overlay debug logging</DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>
   <DeepRimVertical.Settings.ResetDefaults>Reset defaults</DeepRimVertical.Settings.ResetDefaults>
 
   <DeepRimVertical.Navigator.Title>Vertical site</DeepRimVertical.Navigator.Title>
@@ -29,6 +37,10 @@
   <DeepRimVertical.Navigator.FloorList>Known floors</DeepRimVertical.Navigator.FloorList>
   <DeepRimVertical.Navigator.FloorButton>Jump to floor {0}</DeepRimVertical.Navigator.FloorButton>
   <DeepRimVertical.Navigator.FloorButtonCurrent>Floor {0} (current)</DeepRimVertical.Navigator.FloorButtonCurrent>
+  <DeepRimVertical.Navigator.ToggleOverlay>Ghost overlay: {0}</DeepRimVertical.Navigator.ToggleOverlay>
+  <DeepRimVertical.Navigator.CycleOverlayMode>Overlay mode: {0}</DeepRimVertical.Navigator.CycleOverlayMode>
+  <DeepRimVertical.Navigator.SupportInfo>Cell {0}: {1} (max overhang {2})</DeepRimVertical.Navigator.SupportInfo>
+  <DeepRimVertical.Navigator.DebugCell>Overlay debug {0}: terrain={1}, lower={2}, upperTerrain={3}, upperThing={4}, showLower={5}, neutralBase={6}, blocked={7}, source={8}</DeepRimVertical.Navigator.DebugCell>
   <DeepRimVertical.Navigator.PortalsAtCell>Registered vertical links at {0}</DeepRimVertical.Navigator.PortalsAtCell>
   <DeepRimVertical.Navigator.PortalLink>{0} -> {1}</DeepRimVertical.Navigator.PortalLink>
 
@@ -37,4 +49,19 @@
   <DeepRimVertical.Messages.CreatedFloor>Created floor {0}.</DeepRimVertical.Messages.CreatedFloor>
   <DeepRimVertical.Messages.NoFloorAbove>No linked floor above the current level.</DeepRimVertical.Messages.NoFloorAbove>
   <DeepRimVertical.Messages.NoFloorBelow>No linked floor below the current level.</DeepRimVertical.Messages.NoFloorBelow>
+  <DeepRimVertical.Messages.SupportBlocked>Cannot build here: no vertical support from below.</DeepRimVertical.Messages.SupportBlocked>
+  <DeepRimVertical.Messages.NoPortalRoute>No vertical route is available here.</DeepRimVertical.Messages.NoPortalRoute>
+  <DeepRimVertical.Messages.CannotReachPortal>Selected pawn cannot reach the vertical access point.</DeepRimVertical.Messages.CannotReachPortal>
+
+  <DeepRimVertical.FloatMenu.UsePortal>Use vertical access to {0}</DeepRimVertical.FloatMenu.UsePortal>
+
+  <DeepRimVertical.Overlay.Mode.Supports>Supports</DeepRimVertical.Overlay.Mode.Supports>
+  <DeepRimVertical.Overlay.Mode.Structure>Structure</DeepRimVertical.Overlay.Mode.Structure>
+  <DeepRimVertical.Overlay.Mode.Full>Full ghost</DeepRimVertical.Overlay.Mode.Full>
+  <DeepRimVertical.Overlay.State.On>On</DeepRimVertical.Overlay.State.On>
+  <DeepRimVertical.Overlay.State.Off>Off</DeepRimVertical.Overlay.State.Off>
+
+  <DeepRimVertical.Support.Status.NotRequired>support not required</DeepRimVertical.Support.Status.NotRequired>
+  <DeepRimVertical.Support.Status.Supported>supported</DeepRimVertical.Support.Status.Supported>
+  <DeepRimVertical.Support.Status.Unsupported>unsupported</DeepRimVertical.Support.Status.Unsupported>
 </LanguageData>
