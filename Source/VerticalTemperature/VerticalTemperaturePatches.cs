@@ -10,6 +10,12 @@ public static class MapTemperature_OutdoorTemp_Patch
     public static void Postfix(MapTemperature __instance, ref float __result)
     {
         var map = MapTemperatureAccess.Map(__instance);
+        if (UpperFloorClimateService.TryGetMirroredOutdoorTemp(map, out var mirroredTemp))
+        {
+            __result = mirroredTemp;
+            return;
+        }
+
         if (DepthTemperatureUtility.TryGetGeologicalTarget(map, out _, out var target))
         {
             __result = target;
@@ -23,6 +29,12 @@ public static class MapTemperature_SeasonalTemp_Patch
     public static void Postfix(MapTemperature __instance, ref float __result)
     {
         var map = MapTemperatureAccess.Map(__instance);
+        if (UpperFloorClimateService.TryGetMirroredSeasonalTemp(map, out var mirroredTemp))
+        {
+            __result = mirroredTemp;
+            return;
+        }
+
         if (DepthTemperatureUtility.TryGetGeologicalTarget(map, out _, out var target))
         {
             __result = target;

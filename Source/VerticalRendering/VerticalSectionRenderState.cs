@@ -19,11 +19,11 @@ public sealed class VerticalSectionRenderState
         return workers.Values;
     }
 
-    public void RebuildWorkers(Map map, VerticalRenderContext context, UpperLevelTerrainGrid terrainGrid, CellRect visibleSections)
+    public void RebuildWorkers(Map map, VerticalRenderContext context, UpperLevelTerrainGrid terrainGrid, UpperOverlayVisibilityMask overlayMask, CellRect visibleSections)
     {
         _ = terrainGrid;
         var nextKeys = new HashSet<WorkerKey>();
-        var renderFloor = context.LowerFloors.FirstOrDefault();
+        var renderFloor = context.LowerFloors.OrderByDescending(f => f.Floor.levelIndex).FirstOrDefault();
         if (renderFloor != null)
         {
             for (var sectionX = visibleSections.minX; sectionX <= visibleSections.maxX; sectionX++)
@@ -31,6 +31,11 @@ public sealed class VerticalSectionRenderState
                 for (var sectionZ = visibleSections.minZ; sectionZ <= visibleSections.maxZ; sectionZ++)
                 {
                     var sectionCoord = new IntVec2(sectionX, sectionZ);
+                    if (overlayMask != null && !overlayMask.SectionHasRevealCells(sectionCoord))
+                    {
+                        continue;
+                    }
+
                     var probeCell = new IntVec3(sectionCoord.x * Section.Size, 0, sectionCoord.z * Section.Size);
                     if (!probeCell.InBounds(map))
                     {

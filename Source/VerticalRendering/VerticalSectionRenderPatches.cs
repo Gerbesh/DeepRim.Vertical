@@ -26,7 +26,7 @@ public static class VerticalSectionRenderPatches
 
     public static void RenderMap(Map map, CellRect viewRect)
     {
-        if (map == Find.CurrentMap && VerticalRenderContextService.GetLevel(map) > 0)
+        if (VerticalRenderContextService.GetLevel(map) > 0)
         {
             DrawSelectiveLowerUnderlay(map, viewRect);
             DrawUpperNeutralBase(map, viewRect);
@@ -162,7 +162,8 @@ public static class VerticalSectionRenderPatches
 
     private static void DrawSelectiveLowerUnderlay(Map map, CellRect viewRect)
     {
-        if (VerticalRenderContextService.GetLevel(map) <= 0 || !VerticalRuntime.Settings.enableUpperFloorOverlay)
+        var mapLevel = VerticalRenderContextService.GetLevel(map);
+        if (mapLevel <= 0 || !VerticalRuntime.Settings.enableUpperFloorOverlay)
         {
             return;
         }
@@ -180,7 +181,7 @@ public static class VerticalSectionRenderPatches
         }
 
         var renderState = GetOrCreateRenderState(map);
-        renderState.RebuildWorkers(map, context, terrainGrid, ToVisibleSectionRect(viewRect));
+        renderState.RebuildWorkers(map, context, terrainGrid, mask, ToVisibleSectionRect(viewRect));
         var overlayEnabled = VerticalRuntime.Settings.enableUpperFloorOverlay;
         foreach (var worker in renderState.GetActiveWorkers())
         {

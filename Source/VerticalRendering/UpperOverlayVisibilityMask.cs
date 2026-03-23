@@ -32,6 +32,7 @@ public sealed class UpperOverlayVisibilityMask
 
     private BitArray upperTerrainOccupancy;
     private BitArray upperThingOccupancy;
+    private HashSet<IntVec2> revealSections = [];
     private bool dirty = true;
 
     private UpperOverlayVisibilityMask(Map map)
@@ -103,6 +104,12 @@ public sealed class UpperOverlayVisibilityMask
         return new UpperOverlayCellState(hasUpperTerrain, hasUpperThing, showLower, showNeutralBase);
     }
 
+    public bool SectionHasRevealCells(IntVec2 sectionCoord)
+    {
+        RebuildIfDirty();
+        return revealSections.Contains(sectionCoord);
+    }
+
     private void RebuildIfDirty()
     {
         if (!dirty)
@@ -119,6 +126,7 @@ public sealed class UpperOverlayVisibilityMask
         var numCells = Map.cellIndices.NumGridCells;
         upperTerrainOccupancy = new BitArray(numCells);
         upperThingOccupancy = new BitArray(numCells);
+        revealSections = [];
         var upperVoid = VerticalWorld.VerticalDefOf.DeepRimVertical_UpperVoid;
 
         for (var index = 0; index < numCells; index++)
@@ -143,8 +151,30 @@ public sealed class UpperOverlayVisibilityMask
             }
         }
 
+        for (var index = 0; index < numCells; index++)
+        {
+            if (upperTerrainOccupancy[index] || upperThingOccupancy[index])
+            {
+                continue;
+            }
+
+            var terrain = Map.terrainGrid.TerrainAtIgnoreTemp(index);
+            if (terrain != upperVoid)
+            {
+                continue;
+            }
+
+            AddRevealSection(Map.cellIndices.IndexToCell(index));
+        }
+
         dirty = false;
         VerticalOverlayDebugService.LogVerbose($"Rebuilt overlay mask for map {Map.uniqueID} at level {VerticalRenderContextService.GetLevel(Map)}.");
+    }
+
+    private void AddRevealSection(IntVec3 cell)
+    {
+        cell.ToSection(out var x, out var y);
+        revealSections.Add(new IntVec2(x, y));
     }
 
     private static bool CountsAsUpperThing(Thing thing)

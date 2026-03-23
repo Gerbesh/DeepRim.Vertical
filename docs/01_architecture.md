@@ -28,6 +28,9 @@
 - `Persistence`
 - `Settings`
 - `VerticalTemperature`
+- `VerticalRendering`
+- `VerticalSupports`
+- `VerticalState`
 
 ## Underground floor generation policy
 
@@ -74,3 +77,18 @@
 - Same-tile multi-map pathing is not provided by vanilla; cross-level movement will require a dedicated route planner layer.
 - Cross-level combat cannot be solved by a single `GenSight` patch; it needs a targeted extension pipeline.
 - Underground biome and temperature semantics for non-pocket same-tile floors still rely on targeted runtime handling rather than true pocket-map biome ownership.
+- Upper-floor rendering is currently a dedicated compatibility/rendering layer rather than a finalized parity implementation.
+- Positive floors now intentionally mirror weather and outdoor temperature from floor `0`.
+
+## Upper-floor rendering policy
+
+- Positive floors use `DeepRimVertical_UpperVoid` as the baseline terrain instead of concrete flood fill.
+- Level `0` remains the climate source for all positive floors.
+- Camera transitions between floors of the same site preserve the current viewport position and zoom.
+- Ghost overlay rendering is still an active engineering area.
+  - Goal: reveal lower floors only through open `UpperVoid` cells.
+  - Current implementation uses selective lower-level composition driven by per-cell visibility masks.
+  - Lower static content and lower live pawns are rendered through separate paths:
+    - static content through selective underlay section rendering
+    - pawns through a dynamic visibility-gated ghost pass
+  - Current visual result is usable for iterative development, but not yet considered release-quality parity with the reference mod.

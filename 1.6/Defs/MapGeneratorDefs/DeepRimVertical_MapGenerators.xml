@@ -17,6 +17,21 @@
     </genSteps>
   </MapGeneratorDef>
 
+  <MapGeneratorDef>
+    <defName>DeepRimVertical_UpperFloor</defName>
+    <label>upper floor</label>
+    <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+    <disableCallAid>true</disableCallAid>
+    <defaultUnderGridTerrain>DeepRimVertical_UpperVoid</defaultUnderGridTerrain>
+    <pocketMapProperties>
+      <biome>DeepRimVertical_UpperFloorBiome</biome>
+      <temperature>20</temperature>
+    </pocketMapProperties>
+    <genSteps>
+      <li>DeepRimVertical_UpperFloorInit</li>
+    </genSteps>
+  </MapGeneratorDef>
+
   <GenStepDef>
     <defName>DeepRimVertical_UndergroundLayout</defName>
     <order>100</order>
@@ -33,5 +48,11 @@
     <defName>DeepRimVertical_UndergroundFog</defName>
     <order>1500</order>
     <genStep Class="DeepRim.Vertical.VerticalMaps.GenStep_DeepRimVerticalUndergroundFog" />
+  </GenStepDef>
+
+  <GenStepDef>
+    <defName>DeepRimVertical_UpperFloorInit</defName>
+    <order>100</order>
+    <genStep Class="DeepRim.Vertical.VerticalMaps.GenStep_DeepRimVerticalUpperFloorInit" />
   </GenStepDef>
 </Defs>

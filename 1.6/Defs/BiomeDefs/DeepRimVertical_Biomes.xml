@@ -15,4 +15,20 @@
       <Clear>1</Clear>
     </baseWeatherCommonalities>
   </BiomeDef>
+
+  <BiomeDef>
+    <defName>DeepRimVertical_UpperFloorBiome</defName>
+    <label>upper floor</label>
+    <description>Internal biome used by DeepRim Vertical for empty upper construction layers.</description>
+    <generatesNaturally>false</generatesNaturally>
+    <animalDensity>0</animalDensity>
+    <plantDensity>0</plantDensity>
+    <wildAnimalsCanWanderInto>false</wildAnimalsCanWanderInto>
+    <diseaseMtbDays>0</diseaseMtbDays>
+    <forageability>0</forageability>
+    <movementDifficulty>1</movementDifficulty>
+    <baseWeatherCommonalities>
+      <Clear>1</Clear>
+    </baseWeatherCommonalities>
+  </BiomeDef>
 </Defs>

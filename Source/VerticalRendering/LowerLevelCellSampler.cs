@@ -5,11 +5,12 @@ namespace DeepRim.Vertical.VerticalRendering;
 
 public readonly struct LowerLevelCellSample
 {
-    public LowerLevelCellSample(Map sourceMap, TerrainDef terrain, bool usedRecursiveVoidChain)
+    public LowerLevelCellSample(Map sourceMap, TerrainDef terrain, bool usedRecursiveVoidChain, bool roofBlocked)
     {
         SourceMap = sourceMap;
         Terrain = terrain;
         UsedRecursiveVoidChain = usedRecursiveVoidChain;
+        RoofBlocked = roofBlocked;
     }
 
     public Map SourceMap { get; }
@@ -18,9 +19,11 @@ public readonly struct LowerLevelCellSample
 
     public bool UsedRecursiveVoidChain { get; }
 
+    public bool RoofBlocked { get; }
+
     public int SourceLevel => SourceMap == null ? int.MinValue : VerticalRenderContextService.GetLevel(SourceMap);
 
-    public bool HasRenderableTerrain => SourceMap != null && Terrain != null;
+    public bool HasRenderableTerrain => SourceMap != null && (Terrain != null || RoofBlocked);
 }
 
 public static class LowerLevelCellSampler
@@ -37,8 +40,23 @@ public static class LowerLevelCellSampler
         var upperVoid = VerticalWorld.VerticalDefOf.DeepRimVertical_UpperVoid;
         var usedRecursiveVoidChain = false;
 
-        while (terrain == upperVoid && VerticalRenderContextService.GetLevel(map) > 0)
+        while (map != null)
         {
+            if (map.roofGrid.RoofAt(cell) == RoofDefOf.RoofConstructed)
+            {
+                return new LowerLevelCellSample(map, terrain, usedRecursiveVoidChain, roofBlocked: true);
+            }
+
+            if (HasVisibleContentAt(map, cell, terrain, upperVoid))
+            {
+                return new LowerLevelCellSample(map, terrain, usedRecursiveVoidChain, roofBlocked: false);
+            }
+
+            if (terrain != upperVoid || VerticalRenderContextService.GetLevel(map) <= 0)
+            {
+                break;
+            }
+
             usedRecursiveVoidChain = true;
             map = VerticalRenderContextService.LowerMap(map);
             if (map == null || !cell.InBounds(map))
@@ -49,6 +67,54 @@ public static class LowerLevelCellSampler
             terrain = map.terrainGrid.TerrainAt(cell);
         }
 
-        return map == null ? default : new LowerLevelCellSample(map, terrain, usedRecursiveVoidChain);
+        return map == null ? default : new LowerLevelCellSample(map, terrain, usedRecursiveVoidChain, roofBlocked: false);
+    }
+
+    private static bool HasVisibleContentAt(Map map, IntVec3 cell, TerrainDef terrain, TerrainDef upperVoid)
+    {
+        if (map == null || !cell.InBounds(map))
+        {
+            return false;
+        }
+
+        if (terrain != null && terrain != upperVoid)
+        {
+            return true;
+        }
+
+        var things = map.thingGrid.ThingsListAtFast(cell);
+        for (var i = 0; i < things.Count; i++)
+        {
+            var thing = things[i];
+            if (!ShouldStopAtThing(thing))
+            {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool ShouldStopAtThing(Thing thing)
+    {
+        if (thing == null || thing.Destroyed || !thing.Spawned)
+        {
+            return false;
+        }
+
+        if (thing is Pawn or Mote)
+        {
+            return false;
+        }
+
+        if (thing is Blueprint or Frame)
+        {
+            return true;
+        }
+
+        return thing.def.category is ThingCategory.Building or ThingCategory.Plant or ThingCategory.Item
+               && thing.def.drawerType is not DrawerType.None;
     }
 }

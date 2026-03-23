@@ -102,6 +102,26 @@ public static class VerticalSectionLayerUtility
         mainMesh.tris.Add(count + 3);
     }
 
+    public static void FillRoofPlaneSubMesh(LayerSubMesh mainMesh, IntVec3 cell)
+    {
+        var y = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays);
+        var count = mainMesh.verts.Count;
+        mainMesh.verts.Add(new Vector3(cell.x, y, cell.z));
+        mainMesh.verts.Add(new Vector3(cell.x, y, cell.z + 1));
+        mainMesh.verts.Add(new Vector3(cell.x + 1, y, cell.z + 1));
+        mainMesh.verts.Add(new Vector3(cell.x + 1, y, cell.z));
+        mainMesh.colors.Add(ColorWhite);
+        mainMesh.colors.Add(ColorWhite);
+        mainMesh.colors.Add(ColorWhite);
+        mainMesh.colors.Add(ColorWhite);
+        mainMesh.tris.Add(count);
+        mainMesh.tris.Add(count + 1);
+        mainMesh.tris.Add(count + 2);
+        mainMesh.tris.Add(count);
+        mainMesh.tris.Add(count + 2);
+        mainMesh.tris.Add(count + 3);
+    }
+
     public static void FillAdjTransLayerSubMesh(LayerSubMesh transSubMesh, IntVec3 cell, bool[] adjTransit, CellTerrain[] adjTerrains, CellTerrain adjDiffTerrain)
     {
         if (transSubMesh == null)

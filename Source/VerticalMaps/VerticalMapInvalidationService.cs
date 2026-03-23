@@ -10,6 +10,41 @@ namespace DeepRim.Vertical.VerticalMaps;
 
 public static class VerticalMapInvalidationService
 {
+    public static void MarkSiteCellsDirty(Map map, CellRect rect, ulong flags = ulong.MaxValue)
+    {
+        if (map == null || !VerticalSiteWorldComponent.TryGet(out var component))
+        {
+            return;
+        }
+
+        foreach (var floor in component.GetOrderedFloors(map))
+        {
+            if (floor?.Map == null)
+            {
+                continue;
+            }
+
+            UpperFloorStateService.MarkDirty(floor.Map);
+            UpperLevelTerrainGrid.MarkDirty(floor.Map);
+            UpperOverlayVisibilityMask.MarkDirty(floor.Map);
+            VerticalSupportService.MarkDirty(floor.Map);
+            VerticalGhostRenderer.MarkDirty(floor.Map);
+
+            foreach (var cell in rect.Cells)
+            {
+                if (cell.InBounds(floor.Map))
+                {
+                    floor.Map.mapDrawer.MapMeshDirty(cell, flags);
+                }
+            }
+        }
+    }
+
+    public static void MarkSiteCellDirty(Map map, IntVec3 cell, ulong flags = ulong.MaxValue)
+    {
+        MarkSiteCellsDirty(map, CellRect.SingleCell(cell), flags);
+    }
+
     public static void MarkSiteDirty(Map map)
     {
         if (map == null || !VerticalSiteWorldComponent.TryGet(out var component))

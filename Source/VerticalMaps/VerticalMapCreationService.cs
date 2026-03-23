@@ -1,4 +1,6 @@
 using System.Linq;
+using DeepRim.Vertical.VerticalOverlay;
+using DeepRim.Vertical.VerticalState;
 using DeepRim.Vertical.VerticalWorld;
 using RimWorld;
 using RimWorld.Planet;
@@ -25,6 +27,8 @@ public static class VerticalMapCreationService
         }
 
         var targetLevel = currentFloor.levelIndex + levelDelta;
+        VerticalRendering.VerticalOverlayDebugService.Log(
+            $"TryCreateFloor sourceMap={sourceMap.uniqueID} sourceLevel={currentFloor.levelIndex} delta={levelDelta} targetLevel={targetLevel} anchor={anchorCell}.");
         if (!IsWithinConfiguredBounds(targetLevel))
         {
             Messages.Message("DeepRimVertical.Messages.FloorOutOfRange".Translate(targetLevel), MessageTypeDefOf.RejectInput, false);
@@ -37,7 +41,9 @@ public static class VerticalMapCreationService
         if (existing?.Map != null)
         {
             targetMap = existing.Map;
-            CameraJumper.TryJump(anchorCell, targetMap, CameraJumper.MovementMode.Cut);
+            VerticalRendering.VerticalOverlayDebugService.Log(
+                $"TryCreateFloor reused existing targetMap={targetMap.uniqueID} targetLevel={targetLevel} site={site.siteId}.");
+            VerticalCameraSyncService.JumpPreservingView(sourceMap, targetMap, anchorCell);
             return true;
         }
 
@@ -56,13 +62,28 @@ public static class VerticalMapCreationService
                 false,
                 false);
         }
+        else if (targetLevel > 0)
+        {
+            targetMap = MapGenerator.GenerateMap(
+                sourceMap.Size,
+                mapParent,
+                VerticalDefOf.DeepRimVertical_UpperFloor,
+                mapParent.ExtraGenStepDefs,
+                map => UpperFloorGenerationService.PrepareForGeneration(map, sourceMap, anchorCell, targetLevel),
+                false,
+                false);
+        }
         else
         {
             targetMap = MapGenerator.GenerateMap(sourceMap.Size, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null, false, false);
-            PrepareGeneratedFloor(targetMap, anchorCell, targetLevel);
         }
 
         component.RegisterPortal(sourceMap, currentFloor.levelIndex, targetLevel, anchorCell);
+        if (targetLevel > 0)
+        {
+            UpperFloorStateService.MarkDirty(targetMap);
+        }
+
         var mapComponent = targetMap.GetComponent<VerticalMapComponent>();
         if (mapComponent != null)
         {
@@ -70,8 +91,11 @@ public static class VerticalMapCreationService
             mapComponent.levelIndex = targetLevel;
         }
 
+        VerticalRendering.VerticalOverlayDebugService.Log(
+            $"TryCreateFloor generated targetMap={targetMap.uniqueID} targetLevel={targetLevel} parent={targetMap.Parent?.GetUniqueLoadID() ?? "null"} site={site.siteId}.");
         Messages.Message("DeepRimVertical.Messages.CreatedFloor".Translate(VerticalFloorLabel.Format(targetLevel)), MessageTypeDefOf.PositiveEvent, false);
-        CameraJumper.TryJump(anchorCell, targetMap, CameraJumper.MovementMode.Cut);
+        VerticalMapInvalidationService.MarkSiteDirty(sourceMap);
+        VerticalCameraSyncService.JumpPreservingView(sourceMap, targetMap, anchorCell);
         return true;
     }
 
@@ -96,32 +120,5 @@ public static class VerticalMapCreationService
             Mathf.Clamp(anchorCell.x, 6, map.Size.x - 7),
             0,
             Mathf.Clamp(anchorCell.z, 6, map.Size.z - 7));
-    }
-
-    private static void PrepareGeneratedFloor(Map map, IntVec3 anchorCell, int levelIndex)
-    {
-        if (levelIndex < 0)
-        {
-            return;
-        }
-
-        var pocket = CellRect.CenteredOn(anchorCell, 2).ClipInsideMap(map);
-        foreach (var cell in pocket.Cells)
-        {
-            map.roofGrid.SetRoof(cell, null);
-            var things = map.thingGrid.ThingsListAtFast(cell).ToList();
-            foreach (var thing in things)
-            {
-                if (thing is Pawn)
-                {
-                    continue;
-                }
-
-                if (thing.def.passability == Traversability.Impassable || thing.def.mineable || thing is Building)
-                {
-                    thing.Destroy(DestroyMode.Vanish);
-                }
-            }
-        }
     }
 }

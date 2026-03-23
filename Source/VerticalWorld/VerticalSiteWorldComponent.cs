@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DeepRim.Vertical.Persistence;
+using DeepRim.Vertical.VerticalMaps;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
@@ -86,6 +87,8 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
             mapSizeZ = mapParent.StoredMapSize.z
         });
 
+        VerticalRendering.VerticalOverlayDebugService.Log(
+            $"NotifyMapParentGenerated parent={mapParent.GetUniqueLoadID()} level={mapParent.LevelIndex} site={mapParent.SiteId} map={(mapParent.Map == null ? "null" : mapParent.Map.uniqueID.ToString())}.");
         RebuildCaches();
     }
 
@@ -96,7 +99,9 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
         parent.StoredMapSize = sourceMap.Size;
         parent.StoredMapGeneratorDefName = levelIndex < 0
             ? VerticalDefOf.DeepRimVertical_Underground.defName
-            : sourceMap.Parent?.MapGeneratorDef?.defName;
+            : levelIndex > 0
+                ? VerticalDefOf.DeepRimVertical_UpperFloor.defName
+                : sourceMap.Parent?.MapGeneratorDef?.defName;
         parent.Tile = sourceMap.Tile;
         parent.SetFaction(Faction.OfPlayer);
 
@@ -110,6 +115,8 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
             mapSizeZ = sourceMap.Size.z
         });
 
+        VerticalRendering.VerticalOverlayDebugService.Log(
+            $"RegisterGeneratedFloor parent={parent.GetUniqueLoadID()} level={levelIndex} site={site.siteId} sourceMap={sourceMap.uniqueID} sourceParent={sourceMap.Parent?.GetUniqueLoadID() ?? "null"}.");
         RebuildCaches();
     }
 
@@ -122,6 +129,7 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
 
         site.RegisterPortal(new VerticalPortalRecord(sourceLevel, targetLevel, cell));
         site.RegisterPortal(new VerticalPortalRecord(targetLevel, sourceLevel, cell));
+        VerticalMapInvalidationService.MarkSiteDirty(map);
     }
 
     public bool TryGetFloor(Map map, out VerticalSiteRecord site, out VerticalFloorRecord floor)
@@ -135,6 +143,8 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
 
         if (!floorsByParent.TryGetValue(map.Parent, out floor))
         {
+            VerticalRendering.VerticalOverlayDebugService.LogVerbose(
+                $"TryGetFloor miss map={(map == null ? "null" : map.uniqueID.ToString())} parent={map?.Parent?.GetUniqueLoadID() ?? "null"}.");
             return false;
         }
 
@@ -143,6 +153,8 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
             if (candidateSite.floors.Contains(floor))
             {
                 site = candidateSite;
+                VerticalRendering.VerticalOverlayDebugService.LogVerbose(
+                    $"TryGetFloor hit map={map.uniqueID} level={floor.levelIndex} site={site.siteId} parent={map.Parent.GetUniqueLoadID()}.");
                 return true;
             }
         }

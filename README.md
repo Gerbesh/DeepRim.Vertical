@@ -1,6 +1,6 @@
 # DeepRim Vertical
 
-DeepRim Vertical is a RimWorld 1.6 mod workspace for a production-oriented vertical colony framework. The current milestone includes a working underground floor generation path, save-safe world and map persistence, floor creation flow, floor navigation UI, bilingual settings, and the engineering documentation baseline for continued implementation.
+DeepRim Vertical is a RimWorld 1.6 mod workspace for a production-oriented vertical colony framework. The current milestone includes a working underground floor generation path, save-safe world and map persistence, upper-floor creation and rendering experiments, floor navigation UI, bilingual settings, and the engineering documentation baseline for continued implementation.
 
 ## Status
 
@@ -11,6 +11,12 @@ This repository is an active development snapshot, not a final release build. It
 - custom vertical `MapParent` and floor creation services
 - floor navigation UI and hotkeys
 - working underground floor generation redesign
+- upper-floor creation flow with `UpperVoid` baseline terrain
+- upper-floor camera and climate sync to level `0`
+- working selective upper-floor lower-level reveal pipeline
+- stacked lower-floor visibility across positive levels
+- lower-floor live pawn/animal/mech ghost rendering through visible void channels
+- upper-floor debug logging and navigator diagnostics
 - depth-based underground resource scaling
 - hot-depth lava river generation
 - depth temperature utilities
@@ -22,6 +28,7 @@ Planned but not yet implemented:
 - hauling, bills, and utility graph integration
 - vertical combat and line-of-sight resolution
 - finalized construction UX for stairs and shafts
+- finalized parity-quality upper-floor rendering comparable to the reference mod
 
 ## Repository layout
 
@@ -63,6 +70,7 @@ The script first tries the game installation mods folder and falls back to the u
 
 - The `.csproj` references RimWorld and Harmony from local Windows paths. Adjust them if your installation lives elsewhere.
 - `docs/` contains the engineering record, current assumptions, and known limitations for the project.
+- Upper-floor rendering is now functionally usable, but still under active polish and optimization. Underground floors are currently the more stable path.
 
 ## License
 

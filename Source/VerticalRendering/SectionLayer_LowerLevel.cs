@@ -92,8 +92,26 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
 
             var map = sample.SourceMap;
             var terrain = sample.Terrain;
-            var roofBlocked = map.roofGrid.RoofAt(cell) == RoofDefOf.RoofConstructed;
-            if (!roofBlocked && terrain != null)
+            var roofBlocked = sample.RoofBlocked;
+            if (roofBlocked)
+            {
+                GenerateRoofMeshes(cell);
+                SetupColoredSubMeshes(
+                    transparent: true,
+                    null,
+                    cell,
+                    ref showSnowSubMesh,
+                    snowSubMesh,
+                    ref showSandSubMesh,
+                    sandSubMesh,
+                    shouldBlur,
+                    blurTransparent: true,
+                    blurSubMesh,
+                    ref showBlurSubMesh);
+                continue;
+            }
+
+            if (terrain != null)
             {
                 var cellTerrain = new CellTerrain
                 {
@@ -275,6 +293,15 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
             layerSubMesh.disabled = false;
             layerSubMesh.FinalizeMesh(MeshParts.Colors);
             subMeshes.Add(layerSubMesh);
+        }
+    }
+
+    private void GenerateRoofMeshes(IntVec3 cell)
+    {
+        var subMesh = GetSubMesh(VerticalSectionLayerUtility.RoofMaterial);
+        if (subMesh != null)
+        {
+            VerticalSectionLayerUtility.FillRoofPlaneSubMesh(subMesh, cell);
         }
     }
 
