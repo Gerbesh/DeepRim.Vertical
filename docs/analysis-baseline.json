@@ -1,0 +1,88 @@
+{
+  "auditDate": "2026-10-11",
+  "sourceCommit": "62e4dd763e5ae53029776882cdafcbbd75ef833c",
+  "scope": "Source",
+  "versions": {
+    "codegraph": "1.6.2",
+    "codeslicerRepository": "https://github.com/artemnoor/CodeSlicer.git",
+    "codeslicerCommit": "510aca022de1b59316de20a734954e1427f07e3b",
+    "codeslicerVersion": "0.5.3",
+    "dotnetSdk": "8.0.425",
+    "ilspycmd": "9.1.0.7988"
+  },
+  "engine": {
+    "gameVersion": "1.6.4871 rev590",
+    "assemblySha256": "5CF1B5BE399D5B1C9C56CA72C9D35B4ECF307FEACF5859D04AC5A1AA5926356A",
+    "typesInspected": 40
+  },
+  "codeslicer": {
+    "nodes": 922,
+    "edges": 1410,
+    "provider": {
+      "network": false,
+      "parser": "local_semantic",
+      "roslyn": "unavailable",
+      "status": "supported"
+    },
+    "counts": {
+      "files": 44,
+      "members": 375,
+      "types": 74
+    },
+    "callResolution": {
+      "actionable_unresolved": 408,
+      "callsites_total": 410,
+      "eligible_callsites": 408,
+      "external_terminal": 2,
+      "resolved_exact": 0,
+      "resolved_inferred": 0,
+      "support_pack_resolved": 0,
+      "suspicious_edges": 0
+    },
+    "integrity": {
+      "status": "ok",
+      "node_count": 922,
+      "edge_count": 1410,
+      "orphan_node_count": 0,
+      "orphan_ratio": 0.0,
+      "high_orphan_ratio": false,
+      "orphan_nodes": [],
+      "dangling_edge_count": 0,
+      "dangling_edges": [],
+      "duplicate_node_id_count": 0,
+      "duplicate_node_ids": [],
+      "warnings": [],
+      "fingerprint": "984223a342b7d41e2028737368c85a7ae95a915a930ca956bf5befc258bf0e5e"
+    },
+    "slice": {
+      "target": "method:DeepRim.Vertical.VerticalRendering.VerticalSectionRenderPatches.DirtyRenderingMapCells",
+      "matchedNodes": 1,
+      "affectedNodes": 109,
+      "affectedEdges": 150
+    }
+  },
+  "mcp": [
+    {
+      "tool": "codegraph",
+      "advertisedTools": 1,
+      "initialize": "ok",
+      "toolsList": "ok",
+      "sampleCall": "ok"
+    },
+    {
+      "tool": "codeslicer",
+      "advertisedTools": 46,
+      "initialize": "ok",
+      "toolsList": "ok",
+      "sampleCall": "ok"
+    }
+  ],
+  "validation": {
+    "releaseBuild": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "inGameProfiling": "not performed",
+    "note": "Graph integrity does not prove C# call resolution. Baseline precedes the documentation/tooling commit."
+  }
+}

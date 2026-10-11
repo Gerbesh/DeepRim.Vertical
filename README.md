@@ -1,12 +1,14 @@
 # DeepRim Vertical
 
-DeepRim Vertical is a RimWorld 1.6 mod workspace for a production-oriented vertical colony framework. The current milestone includes a working underground floor generation path, save-safe world and map persistence, upper-floor creation and rendering experiments, floor navigation UI, bilingual settings, and the engineering documentation baseline for continued implementation.
+DeepRim Vertical is an experimental RimWorld 1.6 vertical colony framework. It includes separate maps for floors, persistence records, floor navigation, underground generation and an upper-floor rendering prototype.
+
+The October 2026 [rendering audit](docs/wiki/Rendering-audit.md) checks the code against installed RimWorld `1.6.4871 rev590`. It identifies missing vanilla draw passes, incomplete invalidation coverage, mesh ownership problems and expensive frame-time work. These rendering issues are documented, not yet fixed. See the [engineering wiki](https://github.com/Gerbesh/DeepRim.Vertical/wiki) and [local documentation index](docs/README.md).
 
 ## Status
 
 This repository is an active development snapshot, not a final release build. It currently includes:
 
-- verified RimWorld `1.6.4633 rev1260` research notes
+- historical RimWorld `1.6.4633 rev1260` notes and a new `1.6.4871 rev590` engine audit
 - vertical site registry and floor persistence records
 - custom vertical `MapParent` and floor creation services
 - floor navigation UI and hotkeys
@@ -68,9 +70,20 @@ The script first tries the game installation mods folder and falls back to the u
 
 ## Notes
 
-- The `.csproj` references RimWorld and Harmony from local Windows paths. Adjust them if your installation lives elsewhere.
+- Override MSBuild properties `RimWorldDir` and `HarmonyAssembly` if your installation lives elsewhere; the `.csproj` keeps the original Windows defaults.
 - `docs/` contains the engineering record, current assumptions, and known limitations for the project.
-- Upper-floor rendering is now functionally usable, but still under active polish and optimization. Underground floors are currently the more stable path.
+- Upper-floor rendering remains experimental. A successful build does not establish in-game performance or compatibility.
+
+## Code analysis
+
+Pinned [CodeGraph and CodeSlicer setup](docs/wiki/Analysis-tools.md), CLI wrappers, MCP launchers and private engine inspection are available under `tools/analysis/`:
+
+```powershell
+./tools/analysis/setup.ps1 -Engine -ConfigureCodex
+./tools/analysis/run.ps1 -Tool codegraph explore "lower level regeneration"
+```
+
+Local runtimes and game decompilation are ignored by Git. CodeSlicer's C# graph currently lacks Roslyn-backed call resolution; read its limitations before using impact results to change or delete code.
 
 ## License
 

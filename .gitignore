@@ -28,3 +28,15 @@ packages/
 
 # Logs
 *.log
+
+# Local analysis runtimes, indexes and private game decompilation
+.tools/
+.analysis/
+.codegraph/
+.code-index/
+.impact-engine/
+.impact_engine/
+.codex/config.toml
+.venv/
+node_modules/
+__pycache__/

@@ -10,7 +10,7 @@
 ## P1 / important
 
 - Floor creation currently uses navigator development buttons rather than final buildable stairs/shafts.
-- `+` floors are still foundation-style separate maps and do not yet have the planned layered ghost support overlay down to floor `0`.
+- `+` floors have a selective lower-floor overlay prototype. The current renderer drops vanilla global draw passes, has incomplete invalidation coverage and does not apply the planned depth tint correctly. See [the current rendering audit](wiki/Rendering-audit.md).
 - Multi-map same-tile world interactions such as caravan/trader aggregation are not yet integrated.
 - No verified in-workspace image-generation pipeline is configured; any art assets are currently expected to be produced manually via the web workflow if needed.
 - Underground incident suppression is currently focused on storyteller targeting tags and enemy raid rejection; other surface-style arrivals still need explicit audit.

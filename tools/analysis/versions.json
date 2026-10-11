@@ -1,0 +1,8 @@
+{
+  "codegraph": "1.6.2",
+  "codeslicerRepository": "https://github.com/artemnoor/CodeSlicer.git",
+  "codeslicerCommit": "510aca022de1b59316de20a734954e1427f07e3b",
+  "codeslicerVersion": "0.5.3",
+  "dotnetSdk": "8.0.425",
+  "ilspycmd": "9.1.0.7988"
+}

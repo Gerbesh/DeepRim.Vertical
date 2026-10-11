@@ -1,0 +1,48 @@
+name: Code Analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check documentation and repository hygiene
+        run: python tools/analysis/validate-docs.py
+      - name: Install pinned local analyzers
+        run: |
+          mkdir -p .tools/codegraph .analysis
+          cp tools/codegraph/package*.json .tools/codegraph/
+          npm ci --prefix .tools/codegraph --ignore-scripts --no-audit --no-fund
+          python -m pip install -r tools/analysis/requirements-lock.txt
+          python -m pip install --no-deps 'impact-engine @ git+https://github.com/artemnoor/CodeSlicer.git@510aca022de1b59316de20a734954e1427f07e3b'
+      - name: Index source and check graph integrity
+        env:
+          CODEGRAPH_TELEMETRY: '0'
+          PYTHONUTF8: '1'
+        run: |
+          .tools/codegraph/node_modules/.bin/codegraph init . --yes
+          .tools/codegraph/node_modules/.bin/codegraph status .
+          codeslicer --json analyze . --scope Source --no-daemon --no-research-requests --out .analysis/codeslicer-graph.json > .analysis/codeslicer-result.json
+          codeslicer --json graph-quality .analysis/codeslicer-graph.json > .analysis/quality.json
+          python -c "import json; q=json.load(open('.analysis/quality.json')); assert q['status']=='ok' and not q['dangling_edge_count'] and not q['duplicate_node_id_count'], q; print(q)"
+      - name: Save graph diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: analysis-diagnostics
+          path: |
+            .analysis/quality.json
+            .analysis/codeslicer-result.json
+          retention-days: 7
