@@ -35,9 +35,10 @@
 ## Underground floor generation policy
 
 - Floor `-1` and `-2` are generated as rock-sealed underground maps with:
-  - a carved entry pocket around the anchor cell
-  - a small number of caverns away from the entry
+  - no cursor-based excavation or entry pocket
+  - a small number of natural caverns
   - scattered mineable resource deposits
+- Creating a floor does not connect or reveal it. Completing a staircase opens its destination landing and registers the paired movement connection.
 - Floor `-3` and deeper are generated as almost entirely solid rock:
   - thick rock roof across the whole map
   - rock-filled edges
@@ -72,6 +73,8 @@
 - Rejected because coordinate projection and cross-level queries become much harder.
 
 ## Current risks
+
+See the [October 2026 colony systems audit](colony_systems_audit.md) for the current system-wide gaps and implementation dependencies. Shared site identity and UI do not yet provide colony-wide economy, autonomous work or combat.
 
 - RimWorld world object APIs are not designed around many player-home `MapParent`s on one tile.
 - Same-tile multi-map pathing is not provided by vanilla; cross-level movement will require a dedicated route planner layer.

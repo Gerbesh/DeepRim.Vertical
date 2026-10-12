@@ -43,6 +43,27 @@ public sealed class VerticalSiteMapParent : MapParent
 
     public override MapGeneratorDef MapGeneratorDef => DefDatabase<MapGeneratorDef>.GetNamedSilentFail(mapGeneratorDefName) ?? base.MapGeneratorDef;
 
+    // This parent owns a floor's map and save data, not another world settlement.
+    public override bool SelectableNow => false;
+
+    public override void Draw()
+    {
+    }
+
+    public override void DrawExtraSelectionOverlays()
+    {
+    }
+
+    public override IEnumerable<Gizmo> GetGizmos()
+    {
+        yield break;
+    }
+
+    public override IEnumerable<Gizmo> GetCaravanGizmos(Caravan caravan)
+    {
+        yield break;
+    }
+
     public override void ExposeData()
     {
         base.ExposeData();

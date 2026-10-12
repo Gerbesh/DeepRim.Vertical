@@ -12,6 +12,8 @@ public static class VerticalBootstrap
     {
         var harmony = new Harmony(HarmonyId);
         harmony.PatchAll();
+        VerticalCombat.VerticalProjectileUtility.InstallDefs();
+        VerticalUtilities.DubsHygieneAdapter.Install(harmony);
         Log.Message("[DeepRim Vertical] Bootstrap initialized.");
     }
 }

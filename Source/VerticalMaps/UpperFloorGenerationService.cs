@@ -9,21 +9,21 @@ namespace DeepRim.Vertical.VerticalMaps;
 
 public static class UpperFloorGenerationService
 {
-    private static readonly Dictionary<int, UpperFloorGenerationContext> PendingContexts = new();
+    private static readonly HashSet<int> PendingMaps = new();
 
-    public static void PrepareForGeneration(Map map, Map sourceMap, IntVec3 anchorCell, int levelIndex)
+    public static void PrepareForGeneration(Map map, Map sourceMap, int levelIndex)
     {
         if (map == null || sourceMap == null || levelIndex <= 0)
         {
             return;
         }
 
-        PendingContexts[map.uniqueID] = new UpperFloorGenerationContext(anchorCell, levelIndex);
+        PendingMaps.Add(map.uniqueID);
     }
 
     public static void InitializeEmptyConstructionLayer(Map map)
     {
-        if (map == null || !PendingContexts.TryGetValue(map.uniqueID, out var context))
+        if (map == null || !PendingMaps.Contains(map.uniqueID))
         {
             return;
         }
@@ -57,21 +57,8 @@ public static class UpperFloorGenerationService
             map.terrainGrid.SetTerrain(cell, voidTerrain);
         }
 
-        MapGenerator.PlayerStartSpot = context.AnchorCell;
-        PendingContexts.Remove(map.uniqueID);
-    }
-
-    private sealed class UpperFloorGenerationContext
-    {
-        public UpperFloorGenerationContext(IntVec3 anchorCell, int levelIndex)
-        {
-            AnchorCell = anchorCell;
-            LevelIndex = levelIndex;
-        }
-
-        public IntVec3 AnchorCell { get; }
-
-        public int LevelIndex { get; }
+        MapGenerator.PlayerStartSpot = map.Center;
+        PendingMaps.Remove(map.uniqueID);
     }
 }
 

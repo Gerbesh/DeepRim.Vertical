@@ -162,6 +162,15 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
         return false;
     }
 
+    public void UnregisterPortal(Map map, int targetLevel, IntVec3 cell)
+    {
+        if (TryGetFloor(map, out var site, out var floor))
+        {
+            site.UnregisterPortalPair(floor.levelIndex, targetLevel, cell);
+            VerticalMapInvalidationService.MarkSiteDirty(map);
+        }
+    }
+
     public bool TryGetAdjacentFloor(Map map, int delta, out VerticalSiteRecord site, out VerticalFloorRecord floor)
     {
         site = null;
@@ -208,6 +217,11 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
             {
                 floorsByParent[floor.mapParent] = floor;
             }
+        }
+
+        if (Current.ProgramState == ProgramState.Playing)
+        {
+            Find.ColonistBar?.MarkColonistsDirty();
         }
     }
 }

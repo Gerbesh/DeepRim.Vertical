@@ -4,6 +4,7 @@ using DeepRim.Vertical.VerticalState;
 using DeepRim.Vertical.VerticalSupports;
 using DeepRim.Vertical.VerticalTemperature;
 using DeepRim.Vertical.VerticalRendering;
+using DeepRim.Vertical.VerticalProfiling;
 using DeepRim.Vertical.VerticalWorld;
 using System.Linq;
 using UnityEngine;
@@ -45,11 +46,16 @@ public sealed class VerticalMapComponent : MapComponent
         RefreshFromRegistry();
     }
 
+    public override void MapRemoved()
+    {
+        base.MapRemoved();
+        VerticalUtilities.GameComponent_VerticalUtilities.Get()?.RemoveMap(map);
+    }
+
     public override void MapComponentTick()
     {
         base.MapComponentTick();
         UpperFloorClimateService.SyncFromGround(map);
-        VerticalTransferService.ProcessPendingTransfers(map);
     }
 
     public override void MapComponentOnGUI()
@@ -111,6 +117,10 @@ public sealed class VerticalMapComponent : MapComponent
 
     private void DrawToggleButton()
     {
+        if (Widgets.ButtonText(new Rect(Screen.width - 236f, Screen.height - 118f, 110f, 32f), "DeepRimVertical.Profiler.Button".Translate()))
+        {
+            VerticalProfilerWindow.Open();
+        }
         var buttonRect = new Rect(Screen.width - 116f, Screen.height - 118f, 52f, 32f);
         if (Widgets.ButtonText(buttonRect, navigatorVisible ? "LVL-" : "LVL+"))
         {
@@ -144,12 +154,12 @@ public sealed class VerticalMapComponent : MapComponent
         {
             if (listing.ButtonText("DeepRimVertical.Navigator.CreateAbove".Translate()))
             {
-                VerticalMapCreationService.TryCreateFloor(map, focusCell, 1, out _);
+                VerticalMapCreationService.TryCreateFloor(map, 1, out _);
             }
 
             if (listing.ButtonText("DeepRimVertical.Navigator.CreateBelow".Translate()))
             {
-                VerticalMapCreationService.TryCreateFloor(map, focusCell, -1, out _);
+                VerticalMapCreationService.TryCreateFloor(map, -1, out _);
             }
         }
 

@@ -2,6 +2,8 @@
 
 Игровые замеры в исследовательской итерации не выполнялись. Ниже — воспроизводимый протокол; поля результатов оставлены незаполненными намеренно.
 
+Теперь в моде есть [встроенный профилировщик этажей](../per_floor_profiling.md): CPU-время всех карт, TPS, тик/кадр, детализация объектов и систем, пересборки и CSV/TXT. Код и локальные проверки готовы; запись в живой игре ещё не проверена. GPU, фоновые path jobs и native retained resources по-прежнему требуют отдельных средств. Таблица ниже остаётся незаполненной до реальных замеров.
+
 ## Фиксировать условия
 
 Указать build игры/Unity, commit мода, DLC, список mods/load order, размеры карт, количество этажей/пешек и settings. Сохранить одинаковый save и положение камеры. Прогреть shaders и секции перед steady-state замером. Debug verbose выключить во всех сравниваемых вариантах.
@@ -53,3 +55,7 @@
 | Не измерено | — | — | — | — | — | — | — |
 
 Для принятия исправления важен измеримый эффект при той же картинке. Для paused idle дополнительный rebuild не должен происходить без изменения source/settings/topology. Для камеры по уже известным секциям не должно быть повторного создания ресурсов. Целевой frame budget зависит от компьютера; его нельзя обещать из статического аудита.
+
+## Four-floor gameplay acceptance (2026-10-12)
+
+The isolated test-only colony probe builds a vertical site with four maps, performs three real save/reload cycles, and exercises shared wealth, native incident scheduling, mine/haul/build/food/sleep/recipe/refuel/work, real downward and upward projectiles, original-map queued orders, drafted travel, blocked routes and cargo conservation. The same probe validates owned lower ceiling creation/removal from upper decks and roof persistence across saves, as well as 0/1/2/3+ height-combat modifiers. Local smoke logs are not published as source artifacts: reproduce via tools/validation/native-colony/README.md. The probe is not a real-colony performance benchmark or a guarantee for Combat Extended, modded abilities or every DLC event.

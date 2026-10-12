@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef Name="DeepRimVertical_UtilityBase" ParentName="BuildingBase" Abstract="True">
+    <thingClass>DeepRim.Vertical.VerticalUtilities.Building_VerticalUtility</thingClass>
+    <size>(1,1)</size>
+    <rotatable>true</rotatable>
+    <passability>Standable</passability>
+    <fillPercent>0</fillPercent>
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+    <designationCategory>Structure</designationCategory>
+    <graphicData>
+      <texPath>Things/Building/Misc/TempControl/Vent</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+    <building><isInert>true</isInert><isEdifice>false</isEdifice></building>
+    <statBases><MaxHitPoints>160</MaxHitPoints><WorkToBuild>900</WorkToBuild><Flammability>0</Flammability><Beauty>-2</Beauty></statBases>
+    <costList><Steel>15</Steel></costList>
+    <researchPrerequisites><li>Electricity</li></researchPrerequisites>
+  </ThingDef>
+  <ThingDef ParentName="DeepRimVertical_UtilityBase">
+    <defName>DeepRimVertical_ThermalIntake</defName>
+    <label>thermoventilation intake</label>
+    <description>Powered intake for an insulated vertical thermal duct. Build an outlet above in the same column, with duct sections on every intermediate floor. Transfers heat only between connected enclosed rooms.</description>
+    <uiOrder>2100</uiOrder>
+    <graphicData><color>(0.30,0.60,0.85)</color></graphicData>
+    <comps><li Class="CompProperties_Power"><compClass>CompPowerTrader</compClass><basePowerConsumption>60</basePowerConsumption></li></comps>
+    <modExtensions><li Class="DeepRim.Vertical.VerticalUtilities.VerticalUtilityExtension"><kind>ThermalIntake</kind></li></modExtensions>
+  </ThingDef>
+  <ThingDef ParentName="DeepRimVertical_UtilityBase">
+    <defName>DeepRimVertical_ThermalDuct</defName>
+    <label>vertical insulated thermal duct</label>
+    <description>A sealed section of the thermal column. Connects the floors directly above and below without changing the temperature of this room. Has an isolation valve.</description>
+    <uiOrder>2101</uiOrder>
+    <graphicData><color>(0.60,0.60,0.60)</color></graphicData>
+    <modExtensions><li Class="DeepRim.Vertical.VerticalUtilities.VerticalUtilityExtension"><kind>ThermalDuct</kind></li></modExtensions>
+  </ThingDef>
+  <ThingDef ParentName="DeepRimVertical_UtilityBase">
+    <defName>DeepRimVertical_ThermalOutlet</defName>
+    <label>thermoventilation outlet</label>
+    <description>Powered outlet drawing from an intake below along an uninterrupted insulated column. Changes room temperature gradually; the source shares its limited capacity between outlets. You can select the source floor.</description>
+    <uiOrder>2102</uiOrder>
+    <graphicData><color>(0.85,0.55,0.25)</color></graphicData>
+    <comps><li Class="CompProperties_Power"><compClass>CompPowerTrader</compClass><basePowerConsumption>30</basePowerConsumption></li></comps>
+    <modExtensions><li Class="DeepRim.Vertical.VerticalUtilities.VerticalUtilityExtension"><kind>ThermalOutlet</kind></li></modExtensions>
+  </ThingDef>
+  <ThingDef ParentName="DeepRimVertical_UtilityBase">
+    <defName>DeepRimVertical_PowerRiser</defName>
+    <label>vertical cable riser</label>
+    <description>Joins electrical networks through cable risers on adjacent floors in the same column. All connected generators, consumers and batteries share one power calculation. Does not open an air shaft.</description>
+    <uiOrder>2103</uiOrder>
+    <graphicData><color>(0.90,0.80,0.30)</color></graphicData>
+    <comps><li Class="CompProperties_Power"><compClass>CompPowerTransmitter</compClass><transmitsPower>true</transmitsPower></li></comps>
+    <modExtensions><li Class="DeepRim.Vertical.VerticalUtilities.VerticalUtilityExtension"><kind>Power</kind></li></modExtensions>
+  </ThingDef>
+  <ThingDef ParentName="DeepRimVertical_UtilityBase" MayRequire="dubwise.dubsbadhygiene">
+    <defName>DeepRimVertical_PlumbingRiser</defName>
+    <label>vertical plumbing riser</label>
+    <description>Connects Dubs Bad Hygiene plumbing, including water and sewage, through matching risers on every adjacent floor. Native tanks, filtration and sewage handlers remain responsible for actual resources.</description>
+    <uiOrder>2104</uiOrder>
+    <graphicData><color>(0.30,0.80,0.60)</color></graphicData>
+    <comps><li Class="DubsBadHygiene.CompProperties_Pipe"><mode>Sewage</mode></li></comps>
+    <modExtensions><li Class="DeepRim.Vertical.VerticalUtilities.VerticalUtilityExtension"><kind>Plumbing</kind></li></modExtensions>
+  </ThingDef>
+</Defs>

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DeepRim.Vertical.VerticalMaps;
+using DeepRim.Vertical.VerticalConstruction;
 using DeepRim.Vertical.VerticalState;
 using HarmonyLib;
 using RimWorld;
@@ -83,6 +84,21 @@ public static class TerrainGrid_SetTerrain_UpperFloorStatePatch
         }
 
         UpperFloorStateService.MarkDirty(map);
+        VerticalCeilingService.InvalidateUpperCell(map, c);
+        VerticalMapInvalidationService.MarkSiteCellDirty(map, c, 1UL);
+    }
+}
+
+// Removing a terrain layer can expose the void or an old under-terrain without SetTerrain.
+[HarmonyPatch(typeof(TerrainGrid), nameof(TerrainGrid.RemoveTopLayer))]
+public static class TerrainGrid_RemoveTopLayer_VerticalCeilingPatch
+{
+    public static void Postfix(TerrainGrid __instance, IntVec3 c)
+    {
+        var map = Traverse.Create(__instance).Field("map").GetValue<Map>();
+        if (map == null) return;
+        UpperFloorStateService.MarkDirty(map);
+        VerticalCeilingService.InvalidateUpperCell(map, c);
         VerticalMapInvalidationService.MarkSiteCellDirty(map, c, 1UL);
     }
 }

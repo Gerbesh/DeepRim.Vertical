@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DeepRimVertical_ThermalIntake.label>термовентиляция: вход</DeepRimVertical_ThermalIntake.label>
+  <DeepRimVertical_ThermalIntake.description>Вход с вентилятором забирает холод или тепло из своей комнаты. Выше в том же столбе нужен выход, а на промежуточных этажах — изолированные секции канала. Требуется питание; работает между закрытыми комнатами.</DeepRimVertical_ThermalIntake.description>
+  <DeepRimVertical_ThermalDuct.label>вертикальный термоканал</DeepRimVertical_ThermalDuct.label>
+  <DeepRimVertical_ThermalDuct.description>Изолированная секция столба между соседними этажами. Не меняет температуру промежуточной комнаты. Клапан разрывает вертикальную связь.</DeepRimVertical_ThermalDuct.description>
+  <DeepRimVertical_ThermalOutlet.label>термовентиляция: выход</DeepRimVertical_ThermalOutlet.label>
+  <DeepRimVertical_ThermalOutlet.description>Выход с вентилятором постепенно охлаждает или нагревает комнату от входа ниже по непрерывному столбу. Несколько выходов делят мощность источника. Этаж источника можно выбрать.</DeepRimVertical_ThermalOutlet.description>
+  <DeepRimVertical_PowerRiser.label>вертикальный кабельный стояк</DeepRimVertical_PowerRiser.label>
+  <DeepRimVertical_PowerRiser.description>Соединяет проводку соседних этажей через стояки в одинаковых координатах. Генераторы, потребители и батареи получают один общий расчёт мощности. Воздух и тепло через стояк не проходят.</DeepRimVertical_PowerRiser.description>
+  <DeepRimVertical_PlumbingRiser.label>вертикальный стояк водоснабжения</DeepRimVertical_PlumbingRiser.label>
+  <DeepRimVertical_PlumbingRiser.description>Соединяет трубы Dubs Bad Hygiene на соседних этажах в одинаковых координатах. Передаёт водоснабжение и канализацию; воду хранят штатные баки, работают штатные фильтры и слив. На каждом промежуточном этаже нужна секция.</DeepRimVertical_PlumbingRiser.description>
+</LanguageData>

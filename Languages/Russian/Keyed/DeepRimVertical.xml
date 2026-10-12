@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <DeepRimVertical.Stairs.TooCloseToEdge>Лестница должна находиться минимум в двух клетках от края карты.</DeepRimVertical.Stairs.TooCloseToEdge>
+  <DeepRimVertical.Stairs.AlreadyOccupied>В этой клетке уже есть лестница или её проект.</DeepRimVertical.Stairs.AlreadyOccupied>
+  <DeepRimVertical.Stairs.LandingBlocked>Выход на соседнем уровне занят постройкой или непроходимой поверхностью.</DeepRimVertical.Stairs.LandingBlocked>
+  <DeepRimVertical.Stairs.RetryConnection>Открыть проход</DeepRimVertical.Stairs.RetryConnection>
+  <DeepRimVertical.Stairs.RetryConnectionDescription>Повторить создание выхода после устранения препятствия на соседнем уровне.</DeepRimVertical.Stairs.RetryConnectionDescription>
   <DeepRimVertical.SettingsCategory>DeepRim Vertical</DeepRimVertical.SettingsCategory>
   <DeepRimVertical.Settings.Foundation>Основа</DeepRimVertical.Settings.Foundation>
   <DeepRimVertical.Settings.ShowNavigator>Показывать навигатор этажей</DeepRimVertical.Settings.ShowNavigator>
@@ -32,8 +37,8 @@
 
   <DeepRimVertical.Navigator.Title>Вертикальный site</DeepRimVertical.Navigator.Title>
   <DeepRimVertical.Navigator.CurrentFloor>Текущий уровень: {0}</DeepRimVertical.Navigator.CurrentFloor>
-  <DeepRimVertical.Navigator.CreateAbove>Создать +1 под курсором</DeepRimVertical.Navigator.CreateAbove>
-  <DeepRimVertical.Navigator.CreateBelow>Создать -1 под курсором</DeepRimVertical.Navigator.CreateBelow>
+  <DeepRimVertical.Navigator.CreateAbove>Создать уровень выше</DeepRimVertical.Navigator.CreateAbove>
+  <DeepRimVertical.Navigator.CreateBelow>Создать уровень ниже</DeepRimVertical.Navigator.CreateBelow>
   <DeepRimVertical.Navigator.FloorList>Известные уровни</DeepRimVertical.Navigator.FloorList>
   <DeepRimVertical.Navigator.FloorButton>Перейти на уровень {0}</DeepRimVertical.Navigator.FloorButton>
   <DeepRimVertical.Navigator.FloorButtonCurrent>Уровень {0} (текущий)</DeepRimVertical.Navigator.FloorButtonCurrent>
@@ -64,4 +69,73 @@
   <DeepRimVertical.Support.Status.NotRequired>опора не требуется</DeepRimVertical.Support.Status.NotRequired>
   <DeepRimVertical.Support.Status.Supported>поддерживается</DeepRimVertical.Support.Status.Supported>
   <DeepRimVertical.Support.Status.Unsupported>без опоры</DeepRimVertical.Support.Status.Unsupported>
+  <DeepRimVertical.Profiler.Button>Профиль</DeepRimVertical.Profiler.Button>
+  <DeepRimVertical.Profiler.Title>DeepRim: профилировщик этажей</DeepRimVertical.Profiler.Title>
+  <DeepRimVertical.Profiler.Start>Записать 30 секунд</DeepRimVertical.Profiler.Start>
+  <DeepRimVertical.Profiler.Stop>Остановить</DeepRimVertical.Profiler.Stop>
+  <DeepRimVertical.Profiler.Export>Сохранить отчёт</DeepRimVertical.Profiler.Export>
+  <DeepRimVertical.Profiler.NeedGame>Открой сохранение колонии для записи профиля.</DeepRimVertical.Profiler.NeedGame>
+  <DeepRimVertical.Profiler.StartFailed>Не удалось включить профилировщик: {0}</DeepRimVertical.Profiler.StartFailed>
+  <DeepRimVertical.Profiler.Saved>Отчёт профилировщика: {0}</DeepRimVertical.Profiler.Saved>
+  <DeepRimVertical.Profiler.Intro>Запись измеряет все загруженные карты, включая поверхность 0 и скрытые этажи. Выбери скорость игры, затем запиши 30 секунд. После остановки CSV и TXT сохраняются автоматически. Окно можно закрыть во время записи: запись продолжится. Сравни паузу, 1× и 3× в одном сохранении.</DeepRimVertical.Profiler.Intro>
+  <DeepRimVertical.Profiler.Recording>Запись</DeepRimVertical.Profiler.Recording>
+  <DeepRimVertical.Profiler.Finished>Готово</DeepRimVertical.Profiler.Finished>
+  <DeepRimVertical.Profiler.Summary>{0}: {1} с | фактические TPS: {2} | FPS по интервалам: {3}</DeepRimVertical.Profiler.Summary>
+  <DeepRimVertical.Profiler.TickSummary>Тик: среднее {0} мс, p95 ≤ {1} мс, максимум {2} мс | GC 0/1/2: {3} | изменение managed heap: {4} МБ</DeepRimVertical.Profiler.TickSummary>
+  <DeepRimVertical.Profiler.Caveat>Замеры добавляют нагрузку. Детализация включена в родительские замеры: строки нельзя складывать. p95 — верхняя оценка по гистограмме. CPU главного потока; GPU и фоновые path jobs не измеряются. Изменение heap — не объём аллокаций.</DeepRimVertical.Profiler.Caveat>
+  <DeepRimVertical.Profiler.Floors>Расходы этажей: симуляция и обновление кадра считаются отдельно</DeepRimVertical.Profiler.Floors>
+  <DeepRimVertical.Profiler.Floor>Этаж / карта</DeepRimVertical.Profiler.Floor>
+  <DeepRimVertical.Profiler.SimPerTick>Симуляция, мс/тик</DeepRimVertical.Profiler.SimPerTick>
+  <DeepRimVertical.Profiler.UpdatePerFrame>Update, мс/кадр</DeepRimVertical.Profiler.UpdatePerFrame>
+  <DeepRimVertical.Profiler.Invalidations>Полные сбросы</DeepRimVertical.Profiler.Invalidations>
+  <DeepRimVertical.Profiler.Pawns>Пешек в начале</DeepRimVertical.Profiler.Pawns>
+  <DeepRimVertical.Profiler.Details>Детализация по суммарному времени; вложенные расходы пересекаются</DeepRimVertical.Profiler.Details>
+  <DeepRimVertical.Profiler.Objects>Наиболее затратные пешки и типы объектов; включены в симуляцию этажа</DeepRimVertical.Profiler.Objects>
+  <DeepRimVertical.Profiler.Metric>Система / объект</DeepRimVertical.Profiler.Metric>
+  <DeepRimVertical.Profiler.Global>Вся игра</DeepRimVertical.Profiler.Global>
+  <DeepRimVertical.Profiler.Unassigned>Без карты</DeepRimVertical.Profiler.Unassigned>
+  <DeepRimVertical.Profiler.Metric.GameTick>Полный игровой тик</DeepRimVertical.Profiler.Metric.GameTick>
+  <DeepRimVertical.Profiler.Metric.FrameCpu>Root Update, CPU</DeepRimVertical.Profiler.Metric.FrameCpu>
+  <DeepRimVertical.Profiler.Metric.FrameInterval>Интервал кадров</DeepRimVertical.Profiler.Metric.FrameInterval>
+  <DeepRimVertical.Profiler.Metric.MapPreTick>Системы карты перед тиком</DeepRimVertical.Profiler.Metric.MapPreTick>
+  <DeepRimVertical.Profiler.Metric.MapPostTick>Системы карты после тика</DeepRimVertical.Profiler.Metric.MapPostTick>
+  <DeepRimVertical.Profiler.Metric.ThingTick>Тики объектов и их содержимого</DeepRimVertical.Profiler.Metric.ThingTick>
+  <DeepRimVertical.Profiler.Metric.MapUpdate>Обновление карты и рисование</DeepRimVertical.Profiler.Metric.MapUpdate>
+  <DeepRimVertical.Profiler.Metric.MeshUpdate>Обновление мешей карты</DeepRimVertical.Profiler.Metric.MeshUpdate>
+  <DeepRimVertical.Profiler.Metric.MeshDraw>Рисование мешей карты</DeepRimVertical.Profiler.Metric.MeshDraw>
+  <DeepRimVertical.Profiler.Metric.PathService>Пути: планирование/ожидание jobs</DeepRimVertical.Profiler.Metric.PathService>
+  <DeepRimVertical.Profiler.Metric.JobSearch>Поиск работы пешками</DeepRimVertical.Profiler.Metric.JobSearch>
+  <DeepRimVertical.Profiler.Metric.Temperature>Температура карты</DeepRimVertical.Profiler.Metric.Temperature>
+  <DeepRimVertical.Profiler.Metric.Power>Электросети карты</DeepRimVertical.Profiler.Metric.Power>
+  <DeepRimVertical.Profiler.Metric.ClimateSync>Синхронизация климата этажа</DeepRimVertical.Profiler.Metric.ClimateSync>
+  <DeepRimVertical.Profiler.Metric.Transfers>Проверка переходов пешек</DeepRimVertical.Profiler.Metric.Transfers>
+  <DeepRimVertical.Profiler.Metric.FullInvalidation>Полный сброс состояния site</DeepRimVertical.Profiler.Metric.FullInvalidation>
+  <DeepRimVertical.Profiler.Metric.CellInvalidation>Сброс клеток site</DeepRimVertical.Profiler.Metric.CellInvalidation>
+  <DeepRimVertical.Profiler.Metric.StateRebuild>Пересборка состояния клеток</DeepRimVertical.Profiler.Metric.StateRebuild>
+  <DeepRimVertical.Profiler.Metric.SupportRebuild>Пересборка опор</DeepRimVertical.Profiler.Metric.SupportRebuild>
+  <DeepRimVertical.Profiler.Metric.TerrainRebuild>Пересборка кеша terrain этажей</DeepRimVertical.Profiler.Metric.TerrainRebuild>
+  <DeepRimVertical.Profiler.Metric.MaskRebuild>Пересборка маски видимости</DeepRimVertical.Profiler.Metric.MaskRebuild>
+  <DeepRimVertical.Profiler.Metric.UnderlayRebuild>Пересборка секции подложки</DeepRimVertical.Profiler.Metric.UnderlayRebuild>
+  <DeepRimVertical.Profiler.Metric.WorkerScan>Подбор секций подложки</DeepRimVertical.Profiler.Metric.WorkerScan>
+  <DeepRimVertical.Profiler.Metric.GhostDraw>Призраки пешек / опоры</DeepRimVertical.Profiler.Metric.GhostDraw>
+  <DeepRimVertical.Profiler.Metric.ObjectTick>Объект / пешка</DeepRimVertical.Profiler.Metric.ObjectTick>
+  <DeepRimVertical.Utility.NoConnection>Нет непрерывного подключения между этажами</DeepRimVertical.Utility.NoConnection>
+  <DeepRimVertical.Utility.Connected>Стояк подключён к сети другого этажа</DeepRimVertical.Utility.Connected>
+  <DeepRimVertical.Utility.Valve>Открыть канал</DeepRimVertical.Utility.Valve>
+  <DeepRimVertical.Utility.ValveDescription>Включить или изолировать вертикальную связь этой секции.</DeepRimVertical.Utility.ValveDescription>
+  <DeepRimVertical.Utility.Closed>Вертикальная связь закрыта</DeepRimVertical.Utility.Closed>
+  <DeepRimVertical.Utility.SelectSource>Выбрать этаж входа</DeepRimVertical.Utility.SelectSource>
+  <DeepRimVertical.Utility.NearestSource>Ближайший вход ниже</DeepRimVertical.Utility.NearestSource>
+  <DeepRimVertical.Utility.SourceFloor>Вход на этаже {0}</DeepRimVertical.Utility.SourceFloor>
+  <DeepRimVertical.Utility.NoPower>Нет питания вентилятора</DeepRimVertical.Utility.NoPower>
+  <DeepRimVertical.Utility.SourceOffline>Вход отключён или не получает питание</DeepRimVertical.Utility.SourceOffline>
+  <DeepRimVertical.Utility.EnclosedRoom>Вход и выход требуют закрытых комнат</DeepRimVertical.Utility.EnclosedRoom>
+  <DeepRimVertical.Utility.Operating>Работает</DeepRimVertical.Utility.Operating>
+  <DeepRimVertical.Utility.NoAdapter>Адаптер Dubs Bad Hygiene недоступен</DeepRimVertical.Utility.NoAdapter>
+  <DeepRimVertical.Utility.Insulated>Изолированная секция термоканала</DeepRimVertical.Utility.Insulated>
+  <DeepRimVertical.Utility.IntakeReading>Температура забора: {0} °C</DeepRimVertical.Utility.IntakeReading>
+  <DeepRimVertical.Utility.ThermalReading>Вход: этаж {0}, {1} °C; тепло за шаг: {2}</DeepRimVertical.Utility.ThermalReading>
+  <DeepRimVertical.Combat.Attack>Межэтажная атака</DeepRimVertical.Combat.Attack>
+  <DeepRimVertical.Combat.AttackDescription>Приказать стрелять по видимой враждебной цели на другом этаже. Все пересекаемые полы, крыши и стены должны пропускать выстрел.</DeepRimVertical.Combat.AttackDescription>
+  <DeepRimVertical.Combat.NoTargets>Нет целей через открытые этажи</DeepRimVertical.Combat.NoTargets>
 </LanguageData>

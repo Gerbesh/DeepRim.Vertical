@@ -62,6 +62,13 @@ public sealed class VerticalSiteRecord : IExposable
         }
     }
 
+    public void UnregisterPortalPair(int sourceLevel, int targetLevel, IntVec3 cell)
+    {
+        portals.RemoveAll(portal => portal.cellX == cell.x && portal.cellZ == cell.z
+            && ((portal.sourceLevel == sourceLevel && portal.targetLevel == targetLevel)
+                || (portal.sourceLevel == targetLevel && portal.targetLevel == sourceLevel)));
+    }
+
     public void RebuildCacheIfNeeded()
     {
         if (floorsByLevel != null)

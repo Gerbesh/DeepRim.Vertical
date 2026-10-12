@@ -12,6 +12,9 @@ This repository is an active development snapshot, not a final release build. It
 - vertical site registry and floor persistence records
 - custom vertical `MapParent` and floor creation services
 - floor navigation UI and hotkeys
+- one colonist-bar colony group across floors, without extra floor locations or world settlement icons
+- independent floor creation and buildable upstairs/downstairs passages under Architect -> Structure
+- steel, wooden and stone stairs with native material selection, appearance patterns and colors
 - working underground floor generation redesign
 - upper-floor creation flow with `UpperVoid` baseline terrain
 - upper-floor camera and climate sync to level `0`
@@ -19,17 +22,23 @@ This repository is an active development snapshot, not a final release build. It
 - stacked lower-floor visibility across positive levels
 - lower-floor live pawn/animal/mech ghost rendering through visible void channels
 - upper-floor debug logging and navigator diagnostics
+- on-demand per-floor CPU profiler with 30-second captures, hidden-floor simulation costs, work/path/render detail and CSV/TXT export; native three-floor capture/export checked, accelerated colony benchmarks still pending
 - depth-based underground resource scaling
 - hot-depth lava river generation
 - depth temperature utilities
+- thermoventilation intake/insulated duct/outlet, cable risers and optional Dubs Bad Hygiene water/sewage risers; see [setup and gameplay checks](docs/vertical_utilities_test_plan.md)
+- multi-hop stair routes, saved travel intents and original-map queued orders; automatic mining, frame completion, physical stockpile hauling and construction supply for ordinary colonists; [gameplay checks and limits](docs/vertical_routing_test_plan.md)
+- shared colony/world threat wealth and population, coordinated wealth history, one storyteller scheduling target per site and a scoped combined resource readout
+- remote food/beds, physical recipe ingredient and fuel delivery, shared production target counts, repair/cleaning/tending/research adapters and directed projectile flight across open floors; [colony acceptance checks](docs/unified_colony_test_plan.md)
+- upper-floor decks and full wall blocks produce owned, saved constructed ceilings on the map below without removing native roofs; see [construction checks](docs/upper_floor_test_plan.md)
+- downward height advantage for supported projectile weapons (+30/+60/+100% range and cover penalty reduction for +1/+2/+3 or more floors)
 - English and Russian localization
 
 Planned but not yet implemented:
 
-- cross-floor pathfinding and reservations
-- hauling, bills, and utility graph integration
-- vertical combat and line-of-sight resolution
-- finalized construction UX for stairs and shafts
+- broader work-giver, utility, transport, raid-group and third-party combat adapters; larger colony compatibility acceptance
+- vertical falling/gas/fire spread and complete support/shaft construction lifecycle
+- dedicated Mining work for stair excavation and finalized shaft construction UX
 - finalized parity-quality upper-floor rendering comparable to the reference mod
 
 ## Repository layout

@@ -6,6 +6,8 @@
 
 ## Читать по порядку
 
+Для проверки всей игровой логики: [аудит единой колонии](../colony_systems_audit.md) и [системные сценарии приёмки](../colony_systems_test_plan.md), включая экономику, склады, маршруты и межэтажный бой.
+
 1. [Что сломано в рендере, проверка выводов Клода](Rendering-audit.md)
 2. [Как работает рендер RimWorld 1.6](Engine-rendering.md)
 3. [Карты, тики, генерация, пути, температура и сохранения](Engine-systems.md)
@@ -27,3 +29,7 @@
 **Не проверено:** FPS, время кадра, TPS, величина утечки нативной памяти, поведение Harmony-патчей в запущенной игре и визуальная совместимость с другими модами. Успешная сборка не заменяет эти проверки. Рабочий рендер в этой исследовательской итерации не переписан.
 
 Исходники страниц хранятся в [основном репозитории](https://github.com/Gerbesh/DeepRim.Vertical/tree/main/docs/wiki). Их можно проверять и менять обычным Git diff, затем публиковать через `tools/analysis/publish-wiki.ps1`.
+
+## Construction ceilings and height advantage (2026-10-12)
+
+Upper-floor deck/floor materials and full building blocks now provide a constructed roof on the immediately lower map, tracked separately from player/natural roofs and restored across saves. Supported direct-fire weapons shooting downward gain +30%/+60%/+100% effective range at +1/+2/+3 or more floors and corresponding reductions of cover blocking. See [engine systems](Engine-systems.md) and [native acceptance scenarios](https://github.com/Gerbesh/DeepRim.Vertical/blob/main/docs/unified_colony_test_plan.md). Complex projectile/ability adapters and large-colony performance acceptance remain open.

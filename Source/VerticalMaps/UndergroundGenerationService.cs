@@ -23,7 +23,7 @@ public static class UndergroundGenerationService
 
     private static readonly Dictionary<int, UndergroundGenerationContext> PendingContexts = new();
 
-    public static void PrepareForGeneration(Map map, Map sourceMap, IntVec3 anchorCell, int levelIndex)
+    public static void PrepareForGeneration(Map map, Map sourceMap, int levelIndex)
     {
         if (map == null || sourceMap == null || levelIndex >= 0)
         {
@@ -34,7 +34,6 @@ public static class UndergroundGenerationService
         var baseTerrain = ResolveBaseTerrain(primaryRock);
         var context = new UndergroundGenerationContext(
             map.cellIndices.NumGridCells,
-            anchorCell,
             levelIndex,
             primaryRock,
             baseTerrain,
@@ -51,8 +50,6 @@ public static class UndergroundGenerationService
         {
             return;
         }
-
-        MarkEntryPocket(map, context);
 
         if (context.LevelIndex >= -2)
         {
@@ -111,19 +108,8 @@ public static class UndergroundGenerationService
             return;
         }
 
-        MapGenerator.PlayerStartSpot = context.EntryCell;
+        MapGenerator.PlayerStartSpot = map.Center;
         map.fogGrid.Refog(new CellRect(0, 0, map.Size.x, map.Size.z));
-
-        foreach (var cell in CellRect.CenteredOn(context.EntryCell, 3).ClipInsideMap(map).Cells)
-        {
-            var index = map.cellIndices.CellToIndex(cell);
-            if (context.LavaMask[index])
-            {
-                continue;
-            }
-
-            map.fogGrid.Unfog(cell);
-        }
 
         PendingContexts.Remove(map.uniqueID);
     }
@@ -216,17 +202,6 @@ public static class UndergroundGenerationService
         }
 
         return context.BaseTerrain;
-    }
-
-    private static void MarkEntryPocket(Map map, UndergroundGenerationContext context)
-    {
-        foreach (var cell in CellRect.CenteredOn(context.EntryCell, 2).ClipInsideMap(map).Cells)
-        {
-            if (cell.DistanceTo(context.EntryCell) <= 3.1f)
-            {
-                MarkOpen(map, context, cell);
-            }
-        }
     }
 
     private static void MarkEarlyDepthCaverns(Map map, UndergroundGenerationContext context)
@@ -397,11 +372,6 @@ public static class UndergroundGenerationService
         for (var i = 0; i < tries; i++)
         {
             var cell = new IntVec3(Rand.RangeInclusive(8, map.Size.x - 9), 0, Rand.RangeInclusive(8, map.Size.z - 9));
-            if (cell.DistanceTo(context.EntryCell) <= 14f)
-            {
-                continue;
-            }
-
             var index = map.cellIndices.CellToIndex(cell);
             if (!context.OpenMask[index] && !context.LavaMask[index])
             {
@@ -419,11 +389,6 @@ public static class UndergroundGenerationService
         for (var i = 0; i < tries; i++)
         {
             var cell = new IntVec3(Rand.RangeInclusive(4, map.Size.x - 5), 0, Rand.RangeInclusive(4, map.Size.z - 5));
-            if (cell.DistanceTo(context.EntryCell) <= 10f)
-            {
-                continue;
-            }
-
             var index = map.cellIndices.CellToIndex(cell);
             if (!context.OpenMask[index] && !context.LavaMask[index] && context.ResourceMask[index] == null)
             {
@@ -466,14 +431,12 @@ public static class UndergroundGenerationService
     {
         public UndergroundGenerationContext(
             int cellCount,
-            IntVec3 entryCell,
             int levelIndex,
             ThingDef primaryRock,
             TerrainDef baseTerrain,
             TerrainDef volcanicTerrain,
             TerrainDef lavaTerrain)
         {
-            EntryCell = entryCell;
             LevelIndex = levelIndex;
             PrimaryRock = primaryRock;
             BaseTerrain = baseTerrain;
@@ -484,8 +447,6 @@ public static class UndergroundGenerationService
             VolcanicMask = new bool[cellCount];
             ResourceMask = new ThingDef[cellCount];
         }
-
-        public IntVec3 EntryCell { get; }
 
         public int LevelIndex { get; }
 

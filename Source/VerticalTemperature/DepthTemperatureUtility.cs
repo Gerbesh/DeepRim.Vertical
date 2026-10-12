@@ -40,7 +40,7 @@ public static class DepthTemperatureUtility
     {
         levelIndex = 0;
         target = 0f;
-        if (map == null)
+        if (map == null || !VerticalRuntime.Settings.enableDepthThermalProfile)
         {
             return false;
         }

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <DeepRimVertical.Stairs.TooCloseToEdge>Stairs must be at least two cells away from the map edge.</DeepRimVertical.Stairs.TooCloseToEdge>
+  <DeepRimVertical.Stairs.AlreadyOccupied>This cell already contains stairs or their construction plan.</DeepRimVertical.Stairs.AlreadyOccupied>
+  <DeepRimVertical.Stairs.LandingBlocked>The landing on the adjacent level is blocked by a building or impassable terrain.</DeepRimVertical.Stairs.LandingBlocked>
+  <DeepRimVertical.Stairs.RetryConnection>Open passage</DeepRimVertical.Stairs.RetryConnection>
+  <DeepRimVertical.Stairs.RetryConnectionDescription>Retry opening the landing after removing the obstacle on the adjacent level.</DeepRimVertical.Stairs.RetryConnectionDescription>
   <DeepRimVertical.SettingsCategory>DeepRim Vertical</DeepRimVertical.SettingsCategory>
   <DeepRimVertical.Settings.Foundation>Foundation</DeepRimVertical.Settings.Foundation>
   <DeepRimVertical.Settings.ShowNavigator>Show floor navigator</DeepRimVertical.Settings.ShowNavigator>
@@ -32,8 +37,8 @@
 
   <DeepRimVertical.Navigator.Title>Vertical site</DeepRimVertical.Navigator.Title>
   <DeepRimVertical.Navigator.CurrentFloor>Current floor: {0}</DeepRimVertical.Navigator.CurrentFloor>
-  <DeepRimVertical.Navigator.CreateAbove>Create +1 at cursor</DeepRimVertical.Navigator.CreateAbove>
-  <DeepRimVertical.Navigator.CreateBelow>Create -1 at cursor</DeepRimVertical.Navigator.CreateBelow>
+  <DeepRimVertical.Navigator.CreateAbove>Create level above</DeepRimVertical.Navigator.CreateAbove>
+  <DeepRimVertical.Navigator.CreateBelow>Create level below</DeepRimVertical.Navigator.CreateBelow>
   <DeepRimVertical.Navigator.FloorList>Known floors</DeepRimVertical.Navigator.FloorList>
   <DeepRimVertical.Navigator.FloorButton>Jump to floor {0}</DeepRimVertical.Navigator.FloorButton>
   <DeepRimVertical.Navigator.FloorButtonCurrent>Floor {0} (current)</DeepRimVertical.Navigator.FloorButtonCurrent>
@@ -64,4 +69,73 @@
   <DeepRimVertical.Support.Status.NotRequired>support not required</DeepRimVertical.Support.Status.NotRequired>
   <DeepRimVertical.Support.Status.Supported>supported</DeepRimVertical.Support.Status.Supported>
   <DeepRimVertical.Support.Status.Unsupported>unsupported</DeepRimVertical.Support.Status.Unsupported>
+  <DeepRimVertical.Profiler.Button>Profile</DeepRimVertical.Profiler.Button>
+  <DeepRimVertical.Profiler.Title>DeepRim: per-floor profiler</DeepRimVertical.Profiler.Title>
+  <DeepRimVertical.Profiler.Start>Capture 30 seconds</DeepRimVertical.Profiler.Start>
+  <DeepRimVertical.Profiler.Stop>Stop</DeepRimVertical.Profiler.Stop>
+  <DeepRimVertical.Profiler.Export>Save report</DeepRimVertical.Profiler.Export>
+  <DeepRimVertical.Profiler.NeedGame>Load a colony to capture a profile.</DeepRimVertical.Profiler.NeedGame>
+  <DeepRimVertical.Profiler.StartFailed>Could not start the profiler: {0}</DeepRimVertical.Profiler.StartFailed>
+  <DeepRimVertical.Profiler.Saved>Profiler report: {0}</DeepRimVertical.Profiler.Saved>
+  <DeepRimVertical.Profiler.Intro>Captures all loaded maps, including surface 0 and hidden floors. Select a game speed, then capture 30 seconds. CSV and TXT are saved automatically on stop. Closing this window keeps capture running. Compare paused, 1× and 3× using the same save.</DeepRimVertical.Profiler.Intro>
+  <DeepRimVertical.Profiler.Recording>Recording</DeepRimVertical.Profiler.Recording>
+  <DeepRimVertical.Profiler.Finished>Finished</DeepRimVertical.Profiler.Finished>
+  <DeepRimVertical.Profiler.Summary>{0}: {1}s | actual TPS: {2} | FPS from frame intervals: {3}</DeepRimVertical.Profiler.Summary>
+  <DeepRimVertical.Profiler.TickSummary>Tick: mean {0}ms, p95 ≤ {1}ms, max {2}ms | GC 0/1/2: {3} | managed heap delta: {4}MB</DeepRimVertical.Profiler.TickSummary>
+  <DeepRimVertical.Profiler.Caveat>Instrumentation adds overhead. Detail scopes overlap their parents: do not sum rows. p95 is a histogram upper bound. Main-thread CPU only; GPU and background path jobs are not timed. Heap delta is not allocated bytes.</DeepRimVertical.Profiler.Caveat>
+  <DeepRimVertical.Profiler.Floors>Floor costs: simulation and frame updates are separate</DeepRimVertical.Profiler.Floors>
+  <DeepRimVertical.Profiler.Floor>Floor / map</DeepRimVertical.Profiler.Floor>
+  <DeepRimVertical.Profiler.SimPerTick>Simulation, ms/tick</DeepRimVertical.Profiler.SimPerTick>
+  <DeepRimVertical.Profiler.UpdatePerFrame>Update, ms/frame</DeepRimVertical.Profiler.UpdatePerFrame>
+  <DeepRimVertical.Profiler.Invalidations>Full invalidations</DeepRimVertical.Profiler.Invalidations>
+  <DeepRimVertical.Profiler.Pawns>Pawns at start</DeepRimVertical.Profiler.Pawns>
+  <DeepRimVertical.Profiler.Details>Detail sorted by total time; nested scopes overlap</DeepRimVertical.Profiler.Details>
+  <DeepRimVertical.Profiler.Objects>Most expensive pawns and object defs; included in floor simulation</DeepRimVertical.Profiler.Objects>
+  <DeepRimVertical.Profiler.Metric>System / object</DeepRimVertical.Profiler.Metric>
+  <DeepRimVertical.Profiler.Global>Whole game</DeepRimVertical.Profiler.Global>
+  <DeepRimVertical.Profiler.Unassigned>No map</DeepRimVertical.Profiler.Unassigned>
+  <DeepRimVertical.Profiler.Metric.GameTick>Full game tick</DeepRimVertical.Profiler.Metric.GameTick>
+  <DeepRimVertical.Profiler.Metric.FrameCpu>Root Update CPU</DeepRimVertical.Profiler.Metric.FrameCpu>
+  <DeepRimVertical.Profiler.Metric.FrameInterval>Frame interval</DeepRimVertical.Profiler.Metric.FrameInterval>
+  <DeepRimVertical.Profiler.Metric.MapPreTick>Map systems before tick</DeepRimVertical.Profiler.Metric.MapPreTick>
+  <DeepRimVertical.Profiler.Metric.MapPostTick>Map systems after tick</DeepRimVertical.Profiler.Metric.MapPostTick>
+  <DeepRimVertical.Profiler.Metric.ThingTick>Object ticks including contents</DeepRimVertical.Profiler.Metric.ThingTick>
+  <DeepRimVertical.Profiler.Metric.MapUpdate>Map update and drawing</DeepRimVertical.Profiler.Metric.MapUpdate>
+  <DeepRimVertical.Profiler.Metric.MeshUpdate>Map mesh update</DeepRimVertical.Profiler.Metric.MeshUpdate>
+  <DeepRimVertical.Profiler.Metric.MeshDraw>Map mesh drawing</DeepRimVertical.Profiler.Metric.MeshDraw>
+  <DeepRimVertical.Profiler.Metric.PathService>Path scheduling/job waits</DeepRimVertical.Profiler.Metric.PathService>
+  <DeepRimVertical.Profiler.Metric.JobSearch>Pawn work search</DeepRimVertical.Profiler.Metric.JobSearch>
+  <DeepRimVertical.Profiler.Metric.Temperature>Map temperature</DeepRimVertical.Profiler.Metric.Temperature>
+  <DeepRimVertical.Profiler.Metric.Power>Map power networks</DeepRimVertical.Profiler.Metric.Power>
+  <DeepRimVertical.Profiler.Metric.ClimateSync>Floor climate synchronization</DeepRimVertical.Profiler.Metric.ClimateSync>
+  <DeepRimVertical.Profiler.Metric.Transfers>Pending pawn transfers</DeepRimVertical.Profiler.Metric.Transfers>
+  <DeepRimVertical.Profiler.Metric.FullInvalidation>Full site invalidation</DeepRimVertical.Profiler.Metric.FullInvalidation>
+  <DeepRimVertical.Profiler.Metric.CellInvalidation>Site cell invalidation</DeepRimVertical.Profiler.Metric.CellInvalidation>
+  <DeepRimVertical.Profiler.Metric.StateRebuild>Cell state rebuild</DeepRimVertical.Profiler.Metric.StateRebuild>
+  <DeepRimVertical.Profiler.Metric.SupportRebuild>Support rebuild</DeepRimVertical.Profiler.Metric.SupportRebuild>
+  <DeepRimVertical.Profiler.Metric.TerrainRebuild>Floor terrain cache rebuild</DeepRimVertical.Profiler.Metric.TerrainRebuild>
+  <DeepRimVertical.Profiler.Metric.MaskRebuild>Visibility mask rebuild</DeepRimVertical.Profiler.Metric.MaskRebuild>
+  <DeepRimVertical.Profiler.Metric.UnderlayRebuild>Underlay section rebuild</DeepRimVertical.Profiler.Metric.UnderlayRebuild>
+  <DeepRimVertical.Profiler.Metric.WorkerScan>Underlay worker selection</DeepRimVertical.Profiler.Metric.WorkerScan>
+  <DeepRimVertical.Profiler.Metric.GhostDraw>Pawn ghosts / support overlay</DeepRimVertical.Profiler.Metric.GhostDraw>
+  <DeepRimVertical.Profiler.Metric.ObjectTick>Object / pawn</DeepRimVertical.Profiler.Metric.ObjectTick>
+  <DeepRimVertical.Utility.NoConnection>No continuous connection between floors</DeepRimVertical.Utility.NoConnection>
+  <DeepRimVertical.Utility.Connected>Riser connected to another floor's network</DeepRimVertical.Utility.Connected>
+  <DeepRimVertical.Utility.Valve>Open channel</DeepRimVertical.Utility.Valve>
+  <DeepRimVertical.Utility.ValveDescription>Enable or isolate this section's vertical connection.</DeepRimVertical.Utility.ValveDescription>
+  <DeepRimVertical.Utility.Closed>Vertical connection closed</DeepRimVertical.Utility.Closed>
+  <DeepRimVertical.Utility.SelectSource>Select intake floor</DeepRimVertical.Utility.SelectSource>
+  <DeepRimVertical.Utility.NearestSource>Nearest intake below</DeepRimVertical.Utility.NearestSource>
+  <DeepRimVertical.Utility.SourceFloor>Intake on floor {0}</DeepRimVertical.Utility.SourceFloor>
+  <DeepRimVertical.Utility.NoPower>Fan has no power</DeepRimVertical.Utility.NoPower>
+  <DeepRimVertical.Utility.SourceOffline>Intake disabled or unpowered</DeepRimVertical.Utility.SourceOffline>
+  <DeepRimVertical.Utility.EnclosedRoom>Intake and outlet require enclosed rooms</DeepRimVertical.Utility.EnclosedRoom>
+  <DeepRimVertical.Utility.Operating>Operating</DeepRimVertical.Utility.Operating>
+  <DeepRimVertical.Utility.NoAdapter>Dubs Bad Hygiene adapter unavailable</DeepRimVertical.Utility.NoAdapter>
+  <DeepRimVertical.Utility.Insulated>Insulated thermal duct section</DeepRimVertical.Utility.Insulated>
+  <DeepRimVertical.Utility.IntakeReading>Intake temperature: {0} °C</DeepRimVertical.Utility.IntakeReading>
+  <DeepRimVertical.Utility.ThermalReading>Intake: floor {0}, {1} °C; heat per step: {2}</DeepRimVertical.Utility.ThermalReading>
+  <DeepRimVertical.Combat.Attack>Cross-floor attack</DeepRimVertical.Combat.Attack>
+  <DeepRimVertical.Combat.AttackDescription>Order fire at a visible hostile target on another floor. Every intervening floor, roof and wall must allow the shot.</DeepRimVertical.Combat.AttackDescription>
+  <DeepRimVertical.Combat.NoTargets>No targets across open floors</DeepRimVertical.Combat.NoTargets>
 </LanguageData>

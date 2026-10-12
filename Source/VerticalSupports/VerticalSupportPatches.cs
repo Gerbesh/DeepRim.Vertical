@@ -1,4 +1,5 @@
 using DeepRim.Vertical.VerticalMaps;
+using DeepRim.Vertical.VerticalConstruction;
 using HarmonyLib;
 using RimWorld;
 using System.Reflection;
@@ -66,11 +67,13 @@ public static class Thing_SpawnSetup_VerticalInvalidationPatch
 {
     public static void Postfix(Thing __instance, Map map)
     {
-        if (__instance is Pawn or Plant or Mote)
+        if (__instance is Pawn or Plant or Mote or Projectile)
         {
             return;
         }
 
+        foreach (var cell in __instance.OccupiedRect().Cells)
+            VerticalCeilingService.InvalidateUpperCell(map, cell);
         VerticalMapInvalidationService.MarkSiteCellsDirty(map, __instance.OccupiedRect(), 1UL);
     }
 }
@@ -93,13 +96,16 @@ public static class Thing_DeSpawn_VerticalInvalidationPatch
 
     public static void Prefix(Thing __instance, out DeSpawnState __state)
     {
-        __state = new DeSpawnState(__instance.Map, __instance.OccupiedRect());
+        // Projectiles are dynamic drawables and never change floor support or static overlays.
+        __state = __instance is Projectile ? default : new DeSpawnState(__instance.Map, __instance.OccupiedRect());
     }
 
     public static void Postfix(DeSpawnState __state)
     {
         if (__state.Map != null)
         {
+            foreach (var cell in __state.Rect.Cells)
+                VerticalCeilingService.InvalidateUpperCell(__state.Map, cell);
             VerticalMapInvalidationService.MarkSiteCellsDirty(__state.Map, __state.Rect, 1UL);
         }
     }

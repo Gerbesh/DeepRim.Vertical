@@ -1,0 +1,9 @@
+# Native unified colony probe
+
+Test-only mod, excluded from the production assembly/package. Use an isolated save-data folder whose final directory name is exactly `native-smoke-colony`. It replaces terrain, resources, test pawns and work settings; never enable it in a real colony.
+
+Build production, then `dotnet build tools/validation/native-colony/Probe.csproj -c Release`. Output: `obj/native-colony-probe/Assemblies/DeepRim.Colony.NativeProbe.dll`. Put it into a temporary RimWorld mod under `Assemblies/`, with `About/About.xml` package ID `gerbe.deeprim.colonyprobe`. Copy the user's ModsConfig.xml to the isolated profile's `Config/` and append this ID only in that copy. Install the production mod, then launch `RimWorldWin64.exe -batchmode -quicktest -savedatafolder=<absolute isolated profile> -logFile <absolute log path>`.
+
+The probe creates four real floors and tests native wealth/world/history accounting, population, incident-target deduplication, disease candidates, resource readout scopes, routing/mining/physical hauling and storage priorities, construction, food/rest, production ingredients and until-X, refueling, repair/cleaning/tending/research, direct projectile flight both ways, blocked LOS, queued orders, drafted travel, closed-route cargo conservation and profiler exports. Three native save/load cycles cover mining, cargo and a projectile in flight. Stair pairs use the production connection service directly because batch mode does not render its queued loading window. The probe waits for all long events before manually advancing ticks.
+
+Read `result.txt` and the log after the game quits. Keep logs and saves for diagnosis; remove the temporary mod afterward. This controlled probe does not benchmark colony-scale acceleration, test every incident execution, or establish compatibility with all third-party mods.

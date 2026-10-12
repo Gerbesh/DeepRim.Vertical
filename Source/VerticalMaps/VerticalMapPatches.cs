@@ -16,7 +16,7 @@ public static class Map_CanEverExit_Patch
             return;
         }
 
-        if (component.TryGetFloor(__instance, out _, out var floor) && floor.levelIndex < 0)
+        if (component.TryGetFloor(__instance, out _, out var floor) && floor.levelIndex != 0)
         {
             __result = false;
         }
@@ -33,10 +33,8 @@ public static class Map_IncidentTargetTags_Patch
             return;
         }
 
-        if (component.TryGetFloor(__instance, out _, out var floor) && floor.levelIndex < 0)
-        {
-            __result = new[] { IncidentTargetTagDefOf.Map_Misc };
-        }
+        // Physical maps retain their native tags for explicitly routed local incidents.
+        // Storyteller scheduling is deduplicated at AllIncidentTargets instead.
     }
 }
 

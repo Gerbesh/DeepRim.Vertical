@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef Name="DeepRimVertical_StairBase" ParentName="BuildingBase" Abstract="True">
+    <thingClass>DeepRim.Vertical.VerticalConstruction.Building_VerticalStair</thingClass>
+    <size>(1,1)</size>
+    <rotatable>false</rotatable>
+    <passability>Standable</passability>
+    <pathCost>10</pathCost>
+    <fillPercent>0</fillPercent>
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Woody</li>
+      <li>Stony</li>
+    </stuffCategories>
+    <defaultStuff>Steel</defaultStuff>
+    <costStuffCount>40</costStuffCount>
+    <useHitPoints>true</useHitPoints>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <comps>
+      <li Class="CompProperties_Forbiddable"/>
+    </comps>
+    <statBases>
+      <MaxHitPoints>250</MaxHitPoints>
+      <WorkToBuild>2000</WorkToBuild>
+      <Flammability>1</Flammability>
+      <Beauty>-2</Beauty>
+    </statBases>
+    <graphicData>
+      <graphicClass>Graphic_Appearances</graphicClass>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+    <building>
+      <isInert>true</isInert>
+    </building>
+  </ThingDef>
+
+  <ThingDef ParentName="DeepRimVertical_StairBase">
+    <defName>DeepRimVertical_StairsDown</defName>
+    <label>stairs down</label>
+    <description>Construct stairs to the level below. Colonists excavate a single landing cell and open a two-way passage when construction finishes. The lower level is generated if needed.</description>
+    <designationCategory>Structure</designationCategory>
+    <uiOrder>2091</uiOrder>
+    <graphicData>
+      <texPath>Things/Building/DeepRimVertical/StairsDown</texPath>
+    </graphicData>
+    <uiIconPath>Things/Building/DeepRimVertical/StairsDown/StairsDown_Smooth</uiIconPath>
+    <uiIconPathsStuff>
+      <li><appearance>Metal</appearance><iconPath>Things/Building/DeepRimVertical/StairsDown/StairsDown_Metal</iconPath></li>
+      <li><appearance>Planks</appearance><iconPath>Things/Building/DeepRimVertical/StairsDown/StairsDown_Planks</iconPath></li>
+      <li><appearance>Bricks</appearance><iconPath>Things/Building/DeepRimVertical/StairsDown/StairsDown_Bricks</iconPath></li>
+    </uiIconPathsStuff>
+    <placeWorkers>
+      <li>DeepRim.Vertical.VerticalConstruction.PlaceWorker_VerticalStair</li>
+    </placeWorkers>
+    <modExtensions>
+      <li Class="DeepRim.Vertical.VerticalConstruction.VerticalStairExtension">
+        <levelDelta>-1</levelDelta>
+      </li>
+    </modExtensions>
+  </ThingDef>
+
+  <ThingDef ParentName="DeepRimVertical_StairBase">
+    <defName>DeepRimVertical_StairsUp</defName>
+    <label>stairs up</label>
+    <description>Construct stairs to the level above. A landing and a two-way passage open when construction finishes. The upper level is generated if needed.</description>
+    <designationCategory>Structure</designationCategory>
+    <uiOrder>2090</uiOrder>
+    <graphicData>
+      <texPath>Things/Building/DeepRimVertical/StairsUp</texPath>
+    </graphicData>
+    <uiIconPath>Things/Building/DeepRimVertical/StairsUp/StairsUp_Smooth</uiIconPath>
+    <uiIconPathsStuff>
+      <li><appearance>Metal</appearance><iconPath>Things/Building/DeepRimVertical/StairsUp/StairsUp_Metal</iconPath></li>
+      <li><appearance>Planks</appearance><iconPath>Things/Building/DeepRimVertical/StairsUp/StairsUp_Planks</iconPath></li>
+      <li><appearance>Bricks</appearance><iconPath>Things/Building/DeepRimVertical/StairsUp/StairsUp_Bricks</iconPath></li>
+    </uiIconPathsStuff>
+    <placeWorkers>
+      <li>DeepRim.Vertical.VerticalConstruction.PlaceWorker_VerticalStair</li>
+    </placeWorkers>
+    <modExtensions>
+      <li Class="DeepRim.Vertical.VerticalConstruction.VerticalStairExtension">
+        <levelDelta>1</levelDelta>
+      </li>
+    </modExtensions>
+  </ThingDef>
+
+  <!-- Paired exits cannot be built independently and carry no refundable material cost. -->
+  <ThingDef ParentName="DeepRimVertical_StairBase">
+    <defName>DeepRimVertical_StairExitUp</defName>
+    <costStuffCount>0</costStuffCount>
+    <label>stairs up (exit)</label>
+    <description>The other end of stairs from the level above. Removing either end closes the passage.</description>
+    <graphicData>
+      <texPath>Things/Building/DeepRimVertical/StairsUp</texPath>
+    </graphicData>
+    <modExtensions>
+      <li Class="DeepRim.Vertical.VerticalConstruction.VerticalStairExtension">
+        <levelDelta>1</levelDelta>
+        <isExit>true</isExit>
+      </li>
+    </modExtensions>
+  </ThingDef>
+
+  <ThingDef ParentName="DeepRimVertical_StairBase">
+    <defName>DeepRimVertical_StairExitDown</defName>
+    <costStuffCount>0</costStuffCount>
+    <label>stairs down (exit)</label>
+    <description>The other end of stairs from the level below. Removing either end closes the passage.</description>
+    <graphicData>
+      <texPath>Things/Building/DeepRimVertical/StairsDown</texPath>
+    </graphicData>
+    <modExtensions>
+      <li Class="DeepRim.Vertical.VerticalConstruction.VerticalStairExtension">
+        <levelDelta>-1</levelDelta>
+        <isExit>true</isExit>
+      </li>
+    </modExtensions>
+  </ThingDef>
+</Defs>

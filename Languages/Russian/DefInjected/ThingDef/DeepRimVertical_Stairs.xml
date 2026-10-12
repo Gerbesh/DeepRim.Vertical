@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DeepRimVertical_StairsDown.label>лестница вниз</DeepRimVertical_StairsDown.label>
+  <DeepRimVertical_StairsDown.description>Лестница на уровень ниже. После завершения строительства пешки выкапывают одну клетку выхода и открывают двусторонний проход. Если нижний уровень ещё не создан, он будет сгенерирован.</DeepRimVertical_StairsDown.description>
+  <DeepRimVertical_StairsUp.label>лестница вверх</DeepRimVertical_StairsUp.label>
+  <DeepRimVertical_StairsUp.description>Лестница на уровень выше. После завершения строительства появляются площадка и двусторонний проход. Если верхний уровень ещё не создан, он будет сгенерирован.</DeepRimVertical_StairsUp.description>
+  <DeepRimVertical_StairExitUp.label>лестница вверх (выход)</DeepRimVertical_StairExitUp.label>
+  <DeepRimVertical_StairExitUp.description>Выход лестницы с верхнего уровня. Разбор любого конца закрывает проход.</DeepRimVertical_StairExitUp.description>
+  <DeepRimVertical_StairExitDown.label>лестница вниз (выход)</DeepRimVertical_StairExitDown.label>
+  <DeepRimVertical_StairExitDown.description>Выход лестницы с нижнего уровня. Разбор любого конца закрывает проход.</DeepRimVertical_StairExitDown.description>
+</LanguageData>

@@ -42,15 +42,6 @@ public static class MapTemperature_SeasonalTemp_Patch
     }
 }
 
-[HarmonyPatch(typeof(GenTemperature), nameof(GenTemperature.GetTemperatureForCell))]
-public static class GenTemperature_GetTemperatureForCell_Patch
-{
-    public static void Postfix(IntVec3 c, Map map, ref float __result)
-    {
-        __result = DepthTemperatureUtility.ApplyGeologicalPressure(map, c, __result);
-    }
-}
-
 [HarmonyPatch(typeof(RoomTempTracker), "DeepEqualizationTempChangePerInterval")]
 public static class RoomTempTracker_DeepEqualizationTempChangePerInterval_Patch
 {

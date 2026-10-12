@@ -1,4 +1,5 @@
 using System.Linq;
+using DeepRim.Vertical.VerticalConstruction;
 using DeepRim.Vertical.VerticalOverlay;
 using DeepRim.Vertical.VerticalState;
 using DeepRim.Vertical.VerticalWorld;
@@ -11,7 +12,7 @@ namespace DeepRim.Vertical.VerticalMaps;
 
 public static class VerticalMapCreationService
 {
-    public static bool TryCreateFloor(Map sourceMap, IntVec3 anchorCell, int levelDelta, out Map targetMap)
+    public static bool TryCreateFloor(Map sourceMap, int levelDelta, out Map targetMap, bool jumpToFloor = true)
     {
         targetMap = null;
         if (sourceMap == null || levelDelta == 0 || !VerticalSiteWorldComponent.TryGet(out var component))
@@ -28,14 +29,12 @@ public static class VerticalMapCreationService
 
         var targetLevel = currentFloor.levelIndex + levelDelta;
         VerticalRendering.VerticalOverlayDebugService.Log(
-            $"TryCreateFloor sourceMap={sourceMap.uniqueID} sourceLevel={currentFloor.levelIndex} delta={levelDelta} targetLevel={targetLevel} anchor={anchorCell}.");
+            $"TryCreateFloor sourceMap={sourceMap.uniqueID} sourceLevel={currentFloor.levelIndex} delta={levelDelta} targetLevel={targetLevel}.");
         if (!IsWithinConfiguredBounds(targetLevel))
         {
             Messages.Message("DeepRimVertical.Messages.FloorOutOfRange".Translate(targetLevel), MessageTypeDefOf.RejectInput, false);
             return false;
         }
-
-        anchorCell = targetLevel < 0 ? ClampUndergroundAnchor(sourceMap, anchorCell) : anchorCell;
 
         var existing = site.FloorAt(targetLevel);
         if (existing?.Map != null)
@@ -43,7 +42,10 @@ public static class VerticalMapCreationService
             targetMap = existing.Map;
             VerticalRendering.VerticalOverlayDebugService.Log(
                 $"TryCreateFloor reused existing targetMap={targetMap.uniqueID} targetLevel={targetLevel} site={site.siteId}.");
-            VerticalCameraSyncService.JumpPreservingView(sourceMap, targetMap, anchorCell);
+            if (jumpToFloor)
+            {
+                VerticalCameraSyncService.JumpPreservingView(sourceMap, targetMap, sourceMap.Center);
+            }
             return true;
         }
 
@@ -58,7 +60,7 @@ public static class VerticalMapCreationService
                 mapParent,
                 mapParent.MapGeneratorDef,
                 mapParent.ExtraGenStepDefs,
-                map => UndergroundGenerationService.PrepareForGeneration(map, sourceMap, anchorCell, targetLevel),
+                map => UndergroundGenerationService.PrepareForGeneration(map, sourceMap, targetLevel),
                 false,
                 false);
         }
@@ -69,7 +71,7 @@ public static class VerticalMapCreationService
                 mapParent,
                 VerticalDefOf.DeepRimVertical_UpperFloor,
                 mapParent.ExtraGenStepDefs,
-                map => UpperFloorGenerationService.PrepareForGeneration(map, sourceMap, anchorCell, targetLevel),
+                map => UpperFloorGenerationService.PrepareForGeneration(map, sourceMap, targetLevel),
                 false,
                 false);
         }
@@ -78,7 +80,6 @@ public static class VerticalMapCreationService
             targetMap = MapGenerator.GenerateMap(sourceMap.Size, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null, false, false);
         }
 
-        component.RegisterPortal(sourceMap, currentFloor.levelIndex, targetLevel, anchorCell);
         if (targetLevel > 0)
         {
             UpperFloorStateService.MarkDirty(targetMap);
@@ -95,11 +96,16 @@ public static class VerticalMapCreationService
             $"TryCreateFloor generated targetMap={targetMap.uniqueID} targetLevel={targetLevel} parent={targetMap.Parent?.GetUniqueLoadID() ?? "null"} site={site.siteId}.");
         Messages.Message("DeepRimVertical.Messages.CreatedFloor".Translate(VerticalFloorLabel.Format(targetLevel)), MessageTypeDefOf.PositiveEvent, false);
         VerticalMapInvalidationService.MarkSiteDirty(sourceMap);
-        VerticalCameraSyncService.JumpPreservingView(sourceMap, targetMap, anchorCell);
+        VerticalCeilingService.InvalidateBelow(sourceMap);
+        VerticalCeilingService.InvalidateBelow(targetMap);
+        if (jumpToFloor)
+        {
+            VerticalCameraSyncService.JumpPreservingView(sourceMap, targetMap, sourceMap.Center);
+        }
         return true;
     }
 
-    private static bool IsWithinConfiguredBounds(int targetLevel)
+    public static bool IsWithinConfiguredBounds(int targetLevel)
     {
         if (targetLevel > 0)
         {
@@ -109,16 +115,4 @@ public static class VerticalMapCreationService
         return Mathf.Abs(targetLevel) <= VerticalRuntime.Settings.maxUndergroundFloors;
     }
 
-    private static IntVec3 ClampUndergroundAnchor(Map map, IntVec3 anchorCell)
-    {
-        if (map == null)
-        {
-            return anchorCell;
-        }
-
-        return new IntVec3(
-            Mathf.Clamp(anchorCell.x, 6, map.Size.x - 7),
-            0,
-            Mathf.Clamp(anchorCell.z, 6, map.Size.z - 7));
-    }
 }

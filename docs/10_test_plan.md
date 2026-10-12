@@ -19,10 +19,10 @@
 
 ## Underground generation validation
 
-- [ ] Create `-1` and verify sealed rock map with safe spawn pocket and some caverns
+- [ ] Create `-1` and verify sealed, initially fogged rock map with some natural caverns and no automatic entrance
 - [ ] Create `-2` and verify sealed rock map with smaller cavern footprint
 - [ ] Create `-3` and verify mostly solid rock with no large open caverns
-- [ ] Verify entry pocket is only the aligned stair cell footprint, not a large carved room
+- [ ] Build stairs and verify only the aligned landing cell is excavated; see [stairs checks](stairs_test_plan.md)
 - [ ] Verify map edges on underground floors remain rock-sealed
 - [ ] Verify underground floors cannot exit via map edge
 - [ ] Verify enemy raid incidents do not target underground floors

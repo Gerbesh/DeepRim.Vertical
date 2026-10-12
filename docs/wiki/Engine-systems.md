@@ -53,3 +53,9 @@ Derived render data нельзя считать сохранённой исти�
 ## Порядок развития систем
 
 Сначала стабилизировать владение картами, lifecycle и render correctness. Затем portal graph и walkability, reservations и задачи; после этого hauling/bills, utilities, combat/LOS. Такая последовательность позволяет проверять ошибки по слоям, а не смешивать визуальный overlay с симуляцией.
+
+## Upper ceilings and higher-ground combat (2026-10-12)
+
+An upper construction deck (any genuine floor material) or full wall creates a **tracked constructed roof on the immediately lower map** when that cell has no existing native roof. Ownership is saved in VerticalCeilingComponent; unloading/reloading maps and removing upper structure reconcile the roof state without destroying natural or independently player-built roofs. Room and temperature simulation remain RimWorld's native per-map systems, with the physical roof synchronized between levels.
+
+For supported direct-fire projectiles, shooting down by +1/+2/+3 or more floors grants +30%/+60%/+100% effective maximum range and ignores 30%/60%/100% of cover's blocking chance. Upward and same-floor shots receive no boost. Floors, walls, foundations and roofs still block shots. Higher-ground targets have priority among remote candidates only; vanilla local target handling remains unchanged. This is not a special weapon/Combat Extended adapter.

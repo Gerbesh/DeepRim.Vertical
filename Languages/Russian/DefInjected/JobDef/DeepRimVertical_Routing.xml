@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DeepRimVertical_Travel.reportString>идёт на другой этаж.</DeepRimVertical_Travel.reportString>
+  <DeepRimVertical_Pickup.reportString>собирает ресурсы для другого этажа.</DeepRimVertical_Pickup.reportString>
+  <DeepRimVertical_Deliver.reportString>складывает ресурсы с другого этажа.</DeepRimVertical_Deliver.reportString>
+  <DeepRimVertical_DeliverIngredient.reportString>доставляет ингредиенты на другой этаж.</DeepRimVertical_DeliverIngredient.reportString>
+  <DeepRimVertical_RefuelCarried.reportString>заправляет топливом с другого этажа.</DeepRimVertical_RefuelCarried.reportString>
+</LanguageData>

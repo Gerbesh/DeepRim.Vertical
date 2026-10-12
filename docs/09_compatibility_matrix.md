@@ -1,9 +1,15 @@
 # 09 Compatibility Matrix
 
-## Verified baseline
+## Current audit baseline
+
+- Installed engine inspected October 11, 2026: **RimWorld 1.6.4871 rev590**.
+- Current build and local contract checks use installed assemblies. Full gameplay compatibility, DLC combinations and third-party mods have not been verified by those checks.
+- See [the systems audit](colony_systems_audit.md) for missing adapters and [the acceptance plan](colony_systems_test_plan.md) for required checks.
+
+## Historical research baseline
 
 - RimWorld `1.6.4633 rev1260`
-- Runtime logs later reported local executable revision `rev1261`; the current workspace code is being validated against that live revision.
+- Historical runtime logs later reported local executable revision `rev1261`.
 - DLC present during research:
   - Royalty
   - Ideology

@@ -13,7 +13,6 @@ public static class VerticalDebugTools
             return false;
         }
 
-        var focusCell = UI.MouseCell().InBounds(map) ? UI.MouseCell() : map.Center;
-        return VerticalMapCreationService.TryCreateFloor(map, focusCell, delta, out _);
+        return VerticalMapCreationService.TryCreateFloor(map, delta, out _);
     }
 }
