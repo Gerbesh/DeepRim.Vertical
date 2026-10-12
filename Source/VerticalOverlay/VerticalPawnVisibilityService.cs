@@ -12,7 +12,7 @@ public static class VerticalPawnVisibilityService
             return false;
         }
 
-        if (!VerticalRenderContextService.SharesSite(activeMap, pawn.Map))
+        if (pawn.Position.Fogged(pawn.Map) || !VerticalRenderContextService.SharesSite(activeMap, pawn.Map))
         {
             return false;
         }

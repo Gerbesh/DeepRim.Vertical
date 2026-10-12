@@ -18,6 +18,11 @@ public sealed class VerticalSectionRenderState
     {
         return workers.Values;
     }
+    public void Dispose()
+    {
+        foreach (var worker in workers.Values) worker.Dispose();
+        workers.Clear();
+    }
 
     public void RebuildWorkers(Map map, VerticalRenderContext context, UpperLevelTerrainGrid terrainGrid, UpperOverlayVisibilityMask overlayMask, CellRect visibleSections)
     {
@@ -68,6 +73,7 @@ public sealed class VerticalSectionRenderState
         {
             if (!nextKeys.Contains(key))
             {
+                workers[key].Dispose();
                 workers.Remove(key);
             }
         }
@@ -106,6 +112,11 @@ public sealed class VerticalSectionRenderState
 
 public sealed class LowerLevelSectionWorker
 {
+    public void Dispose()
+    {
+        foreach (var mesh in Layer.subMeshes) VerticalSectionLayerUtility.ForgetMesh(mesh);
+        Layer.Dispose();
+    }
     public LowerLevelSectionWorker(Section section, Map sourceMap, IntVec2 sectionCoord)
     {
         ActiveSection = section;

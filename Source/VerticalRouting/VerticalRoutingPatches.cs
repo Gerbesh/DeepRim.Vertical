@@ -90,7 +90,7 @@ public static class TerrainGrid_SetTerrain_UpperFloorStatePatch
 }
 
 // Removing a terrain layer can expose the void or an old under-terrain without SetTerrain.
-[HarmonyPatch(typeof(TerrainGrid), nameof(TerrainGrid.RemoveTopLayer))]
+[HarmonyPatch(typeof(TerrainGrid), "DoTerrainChangedEffects")]
 public static class TerrainGrid_RemoveTopLayer_VerticalCeilingPatch
 {
     public static void Postfix(TerrainGrid __instance, IntVec3 c)

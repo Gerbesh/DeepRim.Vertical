@@ -11,6 +11,8 @@ namespace DeepRim.Vertical.VerticalSupports;
 public static class VerticalSupportService
 {
     private static readonly Dictionary<int, SupportCache> CacheByMapId = new();
+    public static void ClearAll() => CacheByMapId.Clear();
+    public static void RemoveMap(Map map) { if (map != null) CacheByMapId.Remove(map.uniqueID); }
 
     public static void MarkDirty(Map map)
     {

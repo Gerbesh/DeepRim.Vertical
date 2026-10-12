@@ -291,7 +291,21 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         zone.AddCell(new IntVec3(45, 0, 27)); zone.settings.filter.SetDisallowAll(); zone.settings.filter.SetAllow(ThingDefOf.Steel, true); zone.settings.Priority = StoragePriority.Critical;
         foreach (var need in worker.needs.AllNeeds) need.CurLevelPercentage = 1f;
         // The worker is on -2; both source pickup and delivery must route autonomously.
-        StartWork("hauling");
+        var localZone = new Zone_Stockpile(StorageSettingsPreset.DefaultStockpile, bottom.Map.zoneManager);
+        bottom.Map.zoneManager.RegisterZone(localZone); localZone.AddCell(new IntVec3(46, 0, 30));
+        localZone.settings.filter.SetDisallowAll(); localZone.settings.filter.SetAllow(ThingDefOf.WoodLog, true);
+        localZone.settings.Priority = StoragePriority.Normal;
+        var localWood = Spawn("WoodLog", bottom.Map, 46, 29);
+        worker.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 100000));
+        for (var tick = 0; tick < 181; tick++) Find.TickManager.DoSingleTick();
+        var localHaul = JobMaker.MakeJob(JobDefOf.HaulToCell, localWood, new IntVec3(46, 0, 30));
+        localHaul.workGiverDef = DefDatabase<WorkGiverDef>.GetNamed("HaulGeneral");
+        var betterHaul = VerticalWorkSearch.Find(worker, localHaul);
+        Require(betterHaul != null && GameComponent_VerticalTasks.Get().Tasks.Any(t => t.pawn == worker && t.source == steel),
+            "Local hauling displaced higher-priority cross-floor storage");
+        JobMaker.ReturnToPool(localHaul); localWood.Destroy(); localZone.Delete();
+        worker.jobs.StartJob(betterHaul, JobCondition.InterruptForced, preToilReservationsCanFail: true);
+        Log.Message("[COLONY PROBE] Higher-priority remote stockpile beats competing local hauling PASS");
         var peer = surface.Map.mapPawns.FreeColonists.First(p => p != worker);
         Require(GameComponent_VerticalTasks.Get().Claimed(steel, peer) && !peer.CanReserve(steel), "Remote resource claim must block local competition");
     }
@@ -345,6 +359,31 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         VerticalColonyResourceReadoutPatch.Prefix(out var state);
         Require(bottom.Map.resourceCounter.GetCount(ThingDefOf.Steel) == 30, "Readout query scope");
         VerticalColonyResourceReadoutPatch.Finalizer(state);
+        var woodZone = new Zone_Stockpile(StorageSettingsPreset.DefaultStockpile, surface.Map.zoneManager);
+        surface.Map.zoneManager.RegisterZone(woodZone); woodZone.AddCell(new IntVec3(29, 0, 27));
+        woodZone.settings.filter.SetDisallowAll(); woodZone.settings.filter.SetAllow(ThingDefOf.WoodLog, true);
+        var choiceWood = Spawn("WoodLog", surface.Map, 29, 27, 10);
+        surface.Map.resourceCounter.UpdateResourceCounts();
+        var originalMap = Find.CurrentMap;
+        Current.Game.CurrentMap = bottom.Map;
+        try
+        {
+            Require(VerticalBuildStuffPresence.ThingsOfDef(bottom.Map.listerThings, ThingDefOf.Steel).Count == 2,
+                "Remote material presence was checked only on the current map");
+            VerticalBuildResourceScope.Prefix(out var scope);
+            try
+            {
+                Require(new Designator_Build(ThingDefOf.Wall).StuffDef == ThingDefOf.WoodLog
+                    && bottom.Map.resourceCounter.GetCount(ThingDefOf.WoodLog) == 10
+                    && bottom.Map.resourceCounter.AllCountedAmounts[ThingDefOf.Steel] == 30,
+                    "Native build material/cost queries rejected remote stored steel");
+            }
+            finally { VerticalBuildResourceScope.Finalizer(scope); }
+            Require(bottom.Map.resourceCounter.GetCount(ThingDefOf.Steel) == 0, "Build chooser leaked aggregate scope into jobs");
+        }
+        finally { Current.Game.CurrentMap = originalMap; }
+        choiceWood.Destroy(); woodZone.Delete(); surface.Map.resourceCounter.UpdateResourceCounts();
+        Log.Message("[COLONY PROBE] Native build material/cost queries, remote presence and local-job resource isolation PASS");
         first.Destroy(); second.Destroy();
         Log.Message("[COLONY PROBE] Shared wealth/population/story state, single incident target, fixed mode and isolated readout PASS");
     }
@@ -399,7 +438,8 @@ public sealed class VerticalColonyNativeProbe : GameComponent
     }
     private void SetupCombat()
     {
-        worker.jobs.StopAll(); worker.carryTracker.TryDropCarriedThing(worker.Position, ThingPlaceMode.Near, out _);
+        worker.jobs.StopAll();
+        if (worker.carryTracker.CarriedThing != null) worker.carryTracker.TryDropCarriedThing(worker.Position, ThingPlaceMode.Near, out _);
         Require(VerticalMapCreationService.TryCreateFloor(surface.Map, 1, out var high, false), "Combat upper floor"); upper = high.Parent;
         for (var x = 20; x <= 30; x++) for (var z = 20; z <= 28; z++)
         { high.fogGrid.Unfog(new IntVec3(x, 0, z)); surface.Map.roofGrid.SetRoof(new IntVec3(x, 0, z), null); }

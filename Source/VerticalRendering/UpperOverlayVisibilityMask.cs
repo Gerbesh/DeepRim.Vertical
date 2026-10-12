@@ -29,6 +29,8 @@ public readonly struct UpperOverlayCellState
 public sealed class UpperOverlayVisibilityMask
 {
     private static readonly Dictionary<int, UpperOverlayVisibilityMask> CacheByMapId = new();
+    public static void ClearAll() => CacheByMapId.Clear();
+    public static void RemoveMap(Map map) { if (map != null) CacheByMapId.Remove(map.uniqueID); }
 
     private BitArray upperTerrainOccupancy;
     private BitArray upperThingOccupancy;

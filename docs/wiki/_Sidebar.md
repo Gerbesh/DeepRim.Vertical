@@ -1,6 +1,7 @@
 ### DeepRim Vertical
 
 - [Начало](Home.md)
+- [Единая колония и проверки](Unified-colony.md)
 - [Аудит рендера](Rendering-audit.md)
 - [Движок: рендер](Engine-rendering.md)
 - [Движок: симуляция](Engine-systems.md)

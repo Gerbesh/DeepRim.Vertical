@@ -21,5 +21,6 @@ Current implementation and acceptance: [unified colony guide](unified_colony_tes
 - Underground runtime biome/weather ownership is still synthetic for same-tile non-pocket maps and should continue to be audited against edge-case vanilla systems.
 - The disabled-profile 0 °C defect and cell-temperature override were fixed with the utility implementation; refrigerator and room behavior still need gameplay acceptance.
 - Pawn despawn invalidates site-wide caches, and a manual transfer additionally invalidates the whole site. Actual lag contribution remains unmeasured; use the installed [per-floor profiler](per_floor_profiling.md).
+- Rendering now retains native passes, uses native section meshes for the neutral base, scopes ordinary mesh invalidations and clears external workers/caches on load/removal. Interactive FPS, depth tint, multi-cell clipping and third-party visual parity still need acceptance.
 - Projectile spawn/despawn no longer invalidates static site overlays. This removes avoidable work but is not evidence that the user's acceleration lag is resolved.
 - Openings currently carry direct projectiles and explicit utility connections; gravity/falling, smoke/gas/fire spread and unrestricted temperature mixing are not implemented.

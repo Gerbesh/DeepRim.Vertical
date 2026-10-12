@@ -4,6 +4,8 @@ This development snapshot targets the locally installed RimWorld 1.6 assemblies.
 
 ## Included
 
+- fixes for remote construction material selection and competing stockpile priorities, plus native render-pass preservation, section-based neutral background and render-cache cleanup; [verified assembly and scope](docs/unified_colony_verification.md)
+
 - owned constructed ceilings under upper-floor decks and full wall blocks, physically reflected in lower map roofs and restored across saves without claiming native roofs
 - direct-fire height advantage: shooting down from 1/2/3+ floors gets +30/+60/+100% effective range and cover mitigation; same-floor/upward and solid-boundary rules are unchanged
 

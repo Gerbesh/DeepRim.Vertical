@@ -42,7 +42,8 @@ public static class LowerLevelCellSampler
 
         while (map != null)
         {
-            if (map.roofGrid.RoofAt(cell) == RoofDefOf.RoofConstructed)
+            if (cell.Fogged(map)) return default;
+            if (map.roofGrid.RoofAt(cell) != null)
             {
                 return new LowerLevelCellSample(map, terrain, usedRecursiveVoidChain, roofBlocked: true);
             }

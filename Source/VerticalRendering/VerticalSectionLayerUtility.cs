@@ -32,6 +32,7 @@ public static class VerticalSectionLayerUtility
     private static readonly List<float> AdjOpacityTemp = [];
     private static readonly Dictionary<LayerSubMesh, bool> BlurSubMeshFlags = new();
     private static readonly Dictionary<LayerSubMesh, bool> WaterDepthShaderFlags = new();
+    public static void ForgetMesh(LayerSubMesh mesh) { BlurSubMeshFlags.Remove(mesh); WaterDepthShaderFlags.Remove(mesh); }
 
     public static readonly Material TintMaterial = BuildTintMaterial();
     public static readonly Material UpperVoidNeutralMaterial = BuildSolidMaterial(new Color(0.56f, 0.56f, 0.56f, 1f), 2998);

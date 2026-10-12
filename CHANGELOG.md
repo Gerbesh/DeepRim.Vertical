@@ -2,6 +2,11 @@
 
 ## Unreleased - 2026-10-12
 
+- Count real materials across site floors for native build designators, including their independent material-presence check; refresh aggregate UI counts after native stock updates without changing local job inventories.
+- Allow a higher-priority remote stockpile to compete with native local hauling from the same work giver. Preserve equal-priority storage and the explicit prefer-local setting.
+- Preserve the complete native map drawing pipeline, batch the upper neutral base by native section, avoid structural-cache resets for ordinary mesh dirtiness, refresh affected upper workers, and release external layer meshes/caches on viewport removal, map removal and load.
+- Make floor navigation follow actual text/button height; hide support debug details by default and add translated storage/material help. Respect lower-map fog and every roof type in overlay visibility.
+
 - Connect upper decks and full building blocks to owned constructed ceilings on the floor immediately below; keep original/native roofs untouched, persist ownership across saves, and reconcile on terrain and building changes.
 - Add downward-only 1/2/3+ floor firing benefits: effective maximum range x1.30/x1.60/x2.00 and cover interception penalty reduced by 30%/60%/100%. Prioritize targets below among valid remote candidates. Same-floor and upward shots keep baseline values.
 

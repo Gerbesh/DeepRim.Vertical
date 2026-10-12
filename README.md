@@ -31,6 +31,8 @@ This repository is an active development snapshot, not a final release build. It
 - shared colony/world threat wealth and population, coordinated wealth history, one storyteller scheduling target per site and a scoped combined resource readout
 - remote food/beds, physical recipe ingredient and fuel delivery, shared production target counts, repair/cleaning/tending/research adapters and directed projectile flight across open floors; [colony acceptance checks](docs/unified_colony_test_plan.md)
 - upper-floor decks and full wall blocks produce owned, saved constructed ceilings on the map below without removing native roofs; see [construction checks](docs/upper_floor_test_plan.md)
+- native build material selection and cost displays include stored materials on other floors; higher-priority remote stockpiles can beat competing lower-priority local hauling
+- upper rendering retains native passes, batches the neutral base by section and disposes external mesh/cache ownership on load/removal; interactive FPS acceptance remains pending
 - downward height advantage for supported projectile weapons (+30/+60/+100% range and cover penalty reduction for +1/+2/+3 or more floors)
 - English and Russian localization
 

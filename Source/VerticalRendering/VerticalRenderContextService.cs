@@ -41,7 +41,8 @@ public static class VerticalRenderContextService
 
     public static int GetLevel(Map map)
     {
-        return TryGetContext(map, out var context) ? context.CurrentFloor.levelIndex : 0;
+        return map != null && VerticalSiteWorldComponent.TryGet(out var world)
+            && world.TryGetFloor(map, out _, out var floor) ? floor.levelIndex : 0;
     }
 
     public static Map LowerMap(Map map)

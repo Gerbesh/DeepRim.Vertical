@@ -29,9 +29,12 @@ public static class VerticalWorkSearch
         var localIndex = localJob?.workGiverDef == null ? (localJob != null ? -1 : int.MaxValue)
             : givers.FindIndex(g => g.def == localJob.workGiverDef);
         if (localJob != null && (localIndex < 0 || VerticalRuntime.Settings.preferSameLevelWork)) return null;
-        for (var i = 0; i < givers.Count && i < localIndex; i++)
+        for (var i = 0; i < givers.Count && i <= localIndex; i++)
         {
             var giver = givers[i];
+            var competingHaul = i == localIndex;
+            if (competingHaul && (giver.GetType() != typeof(WorkGiver_HaulGeneral)
+                || localJob?.def != JobDefOf.HaulToCell || !localJob.targetB.Cell.InBounds(pawn.Map))) continue;
             if (!CanUse(pawn, giver)) continue;
             VerticalTaskRecord task = null;
             if (giver.GetType() == typeof(WorkGiver_Miner)) task = FindMine(pawn, site, giver.def);
@@ -44,6 +47,12 @@ public static class VerticalWorkSearch
             else if (giver is WorkGiver_Refuel) task = VerticalRefuelSupply.Find(pawn, site, giver.def);
             else if (giver is WorkGiver_Scanner simpleScanner) task = VerticalSimpleWork.Find(pawn, site, simpleScanner);
             if (task == null) continue;
+            if (competingHaul)
+            {
+                var localPriority = localJob.targetB.Cell.GetSlotGroup(pawn.Map)?.Settings.Priority ?? StoragePriority.Unstored;
+                var remotePriority = task.destinationCell.GetSlotGroup(task.destinationMap.Map)?.Settings.Priority ?? StoragePriority.Unstored;
+                if (remotePriority <= localPriority) continue;
+            }
             if (emergency && service.HasTask(pawn)) service.CancelPawn(pawn);
             var job = service.Accept(task);
             if (job != null) { job.workGiverDef = giver.def; return job; }

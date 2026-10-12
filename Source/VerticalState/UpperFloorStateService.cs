@@ -9,6 +9,8 @@ namespace DeepRim.Vertical.VerticalState;
 public static class UpperFloorStateService
 {
     private static readonly Dictionary<int, UpperFloorStateCache> CacheByMapId = new();
+    public static void ClearAll() => CacheByMapId.Clear();
+    public static void RemoveMap(Map map) { if (map != null) CacheByMapId.Remove(map.uniqueID); }
 
     public static void MarkDirty(Map map)
     {

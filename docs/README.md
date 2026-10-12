@@ -1,5 +1,7 @@
 # Documentation index
 
+Current production assembly, native regression coverage and remaining acceptance: [unified colony verification](unified_colony_verification.md).
+
 The current [unified colony gameplay guide](unified_colony_test_plan.md) covers shared wealth/storyteller/history/resources, remote needs and production supplies, additional native work and direct cross-floor projectiles. Earlier audit and routing reports below are historical milestones; their missing-feature lists are superseded by this guide and [current known issues](11_known_issues.md).
 
 The first cross-floor task adapters are implemented as of October 12: mining, frame completion, construction supply and physical stockpile hauling. They passed [local and native game checks](vertical_routing_verification.md). [Current routing gameplay checks and limits](vertical_routing_test_plan.md) distinguish this scope from the broader colony design.

@@ -9,6 +9,8 @@ namespace DeepRim.Vertical.VerticalRendering;
 public sealed class UpperLevelTerrainGrid
 {
     private static readonly Dictionary<int, UpperLevelTerrainGrid> CacheByMapId = new();
+    public static void ClearAll() => CacheByMapId.Clear();
+    public static void RemoveMap(Map map) { if (map != null) CacheByMapId.Remove(map.uniqueID); }
 
     private readonly Dictionary<int, HashSet<IntVec2>> visibleSectionsByLevel = new();
     private readonly Dictionary<int, HashSet<IntVec3>> deckCellsByLevel = new();

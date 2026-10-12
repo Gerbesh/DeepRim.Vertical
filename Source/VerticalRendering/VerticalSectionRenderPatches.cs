@@ -20,17 +20,14 @@ public static class VerticalSectionRenderPatches
         }
 
         var viewRect = Find.CameraDriver.CurrentViewRect.ExpandedBy(1).ClipInsideMap(map);
-        RenderMap(map, viewRect);
-        return false;
+        if (map == Find.CurrentMap) DrawSelectiveLowerUnderlay(map, viewRect);
+        // Keep all native map passes (fog, water, lighting and third-party layers).
+        return true;
     }
 
     public static void RenderMap(Map map, CellRect viewRect)
     {
-        if (VerticalRenderContextService.GetLevel(map) > 0)
-        {
-            DrawSelectiveLowerUnderlay(map, viewRect);
-            DrawUpperNeutralBase(map, viewRect);
-        }
+        if (VerticalRenderContextService.GetLevel(map) > 0) DrawSelectiveLowerUnderlay(map, viewRect);
 
         var sections = Traverse.Create(map.mapDrawer).Field("sections").GetValue<Section[,]>();
         foreach (var (x, y) in EnumerateVisibleSections(viewRect, sections))
@@ -70,12 +67,13 @@ public static class VerticalSectionRenderPatches
     public static void DirtyRenderingMapCells(Map mapRendering, IntVec3 loc)
     {
         _ = loc;
-        UpperLevelTerrainGrid.MarkDirty(mapRendering);
-        UpperOverlayVisibilityMask.MarkDirty(mapRendering);
-        if (mapRendering != null && RenderStatesByMapId.TryGetValue(mapRendering.uniqueID, out var renderState))
-        {
-            renderState.MarkDirty(loc);
-        }
+        // Ordinary mesh changes (snow, lighting, filth) do not change structural occupancy.
+        // Structural changes explicitly invalidate those caches in the terrain/thing hooks.
+        if (mapRendering == null || !VerticalWorld.VerticalSiteWorldComponent.TryGet(out var world)
+            || !world.TryGetFloor(mapRendering, out var site, out var source)) return;
+        foreach (var floor in site.OrderedFloors)
+            if (floor.Map != null && floor.levelIndex >= source.levelIndex
+                && RenderStatesByMapId.TryGetValue(floor.Map.uniqueID, out var renderState)) renderState.MarkDirty(loc);
     }
 
     public static void BlurLowerLevels(Map map, int level, CellRect viewRect)
@@ -103,10 +101,26 @@ public static class VerticalSectionRenderPatches
         _ = map;
         if (map != null)
         {
+            if (RenderStatesByMapId.TryGetValue(map.uniqueID, out var state)) state.Dispose();
             RenderStatesByMapId.Remove(map.uniqueID);
         }
 
         renderingMapId = -999999;
+    }
+    public static void ClearAll()
+    {
+        foreach (var state in RenderStatesByMapId.Values) state.Dispose();
+        RenderStatesByMapId.Clear();
+        UpperLevelTerrainGrid.ClearAll(); UpperOverlayVisibilityMask.ClearAll();
+        VerticalState.UpperFloorStateService.ClearAll(); VerticalSupports.VerticalSupportService.ClearAll();
+    }
+    public static void RemoveMap(Map map)
+    {
+        Reset(map); UpperLevelTerrainGrid.RemoveMap(map); UpperOverlayVisibilityMask.RemoveMap(map);
+        VerticalState.UpperFloorStateService.RemoveMap(map); VerticalSupports.VerticalSupportService.RemoveMap(map);
+        // Other workers can own this map as their lower source.
+        foreach (var state in RenderStatesByMapId.Values) state.Dispose();
+        RenderStatesByMapId.Clear();
     }
 
     private static bool ShouldRender(Map map)
@@ -135,29 +149,6 @@ public static class VerticalSectionRenderPatches
 
         return VerticalRenderContextService.SharesSite(map, Find.CurrentMap)
                && mapLevel <= activeContext.CurrentFloor.levelIndex;
-    }
-
-    private static void DrawUpperNeutralBase(Map map, CellRect viewRect)
-    {
-        if (VerticalRenderContextService.GetLevel(map) <= 0)
-        {
-            return;
-        }
-
-        var mask = UpperOverlayVisibilityMask.GetFor(map);
-        var overlayEnabled = VerticalRuntime.Settings.enableUpperFloorOverlay;
-        foreach (var cell in viewRect.Cells)
-        {
-            var cellState = mask.GetCellState(cell, overlayEnabled);
-            if (!cellState.ShowNeutralBase)
-            {
-                continue;
-            }
-
-            var position = cell.ToVector3ShiftedWithAltitude(AltitudeLayer.Terrain);
-            position.y -= 0.01f;
-            Graphics.DrawMesh(MeshPool.plane10, position, Quaternion.identity, VerticalSectionLayerUtility.UpperVoidNeutralMaterial, 0);
-        }
     }
 
     private static void DrawSelectiveLowerUnderlay(Map map, CellRect viewRect)
@@ -244,6 +235,11 @@ public static class VerticalSectionRenderPatches
 [HarmonyPatch(typeof(MapDrawer), nameof(MapDrawer.DrawMapMesh))]
 public static class MapDrawer_DrawMapMesh_VerticalSectionRender_Patch
 {
+    public static void Postfix(MapDrawer __instance)
+    {
+        if (Find.CurrentMap != null && Traverse.Create(__instance).Field("map").GetValue<Map>() == Find.CurrentMap)
+            VerticalOverlay.VerticalGhostRenderer.DrawFor(Find.CurrentMap);
+    }
     public static bool Prefix(MapDrawer __instance)
     {
         var map = Traverse.Create(__instance).Field("map").GetValue<Map>();

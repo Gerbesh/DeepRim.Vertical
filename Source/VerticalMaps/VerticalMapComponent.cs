@@ -49,6 +49,7 @@ public sealed class VerticalMapComponent : MapComponent
     public override void MapRemoved()
     {
         base.MapRemoved();
+        LongEventHandler.ExecuteWhenFinished(() => VerticalSectionRenderPatches.RemoveMap(map));
         VerticalUtilities.GameComponent_VerticalUtilities.Get()?.RemoveMap(map);
     }
 
@@ -148,6 +149,8 @@ public sealed class VerticalMapComponent : MapComponent
         var listing = new Listing_Standard();
         listing.Begin(listingRect);
         listing.Label("DeepRimVertical.Navigator.CurrentFloor".Translate(VerticalFloorLabel.Format(currentFloor.levelIndex)));
+        if (listing.ButtonText("DeepRimVertical.Navigator.LogisticsButton".Translate()))
+            Find.WindowStack.Add(new Dialog_MessageBox("DeepRimVertical.Navigator.LogisticsHelp".Translate()));
 
         var focusCell = UI.MouseCell().InBounds(map) ? UI.MouseCell() : map.Center;
         if (VerticalRuntime.Settings.enableDevButtons)
@@ -163,10 +166,6 @@ public sealed class VerticalMapComponent : MapComponent
             }
         }
 
-        listing.GapLine();
-        listing.Label("DeepRimVertical.Navigator.FloorList".Translate());
-
-        var listTopOffset = 140f;
         if (currentFloor.levelIndex > 0)
         {
             listing.GapLine();
@@ -184,20 +183,19 @@ public sealed class VerticalMapComponent : MapComponent
                 VerticalMapInvalidationService.MarkSiteDirty(map);
             }
 
-            listing.Label("DeepRimVertical.Navigator.SupportInfo".Translate(
-                focusCell.ToString(),
-                VerticalSupportService.DescribeCellSupport(map, focusCell) + " / " + DescribeCellState(focusCell),
-                VerticalRuntime.Settings.upperFloorMaxOverhang));
-            DrawUpperOverlayDebugInfo(listing, focusCell);
-
-            listTopOffset += 102f;
             if (VerticalRuntime.Settings.enableUpperOverlayDebugOverlay)
             {
-                listTopOffset += 58f;
+                listing.Label("DeepRimVertical.Navigator.SupportInfo".Translate(
+                    focusCell.ToString(), VerticalSupportService.DescribeCellSupport(map, focusCell) + " / " + DescribeCellState(focusCell),
+                    VerticalRuntime.Settings.upperFloorMaxOverhang));
+                DrawUpperOverlayDebugInfo(listing, focusCell);
             }
         }
-
-        var availableHeight = Mathf.Max(90f, navigatorRect.height - (listTopOffset + 56f));
+        listing.GapLine();
+        TooltipHandler.TipRegion(new Rect(listingRect.x, listingRect.y + listing.CurHeight, listingRect.width, Text.LineHeight), "DeepRimVertical.Navigator.LogisticsHelp".Translate());
+        listing.Label("DeepRimVertical.Navigator.FloorList".Translate());
+        var listTopOffset = listing.CurHeight;
+        var availableHeight = Mathf.Max(24f, listingRect.height - listTopOffset - 4f);
         var viewRect = new Rect(listingRect.x, listingRect.y + listTopOffset, listingRect.width, Mathf.Min(availableHeight, floors.Count * 28f + 5f));
         var innerRect = new Rect(0f, 0f, viewRect.width - 16f, floors.Count * 28f + 5f);
         Widgets.BeginScrollView(viewRect, ref scrollPosition, innerRect, true);
@@ -220,7 +218,7 @@ public sealed class VerticalMapComponent : MapComponent
         Widgets.EndScrollView();
         listing.Gap(viewRect.height + 4f);
 
-        var portals = component.PortalsAt(map, focusCell).ToList();
+        var portals = VerticalRuntime.Settings.enableUpperOverlayDebugOverlay ? component.PortalsAt(map, focusCell).ToList() : new System.Collections.Generic.List<DeepRim.Vertical.Persistence.VerticalPortalRecord>();
         if (portals.Count > 0)
         {
             listing.GapLine();

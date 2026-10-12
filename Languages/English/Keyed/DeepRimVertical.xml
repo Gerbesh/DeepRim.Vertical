@@ -35,7 +35,9 @@
   <DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>Enable verbose upper overlay debug logging</DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>
   <DeepRimVertical.Settings.ResetDefaults>Reset defaults</DeepRimVertical.Settings.ResetDefaults>
 
-  <DeepRimVertical.Navigator.Title>Vertical site</DeepRimVertical.Navigator.Title>
+  <DeepRimVertical.Navigator.Title>Colony floors</DeepRimVertical.Navigator.Title>
+  <DeepRimVertical.Navigator.LogisticsButton>Storage and materials: help</DeepRimVertical.Navigator.LogisticsButton>
+  <DeepRimVertical.Navigator.LogisticsHelp>Construction materials are counted across all floors and carried through completed stairs. To move items from another stockpile, give the destination a higher priority; equal priorities do not relocate stored items. An upper floor or solid block provides a ceiling below.</DeepRimVertical.Navigator.LogisticsHelp>
   <DeepRimVertical.Navigator.CurrentFloor>Current floor: {0}</DeepRimVertical.Navigator.CurrentFloor>
   <DeepRimVertical.Navigator.CreateAbove>Create level above</DeepRimVertical.Navigator.CreateAbove>
   <DeepRimVertical.Navigator.CreateBelow>Create level below</DeepRimVertical.Navigator.CreateBelow>

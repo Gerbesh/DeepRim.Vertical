@@ -43,6 +43,7 @@ public sealed class VerticalSiteWorldComponent : WorldComponent
     {
         base.FinalizeInit(fromLoad);
         RebuildCaches();
+        LongEventHandler.ExecuteWhenFinished(VerticalRendering.VerticalSectionRenderPatches.ClearAll);
     }
 
     public VerticalSiteRecord GetOrCreateSiteForMap(Map map)

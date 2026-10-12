@@ -66,6 +66,7 @@ public sealed class GameComponent_VerticalColony : GameComponent
         return snapshot.Value;
     }
     public void Invalidate() { wealth.Clear(); resources.Clear(); resourceTick = -1; }
+    public void InvalidateResources() { resources.Clear(); resourceTick = -1; }
     public void InvalidateWealth(Map map)
     { if (!SynchronizingWealth && VerticalColonyUtility.TrySite(map, out var site)) wealth.Remove(site.siteId); }
     public Dictionary<ThingDef, int> Resources(Map map)

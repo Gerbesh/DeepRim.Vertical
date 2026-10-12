@@ -35,7 +35,9 @@
   <DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>Включить подробное debug-логирование upper overlay</DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>
   <DeepRimVertical.Settings.ResetDefaults>Сбросить настройки</DeepRimVertical.Settings.ResetDefaults>
 
-  <DeepRimVertical.Navigator.Title>Вертикальный site</DeepRimVertical.Navigator.Title>
+  <DeepRimVertical.Navigator.Title>Этажи колонии</DeepRimVertical.Navigator.Title>
+  <DeepRimVertical.Navigator.LogisticsButton>Склады и материалы: справка</DeepRimVertical.Navigator.LogisticsButton>
+  <DeepRimVertical.Navigator.LogisticsHelp>Материалы строительства учитываются со всех этажей. Пешки несут их через завершённые лестницы. Чтобы перенести вещи с другого склада, задайте новому складу более высокий приоритет; одинаковый приоритет не вызывает перескладирование. Настил или сплошной блок сверху создаёт потолок снизу.</DeepRimVertical.Navigator.LogisticsHelp>
   <DeepRimVertical.Navigator.CurrentFloor>Текущий уровень: {0}</DeepRimVertical.Navigator.CurrentFloor>
   <DeepRimVertical.Navigator.CreateAbove>Создать уровень выше</DeepRimVertical.Navigator.CreateAbove>
   <DeepRimVertical.Navigator.CreateBelow>Создать уровень ниже</DeepRimVertical.Navigator.CreateBelow>
