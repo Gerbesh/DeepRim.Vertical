@@ -2,6 +2,11 @@
 
 ## Unreleased - 2026-10-13
 
+- Run a real visible DEV five-floor benchmark: 22 captures, no engine/timing errors after fixes; publish raw FPS/TPS and limits. Native third-speed targets can change during capture; export observed target TPS and explain them in the profiler tooltip.
+- Fix designated plant cutting/harvest remote candidates without invalid Undefined ThingRequests or pawn map spoofing. Native regression now executes both jobs across stairs.
+- Fix mixed fog/void underlay color-buffer sizes and redundant mesh finalization; initialize overlay debug materials on the main thread. Make navigator height follow content and correct nested GUI coordinates so all five floor buttons are visible.
+- Respect RimWorld GUI scaling and keep profiler/LVL controls clear of the native icon block. Occlude camera clear color over missing/fogged lower samples without revealing their terrain; add a deterministic fog fixture.
+
 - Audit profiler and cross-system lifecycle: 34 on-demand hooks now expose GUI/self-overhead, route/work planning, task/utility maintenance, wealth, ceilings, plumbing and power graph. Count failed tick attempts separately from successful TPS; target implemented declarations on Mono and retry failed hook cleanup without blocking other removals.
 - Reuse owned snow/sand/blur meshes instead of allocating orphan meshes on every underlay regeneration; skip Odyssey sand assets when disabled. Remove duplicate terrain/stair invalidation, camera-wide resets and structural invalidation from dynamic despawns.
 - Restore ceilings below still-present upper construction and prevent repeating roof-removal work. Apply the cross-floor bill setting to planning/intent cancellation; remove inactive settings controls, stop per-GUI-event settings writes and enforce valid cold/hot depth ordering.

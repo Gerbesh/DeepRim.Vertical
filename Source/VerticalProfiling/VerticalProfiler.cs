@@ -33,6 +33,7 @@ public static class VerticalProfiler
     private static readonly Dictionary<int, VerticalProfileMapInfo> Maps = new();
     private static readonly Dictionary<string, string> Metadata = new();
     private static readonly HashSet<TimeSpeed> Speeds = new();
+    private static readonly HashSet<float> TargetRates = new();
     private static readonly int[] InitialCollections = new int[3];
     private static int sessionId;
     private static int mainThreadId;
@@ -62,7 +63,7 @@ public static class VerticalProfiler
         try
         {
             VerticalProfilerPatches.Install();
-            Rows.Clear(); Maps.Clear(); Metadata.Clear(); Speeds.Clear();
+            Rows.Clear(); Maps.Clear(); Metadata.Clear(); Speeds.Clear(); TargetRates.Clear();
             objectRows = 0; dropped = 0; lastFrame = 0;
             completed = null; LastCsvPath = null; LastTextPath = null;
             sessionId++;
@@ -144,6 +145,8 @@ public static class VerticalProfiler
         for (var i = 0; i < 3; i++) snapshot.Collections[i] = GC.CollectionCount(i) - InitialCollections[i];
         foreach (var entry in Metadata) snapshot.Metadata.Add(entry.Key, entry.Value);
         snapshot.Metadata["observed_speeds"] = string.Join(";", Speeds.OrderBy(speed => speed));
+        snapshot.Metadata["observed_target_tps"] = string.Join(";", TargetRates.OrderBy(rate => rate)
+            .Select(rate => rate.ToString(CultureInfo.InvariantCulture)));
         foreach (var map in Maps) snapshot.Maps.Add(map.Key, map.Value);
         foreach (var row in Rows.Values)
             snapshot.Rows.Add(new VerticalProfileRow { Key = row.Key, Label = row.Label, Stats = row.Stats.Copy() });
@@ -211,6 +214,7 @@ public static class VerticalProfiler
         if (lastFrame != 0) Add(new VerticalProfileKey(-1, VerticalProfileMetric.FrameInterval), SecondsSince(lastFrame, now) * 1000, false);
         lastFrame = now;
         Speeds.Add(Find.TickManager.CurTimeSpeed);
+        TargetRates.Add(Find.TickManager.Paused ? 0f : 60f * Find.TickManager.TickRateMultiplier);
     }
 
     private static bool Valid(VerticalProfileScope scope) => CapturingOnCurrentThread && scope.Session != 0 && scope.Session == sessionId;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeepRim.Vertical.Persistence;
 using DeepRim.Vertical.VerticalColony;
@@ -15,14 +16,16 @@ public static class VerticalSimpleWork
         if (giver is not WorkGiver_Repair && giver is not WorkGiver_CleanFilth && giver.GetType() != Firefighter
             && giver is not WorkGiver_PlantsCut && giver is not WorkGiver_TendOther && giver is not WorkGiver_Researcher) return null;
         foreach (var map in VerticalColonyUtility.Maps(site).Where(m => m != pawn.Map))
-        foreach (var thing in VerticalWorkSearch.Scan(map.listerThings.ThingsMatching(giver.PotentialWorkThingRequest), 64, pawn))
+        foreach (var thing in VerticalWorkSearch.Scan(Candidates(map, giver), 64, pawn))
         {
             if (!VerticalRouteUtility.Allowed(pawn, thing) || thing.Fogged() || GameComponent_VerticalTasks.Get().Claimed(thing, pawn)
                 || map.reservationManager.ReservationsReadOnly.Any(r => r.Claimant != pawn && r.Target.Thing == thing)) continue;
             if (giver is WorkGiver_Repair && (thing.Faction != pawn.Faction || !thing.def.useHitPoints || thing.HitPoints >= thing.MaxHitPoints || thing.IsBurning())) continue;
             if (giver is WorkGiver_CleanFilth && (thing is not Filth || !map.areaManager.Home[thing.Position])) continue;
             if (giver.GetType() == Firefighter && (thing is not Fire || !map.areaManager.Home[thing.Position])) continue;
-            if (giver is WorkGiver_PlantsCut && (thing is not Plant || map.designationManager.DesignationOn(thing, DesignationDefOf.CutPlant) == null)) continue;
+            if (giver is WorkGiver_PlantsCut && (thing is not Plant plant
+                || map.designationManager.DesignationOn(thing, DesignationDefOf.CutPlant) == null
+                    && (map.designationManager.DesignationOn(thing, DesignationDefOf.HarvestPlant) == null || !plant.HarvestableNow))) continue;
             if (giver is WorkGiver_TendOther)
             {
                 if (thing is not Pawn patient || !HealthAIUtility.ShouldBeTendedNowByPlayer(patient)
@@ -38,5 +41,17 @@ public static class VerticalSimpleWork
                 destination = thing, destinationMap = map.Parent, destinationCell = thing.Position, workGiver = giver.def };
         }
         return null;
+    }
+
+    private static IEnumerable<Thing> Candidates(Map map, WorkGiver_Scanner giver)
+    {
+        // Native plant cutting uses global designations and deliberately has no ThingRequest.
+        // Read the destination map's designations without changing the actor's physical map.
+        if (giver is WorkGiver_PlantsCut)
+            return map.designationManager.SpawnedDesignationsOfDef(DesignationDefOf.CutPlant)
+                .Concat(map.designationManager.SpawnedDesignationsOfDef(DesignationDefOf.HarvestPlant))
+                .Select(designation => designation.target.Thing).Where(thing => thing != null).Distinct();
+        var request = giver.PotentialWorkThingRequest;
+        return request.IsUndefined ? Enumerable.Empty<Thing>() : map.listerThings.ThingsMatching(request);
     }
 }

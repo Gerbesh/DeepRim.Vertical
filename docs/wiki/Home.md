@@ -37,3 +37,7 @@
 ## Construction ceilings and height advantage (2026-10-12)
 
 Upper-floor deck/floor materials and full building blocks now provide a constructed roof on the immediately lower map, tracked separately from player/natural roofs and restored across saves. Supported direct-fire weapons shooting downward gain +30%/+60%/+100% effective range at +1/+2/+3 or more floors and corresponding reductions of cover blocking. See [engine systems](Engine-systems.md) and [native acceptance scenarios](https://github.com/Gerbesh/DeepRim.Vertical/blob/main/docs/unified_colony_test_plan.md). Complex projectile/ability adapters and large-colony performance acceptance remain open.
+
+## Живой DEV-прогон 13 октября
+
+[22 настоящих замера пяти этажей](Live-profiling-2026-10-13.md): исправлены ошибки поиска растений, цветов меша, инициализации материалов и навигатора; опубликованы FPS/TPS и ограничения.

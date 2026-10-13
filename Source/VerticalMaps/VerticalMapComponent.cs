@@ -16,6 +16,7 @@ namespace DeepRim.Vertical.VerticalMaps;
 public sealed class VerticalMapComponent : MapComponent
 {
     private static Rect navigatorRect = new(280f, 120f, 265f, 340f);
+    private static float navigatorContentHeight = 340f;
     private static bool navigatorVisible = true;
     private const int NavigatorWindowId = 0x44525631;
 
@@ -118,12 +119,12 @@ public sealed class VerticalMapComponent : MapComponent
 
     private void DrawToggleButton()
     {
-        if (Widgets.ButtonText(new Rect(Screen.width - 236f, Screen.height - 118f, 110f, 32f), "DeepRimVertical.Profiler.Button".Translate()))
+        if (Widgets.ButtonText(new Rect(UI.screenWidth - 340f, UI.screenHeight - 118f, 110f, 32f), "DeepRimVertical.Profiler.Button".Translate()))
         {
             VerticalProfilerWindow.Open();
         }
         if (!VerticalRuntime.Settings.showNavigator) return;
-        var buttonRect = new Rect(Screen.width - 116f, Screen.height - 118f, 52f, 32f);
+        var buttonRect = new Rect(UI.screenWidth - 224f, UI.screenHeight - 118f, 52f, 32f);
         if (Widgets.ButtonText(buttonRect, navigatorVisible ? "LVL-" : "LVL+"))
         {
             navigatorVisible = !navigatorVisible;
@@ -132,9 +133,9 @@ public sealed class VerticalMapComponent : MapComponent
 
     private void DrawNavigatorWindow(VerticalSiteWorldComponent component)
     {
-        navigatorRect.x = Mathf.Clamp(navigatorRect.x, 0f, Screen.width - navigatorRect.width);
-        navigatorRect.y = Mathf.Clamp(navigatorRect.y, 35f, Screen.height - navigatorRect.height);
-        navigatorRect.height = Mathf.Clamp(navigatorRect.height, 240f, Screen.height - 50f);
+        navigatorRect.height = Mathf.Clamp(navigatorContentHeight, 240f, UI.screenHeight - 85f);
+        navigatorRect.x = Mathf.Clamp(navigatorRect.x, 0f, UI.screenWidth - navigatorRect.width);
+        navigatorRect.y = Mathf.Clamp(navigatorRect.y, 35f, UI.screenHeight - navigatorRect.height);
         navigatorRect = GUI.Window(NavigatorWindowId, navigatorRect, _ => DrawNavigatorContents(component), "DeepRimVertical.Navigator.Title".Translate().ToString());
     }
 
@@ -193,11 +194,13 @@ public sealed class VerticalMapComponent : MapComponent
             }
         }
         listing.GapLine();
-        TooltipHandler.TipRegion(new Rect(listingRect.x, listingRect.y + listing.CurHeight, listingRect.width, Text.LineHeight), "DeepRimVertical.Navigator.LogisticsHelp".Translate());
+        TooltipHandler.TipRegion(new Rect(0f, listing.CurHeight, listingRect.width, Text.LineHeight), "DeepRimVertical.Navigator.LogisticsHelp".Translate());
         listing.Label("DeepRimVertical.Navigator.FloorList".Translate());
         var listTopOffset = listing.CurHeight;
+        var desiredListHeight = Mathf.Min(224f, floors.Count * 28f + 5f);
         var availableHeight = Mathf.Max(24f, listingRect.height - listTopOffset - 4f);
-        var viewRect = new Rect(listingRect.x, listingRect.y + listTopOffset, listingRect.width, Mathf.Min(availableHeight, floors.Count * 28f + 5f));
+        // Listing.Begin already enters listingRect's GUI group; these are local coordinates.
+        var viewRect = new Rect(0f, listTopOffset, listingRect.width, Mathf.Min(availableHeight, desiredListHeight));
         var innerRect = new Rect(0f, 0f, viewRect.width - 16f, floors.Count * 28f + 5f);
         Widgets.BeginScrollView(viewRect, ref scrollPosition, innerRect, true);
         var y = 0f;
@@ -230,6 +233,7 @@ public sealed class VerticalMapComponent : MapComponent
             }
         }
 
+        navigatorContentHeight = listing.CurHeight + 44f + desiredListHeight - viewRect.height;
         listing.End();
         GUI.DragWindow(new Rect(0f, 0f, navigatorRect.width, 28f));
     }

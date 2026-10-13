@@ -1,5 +1,7 @@
 # Native unified colony probe
 
+October 13 live regression additionally executes designated plant cutting and harvest across stairs, verifies that overlay color buffers match vertices and rerolls a worker capable of PlantCutting. This catches the native global-designation scanner's Undefined request and mixed fog/void color upload defects.
+
 Test-only mod, excluded from the production assembly/package. Use an isolated save-data folder whose final directory name is exactly `native-smoke-colony`. It replaces terrain, resources, test pawns and work settings; never enable it in a real colony.
 
 Build production, then `dotnet build tools/validation/native-colony/Probe.csproj -c Release`. Output: `obj/native-colony-probe/Assemblies/DeepRim.Colony.NativeProbe.dll`. Put it into a temporary RimWorld mod under `Assemblies/`, with `About/About.xml` package ID `gerbe.deeprim.colonyprobe`. Copy the user's ModsConfig.xml to the isolated profile's `Config/` and append this ID only in that copy. Install the production mod, then launch `RimWorldWin64.exe -batchmode -quicktest -savedatafolder=<absolute isolated profile> -logFile <absolute log path>`.

@@ -13,7 +13,7 @@ public sealed class VerticalProfilerWindow : Window
     private Vector2 scroll;
     private VerticalProfileSnapshot snapshot;
     private long refreshedAt;
-    public override Vector2 InitialSize => new(Mathf.Min(1080, Screen.width - 40), Mathf.Min(760, Screen.height - 60));
+    public override Vector2 InitialSize => new(Mathf.Min(1080, UI.screenWidth - 40), Mathf.Min(760, UI.screenHeight - 60));
 
     public VerticalProfilerWindow()
     {
@@ -69,6 +69,8 @@ public sealed class VerticalProfilerWindow : Window
             Widgets.Label(new Rect(0, 40, inRect.width, 25), "DeepRimVertical.Profiler.Summary".Translate(
                 snapshot.Running ? "DeepRimVertical.Profiler.Recording".Translate().ToString() : "DeepRimVertical.Profiler.Finished".Translate().ToString(),
                 snapshot.Seconds.ToString("F1"), snapshot.Tps.ToString("F1"), interval?.MeanMs > 0 ? (1000 / interval.MeanMs).ToString("F1") : "—"));
+            if (snapshot.Metadata.TryGetValue("observed_target_tps", out var targetRates) && !string.IsNullOrEmpty(targetRates))
+                TooltipHandler.TipRegion(new Rect(0, 40, inRect.width, 25), "DeepRimVertical.Profiler.TargetRates".Translate(targetRates));
             Widgets.Label(new Rect(0, 65, inRect.width, 25), "DeepRimVertical.Profiler.TickSummary".Translate(
                 (tick?.MeanMs ?? 0).ToString("F3"), (tick?.PercentileUpperBound(.95) ?? 0).ToString("F3"), (tick?.MaxMs ?? 0).ToString("F3"),
                 string.Join("/", snapshot.Collections), (snapshot.HeapDelta / 1048576d).ToString("F2")));

@@ -80,6 +80,10 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
             var sample = LowerLevelCellSampler.Sample(sourceMap, cell);
             if (!sample.HasRenderableTerrain)
             {
+                // The active upper map has no fog layer here. A missing/fogged lower sample
+                // must occlude the camera clear color without revealing unexplored terrain.
+                VerticalSectionLayerUtility.FillTerrainMainLayerSubMesh(
+                    GetSubMesh(VerticalSectionLayerUtility.UpperVoidNeutralMaterial), cell);
                 VerticalSectionLayerUtility.GenerateColorMeshes(snowSubMesh, transparent: true);
                 if (ModsConfig.OdysseyActive)
                 {
@@ -157,9 +161,9 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
         }
 
         FinalizeMesh(MeshParts.All);
-        FinalizeSubMesh(showSnowSubMesh, snowSubMesh);
-        FinalizeSubMesh(showSandSubMesh, sandSubMesh);
-        FinalizeSubMesh(showBlurSubMesh, blurSubMesh);
+        SetSubMeshVisibility(showSnowSubMesh, snowSubMesh);
+        SetSubMeshVisibility(showSandSubMesh, sandSubMesh);
+        SetSubMeshVisibility(showBlurSubMesh, blurSubMesh);
     }
 
     public override void DrawLayer()
@@ -270,24 +274,20 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
             }
         }
 
-        if (shouldBlur)
+        // Base geometry contains nine vertices per cell, including fog/roof/void cells.
+        // Append nine colors on every branch so a mixed section never uploads a partial buffer.
+        VerticalSectionLayerUtility.GenerateColorMeshes(blurSubMesh, transparent: !shouldBlur || blurTransparent);
+        if (shouldBlur && !blurTransparent)
         {
-            VerticalSectionLayerUtility.GenerateColorMeshes(blurSubMesh, blurTransparent);
-            if (!blurTransparent)
-            {
-                showBlurSubMesh = true;
-            }
+            showBlurSubMesh = true;
         }
     }
 
-    private void FinalizeSubMesh(bool showSubMesh, LayerSubMesh layerSubMesh)
+    private static void SetSubMeshVisibility(bool showSubMesh, LayerSubMesh layerSubMesh)
     {
         if (layerSubMesh == null) return;
         layerSubMesh.disabled = !showSubMesh;
-        if (showSubMesh)
-        {
-            layerSubMesh.FinalizeMesh(MeshParts.Colors);
-        }
+        // FinalizeMesh(All) above already uploaded geometry and colors exactly once.
     }
 
     private void GenerateRoofMeshes(IntVec3 cell)

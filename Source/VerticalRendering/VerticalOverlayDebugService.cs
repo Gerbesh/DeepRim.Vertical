@@ -4,6 +4,7 @@ using Verse;
 
 namespace DeepRim.Vertical.VerticalRendering;
 
+[StaticConstructorOnStartup]
 public static class VerticalOverlayDebugService
 {
     private static readonly HashSet<string> OnceKeys = [];

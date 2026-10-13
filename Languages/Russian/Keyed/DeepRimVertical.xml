@@ -83,6 +83,7 @@
   <DeepRimVertical.Profiler.Recording>Запись</DeepRimVertical.Profiler.Recording>
   <DeepRimVertical.Profiler.Finished>Готово</DeepRimVertical.Profiler.Finished>
   <DeepRimVertical.Profiler.Summary>{0}: {1} с | фактические TPS: {2} | FPS по интервалам: {3}</DeepRimVertical.Profiler.Summary>
+  <DeepRimVertical.Profiler.TargetRates>Целевые TPS, наблюдавшиеся в записи: {0}. Третья скорость автоматически меняется с 360 на 720, когда все колонисты спят; принудительная пауза даёт 0. Сравнивай фактический TPS с целью именно этого участка записи.</DeepRimVertical.Profiler.TargetRates>
   <DeepRimVertical.Profiler.TickSummary>Тик: среднее {0} мс, p95 ≤ {1} мс, максимум {2} мс | GC 0/1/2: {3} | изменение managed heap: {4} МБ</DeepRimVertical.Profiler.TickSummary>
   <DeepRimVertical.Profiler.Caveat>Замеры добавляют нагрузку. Детализация включена в родительские замеры: строки нельзя складывать. p95 — верхняя оценка по гистограмме. CPU главного потока; GPU и фоновые path jobs не измеряются. Изменение heap — не объём аллокаций.</DeepRimVertical.Profiler.Caveat>
   <DeepRimVertical.Profiler.Floors>Расходы этажей: симуляция и обновление кадра считаются отдельно</DeepRimVertical.Profiler.Floors>

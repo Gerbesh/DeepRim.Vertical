@@ -206,7 +206,7 @@ public sealed class VerticalColonyNativeProbe : GameComponent
             map.terrainGrid.SetTerrain(cell, TerrainDefOf.Concrete); map.fogGrid.Unfog(cell);
         }
         var requiredWork = new[] { WorkTypeDefOf.Mining, WorkTypeDefOf.Construction, WorkTypeDefOf.Hauling,
-            WorkTypeDefOf.Crafting, WorkTypeDefOf.Cleaning, WorkTypeDefOf.Doctor, WorkTypeDefOf.Research };
+            WorkTypeDefOf.Crafting, WorkTypeDefOf.Cleaning, WorkTypeDefOf.Doctor, WorkTypeDefOf.Research, WorkTypeDefOf.PlantCutting };
         Func<Pawn, bool> capable = p => p.DevelopmentalStage == DevelopmentalStage.Adult
             && requiredWork.All(w => !p.WorkTypeIsDisabled(w)) && !p.WorkTagIsDisabled(WorkTags.Violent);
         worker = upper.mapPawns.FreeColonists.FirstOrDefault(capable);
@@ -610,23 +610,36 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         lower.roofGrid.SetRoof(natural, null);
         Log.Message("[COLONY PROBE] Upper deck/full block ceilings, removal and native/player roof preservation PASS");
         var section = high.mapDrawer.SectionAt(new IntVec3(23, 0, 24));
+        var fogFixtureCell = new IntVec3(26, 0, 26);
+        var wasFogged = lower.fogGrid.IsFogged(fogFixtureCell);
+        lower.fogGrid.Refog(CellRect.CenteredOn(fogFixtureCell, 0));
         var layer = new DeepRim.Vertical.VerticalRendering.SectionLayer_LowerLevel(section);
         layer.Prepare(lower, 0, DeepRim.Vertical.VerticalRendering.UpperLevelTerrainGrid.GetFor(high), 1, .86f,
             DeepRim.Vertical.VerticalRendering.UpperOverlayVisibilityMask.GetFor(high), true);
         try
         {
             layer.Regenerate(); var initialMeshes = layer.subMeshes.Select(m => m.mesh).ToArray();
+            Require(layer.subMeshes.All(m => m.colors.Count == 0 || m.colors.Count == m.verts.Count), "Underlay color/vertex buffer mismatch");
+            Require(layer.subMeshes.Any(m => m.material == DeepRim.Vertical.VerticalRendering.VerticalSectionLayerUtility.UpperVoidNeutralMaterial
+                && m.verts.Count > 0), "Fogged lower cells reveal camera clear color through upper void");
             Require(initialMeshes.Length > 0, "Render mesh fixture empty");
             for (var repeat = 0; repeat < 25; repeat++) layer.Regenerate();
             Require(layer.subMeshes.Count == initialMeshes.Length && layer.subMeshes.Select(m => m.mesh).SequenceEqual(initialMeshes),
                 "Repeated regeneration grows or replaces owned overlay meshes");
+            Require(layer.subMeshes.All(m => m.colors.Count == 0 || m.colors.Count == m.verts.Count), "Regenerated underlay color/vertex buffer mismatch");
         }
-        finally { foreach (var mesh in layer.subMeshes) DeepRim.Vertical.VerticalRendering.VerticalSectionLayerUtility.ForgetMesh(mesh); layer.Dispose(); }
+        finally
+        {
+            foreach (var mesh in layer.subMeshes) DeepRim.Vertical.VerticalRendering.VerticalSectionLayerUtility.ForgetMesh(mesh);
+            layer.Dispose();
+            if (!wasFogged) lower.fogGrid.Unfog(fogFixtureCell);
+        }
         Log.Message("[COLONY PROBE] Repeated overlay regeneration retains owned mesh identities/count PASS");
     }
     private void MoveWorker(Map map, IntVec3 cell)
     {
-        worker.jobs.StopAll(); worker.carryTracker.TryDropCarriedThing(worker.Position, ThingPlaceMode.Near, out _);
+        worker.jobs.StopAll();
+        if (worker.carryTracker.CarriedThing != null) worker.carryTracker.TryDropCarriedThing(worker.Position, ThingPlaceMode.Near, out _);
         worker.DeSpawn(); GenSpawn.Spawn(worker, cell, map);
         foreach (var need in worker.needs.AllNeeds) need.CurLevelPercentage = 1;
     }
@@ -660,6 +673,20 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         Find.ResearchManager.SetCurrentProject(project);
         var before = Find.ResearchManager.GetProgress(project); worker.skills.GetSkill(SkillDefOf.Intellectual).Level = 20;
         RunWork("research", WorkTypeDefOf.Research, surface.Map, () => Find.ResearchManager.GetProgress(project) > before);
+        worker.jobs.StopAll();
+        var plantCell = new IntVec3(36, 0, 29);
+        worker.skills.GetSkill(SkillDefOf.Plants).Level = 20;
+        middle.Map.terrainGrid.SetTerrain(plantCell, TerrainDefOf.Soil);
+        var cutPlant = (Plant)Spawn("Plant_Potato", middle.Map, plantCell.x, plantCell.z);
+        cutPlant.Growth = 1;
+        middle.Map.designationManager.AddDesignation(new Designation(cutPlant, DesignationDefOf.CutPlant));
+        RunWork("designated plant cutting", WorkTypeDefOf.PlantCutting, middle.Map, () => cutPlant.Destroyed);
+        bottom.Map.terrainGrid.SetTerrain(plantCell, TerrainDefOf.Soil);
+        var harvestPlant = (Plant)Spawn("Plant_Potato", bottom.Map, plantCell.x, plantCell.z);
+        harvestPlant.Growth = 1;
+        bottom.Map.designationManager.AddDesignation(new Designation(harvestPlant, DesignationDefOf.HarvestPlant));
+        RunWork("designated plant harvest", WorkTypeDefOf.PlantCutting, bottom.Map,
+            () => harvestPlant.Destroyed || harvestPlant.Growth < .95f);
         worker.jobs.StopAll();
         foreach (var work in DefDatabase<WorkTypeDef>.AllDefs) worker.workSettings.SetPriority(work, 0);
     }

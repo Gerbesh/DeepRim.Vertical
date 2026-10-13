@@ -2,6 +2,7 @@
 
 - [Начало](Home.md)
 - [Аудит 13 октября](Audit-2026-10-13.md)
+- [Живой DEV-прогон](Live-profiling-2026-10-13.md)
 - [Единая колония и проверки](Unified-colony.md)
 - [Аудит рендера](Rendering-audit.md)
 - [Движок: рендер](Engine-rendering.md)

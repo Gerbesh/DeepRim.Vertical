@@ -83,6 +83,7 @@
   <DeepRimVertical.Profiler.Recording>Recording</DeepRimVertical.Profiler.Recording>
   <DeepRimVertical.Profiler.Finished>Finished</DeepRimVertical.Profiler.Finished>
   <DeepRimVertical.Profiler.Summary>{0}: {1}s | actual TPS: {2} | FPS from frame intervals: {3}</DeepRimVertical.Profiler.Summary>
+  <DeepRimVertical.Profiler.TargetRates>Target TPS observed during capture: {0}. The third speed automatically changes from 360 to 720 while all colonists sleep; a forced pause gives 0. Compare actual TPS with the target for that part of the capture.</DeepRimVertical.Profiler.TargetRates>
   <DeepRimVertical.Profiler.TickSummary>Tick: mean {0}ms, p95 ≤ {1}ms, max {2}ms | GC 0/1/2: {3} | managed heap delta: {4}MB</DeepRimVertical.Profiler.TickSummary>
   <DeepRimVertical.Profiler.Caveat>Instrumentation adds overhead. Detail scopes overlap their parents: do not sum rows. p95 is a histogram upper bound. Main-thread CPU only; GPU and background path jobs are not timed. Heap delta is not allocated bytes.</DeepRimVertical.Profiler.Caveat>
   <DeepRimVertical.Profiler.Floors>Floor costs: simulation and frame updates are separate</DeepRimVertical.Profiler.Floors>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>DeepRim.Performance.NativeProbe</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>../../../obj/native-performance-probe/Assemblies/</OutputPath>
+    <RimWorldDir Condition="'$(RimWorldDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="DeepRim.Vertical"><HintPath>../../../1.6/Assemblies/DeepRim.Vertical.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(RimWorldDir)/RimWorldWin64_Data/Managed/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(RimWorldDir)/RimWorldWin64_Data/Managed/UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(RimWorldDir)/RimWorldWin64_Data/Managed/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule"><HintPath>$(RimWorldDir)/RimWorldWin64_Data/Managed/UnityEngine.ScreenCaptureModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(RimWorldDir)/RimWorldWin64_Data/Managed/UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

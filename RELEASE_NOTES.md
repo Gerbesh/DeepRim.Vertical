@@ -17,7 +17,7 @@ This development snapshot targets the locally installed RimWorld 1.6 assemblies.
 - thermoventilation intake/duct/outlet, electricity risers and optional Dubs Bad Hygiene water/sewage risers; [setup and acceptance checks](docs/vertical_utilities_test_plan.md)
 - a single real room temperature for underground heat transfer, with the disabled geothermal profile correctly bypassed
 
-- on-demand per-floor profiler (button beside LVL), 30-second CSV/TXT captures for accelerated-game lag diagnosis; native three-floor hooks/export/cleanup checked, actual lag benchmark still pending
+- on-demand per-floor profiler (button beside LVL), 34 hooks, 30-second CSV/TXT captures and observed target TPS; [22 real rendered DEV five-floor captures](docs/live_profiling_2026-10-13.md), with measured FPS/TPS, fixed runtime defects and explicit large-colony limits
 
 - independent floor creation without cursor-based excavation or automatic portals
 - buildable stairs up/down under Architect -> Structure; completed Construction work opens a one-cell landing and a paired passage

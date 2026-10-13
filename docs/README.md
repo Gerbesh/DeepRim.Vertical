@@ -1,5 +1,7 @@
 # Documentation index
 
+Measured in a real DEV game: [October 13 rendered five-floor performance run](live_profiling_2026-10-13.md), with raw FPS/TPS summary, runtime defects fixed and limits.
+
 Latest review: [October 13 profiler and whole-mod logic audit](mod_logic_audit_2026-10-13.md), with verified fixes and explicitly open defects/adapters.
 
 Current production assembly, native regression coverage and remaining acceptance: [unified colony verification](unified_colony_verification.md).
