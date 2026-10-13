@@ -42,7 +42,6 @@ public static class VerticalCameraSyncService
 
         CameraJumper.TryJump(jumpCell, targetMap, CameraJumper.MovementMode.Cut);
         Restore(driver, targetMap, view);
-        VerticalMapInvalidationService.MarkSiteDirty(targetMap);
         VerticalOverlayDebugService.Log(
             $"JumpPreservingView completed currentMap={(Find.CurrentMap == null ? "null" : Find.CurrentMap.uniqueID.ToString())} jumpCell={jumpCell}.");
     }

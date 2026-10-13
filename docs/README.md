@@ -1,5 +1,7 @@
 # Documentation index
 
+Latest review: [October 13 profiler and whole-mod logic audit](mod_logic_audit_2026-10-13.md), with verified fixes and explicitly open defects/adapters.
+
 Current production assembly, native regression coverage and remaining acceptance: [unified colony verification](unified_colony_verification.md).
 
 The current [unified colony gameplay guide](unified_colony_test_plan.md) covers shared wealth/storyteller/history/resources, remote needs and production supplies, additional native work and direct cross-floor projectiles. Earlier audit and routing reports below are historical milestones; their missing-feature lists are superseded by this guide and [current known issues](11_known_issues.md).

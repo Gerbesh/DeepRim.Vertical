@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop'
 $routeRoot=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $routeManaged=Join-Path $RimWorldDir 'RimWorldWin64_Data/Managed'
 foreach($dll in @('UnityEngine.CoreModule.dll','UnityEngine.IMGUIModule.dll','UnityEngine.dll','Assembly-CSharp.dll')){[void][Reflection.Assembly]::LoadFrom((Join-Path $routeManaged $dll))}
-[void][Reflection.Assembly]::LoadFrom('C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll')
+[void][Reflection.Assembly]::LoadFrom('C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\1.6\Assemblies\0Harmony.dll')
 [void][Reflection.Assembly]::LoadFrom((Join-Path $routeRoot '1.6/Assemblies/DeepRim.Vertical.dll'))
 function Assert-Route([bool]$pass,[string]$message){if(-not $pass){throw $message}}
 $edges=[Collections.Generic.Dictionary[string,single]]::new()

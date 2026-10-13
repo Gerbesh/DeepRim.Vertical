@@ -12,6 +12,7 @@
     <Platforms>AnyCPU</Platforms>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <RimWorldDir Condition="'$(RimWorldDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldDir>
+    <HarmonyAssembly Condition="'$(HarmonyAssembly)' == '' and Exists('C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\1.6\Assemblies\0Harmony.dll')">C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\1.6\Assemblies\0Harmony.dll</HarmonyAssembly>
     <HarmonyAssembly Condition="'$(HarmonyAssembly)' == ''">C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HarmonyAssembly>
   </PropertyGroup>
   <ItemGroup>

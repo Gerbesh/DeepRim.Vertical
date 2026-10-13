@@ -92,7 +92,8 @@ public static class VerticalProfiler
         catch (Exception error)
         {
             Running = false; game = null;
-            VerticalProfilerPatches.Uninstall();
+            try { VerticalProfilerPatches.Uninstall(); }
+            catch (Exception cleanup) { Log.Error("[DeepRim Vertical][Profiler] Start cleanup failed: " + cleanup); }
             reason = "DeepRimVertical.Profiler.StartFailed".Translate(error.Message);
             Log.Error($"[DeepRim Vertical][Profiler] Capture could not start: {error}");
             return false;

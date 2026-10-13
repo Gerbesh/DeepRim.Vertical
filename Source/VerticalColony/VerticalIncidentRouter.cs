@@ -37,7 +37,7 @@ public static class VerticalColonyIncidentAvailabilityPatch
     public static void Prefix(IncidentParms parms, out int __state)
     {
         __state = ColonyQueryScope.Disease;
-        if (parms.quest == null) ColonyQueryScope.Disease++;
+        ColonyQueryScope.Disease = parms.quest == null && ColonyQueryScope.ExplicitQuest == 0 ? __state + 1 : 0;
     }
     public static void Postfix(IncidentWorker __instance, IncidentParms parms, ref bool __result)
     {
@@ -49,8 +49,10 @@ public static class VerticalColonyIncidentAvailabilityPatch
 [HarmonyPatch(typeof(Storyteller), nameof(Storyteller.TryFire))]
 public static class VerticalColonyIncidentExecutionPatch
 {
-    public static void Prefix(FiringIncident fi)
+    public static void Prefix(FiringIncident fi, out int __state)
     {
+        __state = ColonyQueryScope.ExplicitQuest;
+        if (fi?.parms?.quest != null || fi?.sourceQuestPart != null) ColonyQueryScope.ExplicitQuest++;
         if (fi?.parms?.target is not Map map || fi.parms.quest != null || fi.sourceQuestPart != null
             || !VerticalColonyUtility.TrySite(map, out var site)) return;
         var anchor = VerticalColonyUtility.Anchor(site);
@@ -62,12 +64,13 @@ public static class VerticalColonyIncidentExecutionPatch
         }
         else fi.parms.target = anchor;
     }
+    public static void Finalizer(int __state) => ColonyQueryScope.ExplicitQuest = __state;
 }
 [HarmonyPatch(typeof(IncidentWorker), nameof(IncidentWorker.TryExecute))]
 public static class VerticalColonyDiseaseExecutionScopePatch
 {
     public static void Prefix(IncidentParms parms, out int __state)
-    { __state = ColonyQueryScope.Disease; if (parms.quest == null) ColonyQueryScope.Disease++; }
+    { __state = ColonyQueryScope.Disease; ColonyQueryScope.Disease = parms.quest == null && ColonyQueryScope.ExplicitQuest == 0 ? __state + 1 : 0; }
     public static void Finalizer(int __state) => ColonyQueryScope.Disease = __state;
 }
 [HarmonyPatch]

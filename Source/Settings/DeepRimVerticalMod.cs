@@ -37,16 +37,13 @@ public sealed class DeepRimVerticalMod : Mod
         listing.CheckboxLabeled("DeepRimVertical.Settings.EnableDepthThermalProfile".Translate(), ref settings.enableDepthThermalProfile);
         settings.coldDepthLevel = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.ColdDepthLevel".Translate(settings.coldDepthLevel), settings.coldDepthLevel, -10f, -1f));
         settings.coldDepthTemp = listing.SliderLabeled("DeepRimVertical.Settings.ColdDepthTemp".Translate(settings.coldDepthTemp.ToStringTemperature()), settings.coldDepthTemp, -80f, 10f);
-        settings.hotDepthLevel = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.HotDepthLevel".Translate(settings.hotDepthLevel), settings.hotDepthLevel, -25f, -4f));
+        settings.hotDepthLevel = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.HotDepthLevel".Translate(settings.hotDepthLevel), settings.hotDepthLevel, -25f, Mathf.Min(-4f, settings.coldDepthLevel - 1)));
         settings.hotDepthTemp = listing.SliderLabeled("DeepRimVertical.Settings.HotDepthTemp".Translate(settings.hotDepthTemp.ToStringTemperature()), settings.hotDepthTemp, -20f, 120f);
-        settings.shaftHeatExchangeMultiplier = listing.SliderLabeled("DeepRimVertical.Settings.ShaftHeatExchangeMultiplier".Translate(settings.shaftHeatExchangeMultiplier.ToStringPercent()), settings.shaftHeatExchangeMultiplier, 0f, 5f);
-        settings.closedPortalHeatLeakMultiplier = listing.SliderLabeled("DeepRimVertical.Settings.ClosedPortalHeatLeakMultiplier".Translate(settings.closedPortalHeatLeakMultiplier.ToStringPercent()), settings.closedPortalHeatLeakMultiplier, 0f, 2f);
         listing.GapLine();
         listing.Label("DeepRimVertical.Settings.Jobs".Translate());
         listing.CheckboxLabeled("DeepRimVertical.Settings.AllowCrossLevelBills".Translate(), ref settings.allowCrossLevelBills);
         listing.CheckboxLabeled("DeepRimVertical.Settings.AllowCrossLevelHauling".Translate(), ref settings.allowCrossLevelHauling);
         listing.CheckboxLabeled("DeepRimVertical.Settings.PreferSameLevelWork".Translate(), ref settings.preferSameLevelWork);
-        settings.crossLevelBillIngredientSearchRangeByFloor = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.BillRangeByFloor".Translate(settings.crossLevelBillIngredientSearchRangeByFloor), settings.crossLevelBillIngredientSearchRangeByFloor, 10f, 150f));
         settings.crossLevelHaulMaxFloorDistance = Mathf.RoundToInt(listing.SliderLabeled("DeepRimVertical.Settings.HaulMaxFloorDistance".Translate(settings.crossLevelHaulMaxFloorDistance), settings.crossLevelHaulMaxFloorDistance, 1f, 25f));
         listing.GapLine();
         listing.Label("DeepRimVertical.Settings.UpperFloors".Translate());
@@ -68,6 +65,5 @@ public sealed class DeepRimVerticalMod : Mod
         }
 
         listing.End();
-        settings.Write();
     }
 }

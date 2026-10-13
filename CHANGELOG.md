@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - 2026-10-13
+
+- Audit profiler and cross-system lifecycle: 34 on-demand hooks now expose GUI/self-overhead, route/work planning, task/utility maintenance, wealth, ceilings, plumbing and power graph. Count failed tick attempts separately from successful TPS; target implemented declarations on Mono and retry failed hook cleanup without blocking other removals.
+- Reuse owned snow/sand/blur meshes instead of allocating orphan meshes on every underlay regeneration; skip Odyssey sand assets when disabled. Remove duplicate terrain/stair invalidation, camera-wide resets and structural invalidation from dynamic despawns.
+- Restore ceilings below still-present upper construction and prevent repeating roof-removal work. Apply the cross-floor bill setting to planning/intent cancellation; remove inactive settings controls, stop per-GUI-event settings writes and enforce valid cold/hot depth ordering.
+- Isolate nested explicitly targeted quest disease queries and move non-surface enemy-raid rejection to the public availability entry point. Update Harmony resolution for versioned Workshop layout.
+- Pass local suites and two four-floor native regressions (all DLC+DBH and Core only), including three saves/reloads, 25 mesh rebuilds, ceiling recovery, disabled bills, quest scoping and 34-hook exports/cleanup. Real-save lag measurement and explicit residual defects are recorded in the audit.
+
 ## Unreleased - 2026-10-12
 
 - Count real materials across site floors for native build designators, including their independent material-presence check; refresh aggregate UI counts after native stock updates without changing local job inventories.

@@ -101,7 +101,6 @@ public static class VerticalStairService
 
         targetMap.fogGrid.Unfog(cell);
         targetMap.fogGrid.FloodUnfogAdjacent(cell, sendLetters: false);
-        VerticalMapInvalidationService.MarkSiteDirty(sourceMap);
         return true;
     }
 

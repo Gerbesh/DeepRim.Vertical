@@ -13,7 +13,9 @@ public enum VerticalProfileMetric
     MeshUpdate, MeshDraw, PathService, JobSearch, Temperature, Power,
     ClimateSync, Transfers, FullInvalidation, CellInvalidation,
     StateRebuild, SupportRebuild, TerrainRebuild, MaskRebuild,
-    UnderlayRebuild, WorkerScan, GhostDraw, ObjectTick
+    UnderlayRebuild, WorkerScan, GhostDraw, ObjectTick,
+    GuiCpu, ProfilerUi, NeutralBaseRebuild, WorkPlanning, RoutePlanning,
+    TaskMaintenance, UtilityMaintenance, ColonyAccounting, CeilingSync, PlumbingRefresh, PowerGraph
 }
 
 // Fixed-size histograms keep captures bounded. Percentiles are upper bounds, not exact samples.
@@ -109,7 +111,8 @@ public sealed class VerticalProfileSnapshot
     public readonly Dictionary<string, string> Metadata = new();
     public readonly Dictionary<int, VerticalProfileMapInfo> Maps = new();
     public readonly List<VerticalProfileRow> Rows = new();
-    public long Ticks => Find(-1, VerticalProfileMetric.GameTick)?.Calls ?? 0;
+    public long TickAttempts => Find(-1, VerticalProfileMetric.GameTick)?.Calls ?? 0;
+    public long Ticks => TickAttempts - (Find(-1, VerticalProfileMetric.GameTick)?.Errors ?? 0);
     public long Frames => Find(-1, VerticalProfileMetric.FrameCpu)?.Calls ?? 0;
     public double Tps => Seconds > 0 ? Ticks / Seconds : 0;
     public VerticalProfileStats Find(int mapId, VerticalProfileMetric metric) =>
@@ -134,6 +137,7 @@ public sealed class VerticalProfileSnapshot
             ["started_utc"] = StartedUtc.ToString("O", CultureInfo.InvariantCulture),
             ["elapsed_seconds"] = Number(Seconds), ["actual_tps"] = Number(Tps),
             ["ticks"] = Ticks.ToString(CultureInfo.InvariantCulture),
+            ["tick_attempts"] = TickAttempts.ToString(CultureInfo.InvariantCulture),
             ["frames"] = Frames.ToString(CultureInfo.InvariantCulture),
             ["stop_reason"] = StopReason, ["running"] = Running.ToString(),
             ["managed_heap_delta_bytes"] = HeapDelta.ToString(CultureInfo.InvariantCulture),

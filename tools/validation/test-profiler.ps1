@@ -1,6 +1,6 @@
 param(
     [string]$RimWorldDir = 'C:\Program Files (x86)\Steam\steamapps\common\RimWorld',
-    [string]$HarmonyAssembly = 'C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll',
+    [string]$HarmonyAssembly = 'C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\1.6\Assemblies\0Harmony.dll',
     [switch]$ClrProbe
 )
 $ErrorActionPreference = 'Stop'
@@ -49,6 +49,9 @@ Add-TestRow $snapshot 42 ObjectTick 15 $specialLabel -73
 Add-TestRow $snapshot 43 ThingTick 99 'Other floor'
 Assert-Check ($snapshot.SimulationMs(42) -eq 35) 'Floor totals double-count details or another floor.'
 Assert-Check ($snapshot.Tps -eq .5) 'TPS must use completed tick calls and real capture duration.'
+$failedTick = $snapshot.Find(-1, [DeepRim.Vertical.VerticalProfiling.VerticalProfileMetric]::GameTick)
+$failedTick.Add(1, $true)
+Assert-Check ($snapshot.TickAttempts -eq 2 -and $snapshot.Ticks -eq 1 -and $snapshot.Tps -eq .5) 'Failed ticks must not inflate successful TPS.'
 $originalCulture=[Threading.Thread]::CurrentThread.CurrentCulture
 try {
     [Threading.Thread]::CurrentThread.CurrentCulture=[Globalization.CultureInfo]::GetCultureInfo('ru-RU')
@@ -63,8 +66,9 @@ try {
 # desktop .NET Core, and .NET Framework cannot JIT all current game interface implementations.
 if (-not $ClrProbe) {
 $hooks=[DeepRim.Vertical.VerticalProfiling.VerticalProfilerPatches]::GetHooks()
-Assert-Check ($hooks.Count -eq 23) 'Expected 23 hook contracts.'
+Assert-Check ($hooks.Count -eq 34) 'Expected 34 hook contracts.'
 foreach($hook in $hooks) {
+    Assert-Check ($hook.Method.ReflectedType -eq $hook.Method.DeclaringType) 'Inherited hook must target its implemented declaration.'
     $prefixState=@($hook.Prefix.GetParameters() | Where-Object { $_.Name -eq '__state' })[0]
     $finalState=@($hook.Finalizer.GetParameters() | Where-Object { $_.Name -eq '__state' })[0]
     Assert-Check ($prefixState.ParameterType.GetElementType() -eq $finalState.ParameterType) "State mismatch: $($hook.Method)"
@@ -165,5 +169,5 @@ if ($ClrProbe) {
 } else {
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath -RimWorldDir $RimWorldDir -HarmonyAssembly $HarmonyAssembly -ClrProbe
     if ($LASTEXITCODE -ne 0) { throw 'CLR profiling probe failed.' }
-    Write-Output 'PASS: timing statistics/outliers, floor partition, TPS, CSV/locales, 23 engine hook contracts, nested holders, capture epochs, RU/EN labels. Full Unity/Mono capture requires in-game validation.'
+    Write-Output 'PASS: timing statistics/outliers, floor partition, TPS, CSV/locales, 34 engine hook contracts, nested holders, capture epochs, RU/EN labels. Full Unity/Mono capture requires in-game validation.'
 }

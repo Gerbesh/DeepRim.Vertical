@@ -51,7 +51,7 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
         var cellRect = section.CellRect;
         var snowSubMesh = SetupSnowSubMesh();
         var showSnowSubMesh = false;
-        var sandSubMesh = SetupSandSubMesh();
+        var sandSubMesh = ModsConfig.OdysseyActive ? SetupSandSubMesh() : null;
         var showSandSubMesh = false;
         var blurSubMesh = SetupBlurSubMesh();
         blurSubMesh.SetBlurringSubMesh(true);
@@ -215,19 +215,13 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
 
     private LayerSubMesh GetColorSubMesh(string name, Material mat, Texture2D pollutedTex = null)
     {
-        var mesh = new Mesh();
-        if (UnityData.isEditor)
-        {
-            mesh.name = $"SectionLayerSubMesh_{GetType().Name}_{name}_{Map.Tile}";
-        }
-
-        var subMesh = new LayerSubMesh(mesh, mat, null);
+        var subMesh = GetSubMesh(mat);
         if (ModsConfig.BiotechActive && pollutedTex != null)
         {
             subMesh.material.SetTexture(ShaderPropertyIDs.PollutedTex, pollutedTex);
         }
 
-        if (subMesh.mesh.vertexCount == 0)
+        if (subMesh.verts.Count == 0)
         {
             SectionLayerGeometryMaker_Solid.MakeBaseGeometry(section, subMesh, pollutedTex == null ? AltitudeLayer.Terrain : AltitudeLayer.MetaOverlays);
         }
@@ -288,11 +282,11 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
 
     private void FinalizeSubMesh(bool showSubMesh, LayerSubMesh layerSubMesh)
     {
+        if (layerSubMesh == null) return;
+        layerSubMesh.disabled = !showSubMesh;
         if (showSubMesh)
         {
-            layerSubMesh.disabled = false;
             layerSubMesh.FinalizeMesh(MeshParts.Colors);
-            subMeshes.Add(layerSubMesh);
         }
     }
 

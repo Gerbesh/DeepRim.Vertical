@@ -77,7 +77,8 @@ public sealed class GameComponent_VerticalTasks : GameComponent
         if (task.kind == VerticalTaskKind.Supply && task.destination?.Spawned != true && task.destinationMap?.Map != null)
             task.destination = task.destinationCell.GetThingList(task.destinationMap.Map).OfType<Frame>()
                 .FirstOrDefault(f => f.BuildDef == task.destinationBuildDef && f.Stuff == task.destinationStuff && f.Faction == task.pawn.Faction);
-        if (task.kind == VerticalTaskKind.Work) return VerticalRouteUtility.Allowed(task.pawn, task.destination);
+        if (task.kind == VerticalTaskKind.Work) return VerticalRouteUtility.Allowed(task.pawn, task.destination)
+            && (VerticalRuntime.Settings.allowCrossLevelBills || task.workGiver?.Worker is not WorkGiver_DoBill);
         if (task.kind == VerticalTaskKind.Food) return task.pawn.needs.food != null && VerticalNeeds.FoodAllowed(task.pawn, task.destination);
         if (task.kind == VerticalTaskKind.Rest) return task.destination is Building_Bed bed && VerticalNeeds.BedAllowed(task.pawn, bed);
         if (task.kind is VerticalTaskKind.Haul or VerticalTaskKind.Supply or VerticalTaskKind.BillSupply or VerticalTaskKind.RefuelSupply)

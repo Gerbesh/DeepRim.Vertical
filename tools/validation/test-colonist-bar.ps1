@@ -1,6 +1,6 @@
 param(
     [string]$RimWorldDir = 'C:\Program Files (x86)\Steam\steamapps\common\RimWorld',
-    [string]$HarmonyAssembly = 'C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll'
+    [string]$HarmonyAssembly = 'C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\1.6\Assemblies\0Harmony.dll'
 )
 $ErrorActionPreference = 'Stop'
 # The game's bundled Harmony uses the classic .NET reflection runtime, like RimWorld/Mono.

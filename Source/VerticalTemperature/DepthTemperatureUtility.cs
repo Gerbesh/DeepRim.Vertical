@@ -21,8 +21,8 @@ public static class DepthTemperatureUtility
         }
 
         var settings = VerticalRuntime.Settings;
-        var coldDepth = -settings.coldDepthLevel;
-        var hotDepth = -settings.hotDepthLevel;
+        var coldDepth = Mathf.Max(1, -settings.coldDepthLevel);
+        var hotDepth = Mathf.Max(coldDepth + 1, -settings.hotDepthLevel);
         if (depth <= coldDepth)
         {
             return Lerp(0f, settings.coldDepthTemp, depth / (float)coldDepth);

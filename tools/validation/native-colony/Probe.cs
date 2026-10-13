@@ -176,7 +176,7 @@ public sealed class VerticalColonyNativeProbe : GameComponent
                     TestClosedRoute();
                     TestCargoCancellation();
                     TestProfiler();
-                    File.WriteAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "result.txt"), "PASS: native four-floor colony; shared map/world/history wealth, population, story state, resource readout and disease candidates; autonomous mining, physical hauling and reservations, construction, food/rest, recipe ingredients and global until-X, fuel, repair/clean/tend/research; bidirectional projectiles and blocked LOS; three save/load cycles including mid-flight; original-map queued orders, drafted travel with independent destination geometry, closed-route cargo conservation; four-floor profiler, 23 hooks, exports and cleanup.");
+                    File.WriteAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "result.txt"), "PASS: native four-floor colony; shared map/world/history wealth, population, story state, resource readout and disease candidates; autonomous mining, physical hauling and reservations, construction, food/rest, recipe ingredients and global until-X, fuel, repair/clean/tend/research; bidirectional projectiles and blocked LOS; three save/load cycles including mid-flight; original-map queued orders, drafted travel with independent destination geometry, closed-route cargo conservation; four-floor profiler, 34 hooks, exports and cleanup.");
                     Log.Message("[COLONY PROBE] PASS"); Application.Quit(); return;
                 }
             }
@@ -300,7 +300,18 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         for (var tick = 0; tick < 181; tick++) Find.TickManager.DoSingleTick();
         var localHaul = JobMaker.MakeJob(JobDefOf.HaulToCell, localWood, new IntVec3(46, 0, 30));
         localHaul.workGiverDef = DefDatabase<WorkGiverDef>.GetNamed("HaulGeneral");
-        var betterHaul = VerticalWorkSearch.Find(worker, localHaul);
+        Job betterHaul = null;
+        for (var attempt = 0; attempt < 40 && betterHaul == null; attempt++)
+        {
+            foreach (var need in worker.needs.AllNeeds) need.CurLevelPercentage = 1f;
+            betterHaul = VerticalWorkSearch.Find(worker, localHaul);
+            if (betterHaul == null) for (var tick = 0; tick < 181; tick++) Find.TickManager.DoSingleTick();
+        }
+        if (betterHaul == null) Log.Message("[COLONY PROBE] Haul diagnostic: eligible=" + VerticalWorkSearch.Eligible(worker)
+            + " preferLocal=" + DeepRim.Vertical.VerticalRuntime.Settings.preferSameLevelWork
+            + " owned=" + GameComponent_VerticalTasks.Get().HasTask(worker)
+            + " candidates=" + surface.Map.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEver).Count
+            + " source=" + VerticalWorkSearch.SourceUsable(worker, steel));
         Require(betterHaul != null && GameComponent_VerticalTasks.Get().Tasks.Any(t => t.pawn == worker && t.source == steel),
             "Local hauling displaced higher-priority cross-floor storage");
         JobMaker.ReturnToPool(localHaul); localWood.Destroy(); localZone.Delete();
@@ -346,7 +357,14 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         var victims = (System.Collections.Generic.IEnumerable<Pawn>)typeof(IncidentWorker_DiseaseHuman).GetMethod("PotentialVictimCandidates", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
             .Invoke(new IncidentWorker_DiseaseHuman(), new object[] { surface.Map });
         Require(victims.Contains(worker) && victims.Count() == 3, "Disease ignores underground colonists");
+        VerticalColonyIncidentAvailabilityPatch.Prefix(new IncidentParms { target = surface.Map, quest = new Quest() }, out var questDiseaseState);
+        var questVictims = (System.Collections.Generic.IEnumerable<Pawn>)typeof(IncidentWorker_DiseaseHuman).GetMethod("PotentialVictimCandidates", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            .Invoke(new IncidentWorker_DiseaseHuman(), new object[] { surface.Map });
+        Require(!questVictims.Contains(worker), "Nested explicitly targeted quest inherited colony-wide disease candidates");
+        VerticalColonyIncidentAvailabilityPatch.Finalizer(questDiseaseState);
+        Require(victims.Count() == 3, "Quest scope did not restore outer colony disease scope");
         VerticalColonyIncidentAvailabilityPatch.Finalizer(diseaseState);
+        Require(!IncidentDefOf.RaidEnemy.Worker.CanFireNow(new IncidentParms { target = bottom.Map, points = 100 }), "Raid availability bypasses non-surface floor rejection");
         worker.DeSpawn(); GenSpawn.Spawn(worker, oldPosition, surface.Map);
         var first = Spawn("Steel", surface.Map, 28, 28, 10); var second = Spawn("Steel", middle.Map, 28, 28, 20);
         foreach (var map in new[] { surface.Map, middle.Map })
@@ -429,6 +447,18 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         Require(!productionBill.ShouldDoNow() && recipe.WorkerCounter.CountProducts(productionBill) == 20, "Until-X does not count another floor");
         blocks.Destroy(); middle.Map.resourceCounter.UpdateResourceCounts();
         Spawn("ChunkGranite", surface.Map, 26, 28);
+        VerticalColonyUtility.TrySite(bottom.Map, out var productionSite);
+        var billScanner = DefDatabase<WorkGiverDef>.AllDefs.Select(d => d.Worker).OfType<WorkGiver_DoBill>()
+            .First(s => s.ThingIsUsableBillGiver(bench));
+        DeepRim.Vertical.VerticalRuntime.Settings.allowCrossLevelBills = false;
+        try
+        {
+            Require(VerticalProductionSupply.Find(worker, productionSite, billScanner) == null
+                && !VerticalProductionSupply.BillValid(new VerticalTaskRecord { pawn = worker, bill = productionBill, destination = bench }),
+                "Disabled cross-floor bills still produce supply plans");
+        }
+        finally { DeepRim.Vertical.VerticalRuntime.Settings.allowCrossLevelBills = true; }
+        Log.Message("[COLONY PROBE] Cross-floor bill setting rejects planning and existing supply intent PASS");
         var outputZone = new Zone_Stockpile(StorageSettingsPreset.DefaultStockpile, bottom.Map.zoneManager);
         bottom.Map.zoneManager.RegisterZone(outputZone); outputZone.AddCell(new IntVec3(50, 0, 27));
         outputZone.settings.filter.SetDisallowAll(); outputZone.settings.filter.SetAllow(DefDatabase<ThingDef>.GetNamed("BlocksGranite"), true);
@@ -533,6 +563,11 @@ public sealed class VerticalColonyNativeProbe : GameComponent
         ceiling.MapComponentTick();
         Require(ceiling.Owns(fresh) && lower.roofGrid.RoofAt(fresh) == RoofDefOf.RoofConstructed,
             "Upper deck did not create lower owned ceiling");
+        lower.areaManager.NoRoof[fresh] = true;
+        Require(!new WorkGiver_RemoveRoof().HasJobOnCell(worker, fresh), "Roof removal repeatedly targets a structural ceiling");
+        lower.roofGrid.SetRoof(fresh, null); ceiling.MapComponentTick();
+        Require(ceiling.Owns(fresh) && lower.roofGrid.RoofAt(fresh) == RoofDefOf.RoofConstructed, "Externally removed structural ceiling was not restored");
+        lower.areaManager.NoRoof[fresh] = false;
         high.terrainGrid.RemoveFoundation(fresh, false);
         high.terrainGrid.SetTerrain(fresh, VerticalDefOf.DeepRimVertical_UpperVoid);
         ceiling.MapComponentTick();
@@ -574,6 +609,20 @@ public sealed class VerticalColonyNativeProbe : GameComponent
             "Natural roof was deleted with the upper deck");
         lower.roofGrid.SetRoof(natural, null);
         Log.Message("[COLONY PROBE] Upper deck/full block ceilings, removal and native/player roof preservation PASS");
+        var section = high.mapDrawer.SectionAt(new IntVec3(23, 0, 24));
+        var layer = new DeepRim.Vertical.VerticalRendering.SectionLayer_LowerLevel(section);
+        layer.Prepare(lower, 0, DeepRim.Vertical.VerticalRendering.UpperLevelTerrainGrid.GetFor(high), 1, .86f,
+            DeepRim.Vertical.VerticalRendering.UpperOverlayVisibilityMask.GetFor(high), true);
+        try
+        {
+            layer.Regenerate(); var initialMeshes = layer.subMeshes.Select(m => m.mesh).ToArray();
+            Require(initialMeshes.Length > 0, "Render mesh fixture empty");
+            for (var repeat = 0; repeat < 25; repeat++) layer.Regenerate();
+            Require(layer.subMeshes.Count == initialMeshes.Length && layer.subMeshes.Select(m => m.mesh).SequenceEqual(initialMeshes),
+                "Repeated regeneration grows or replaces owned overlay meshes");
+        }
+        finally { foreach (var mesh in layer.subMeshes) DeepRim.Vertical.VerticalRendering.VerticalSectionLayerUtility.ForgetMesh(mesh); layer.Dispose(); }
+        Log.Message("[COLONY PROBE] Repeated overlay regeneration retains owned mesh identities/count PASS");
     }
     private void MoveWorker(Map map, IntVec3 cell)
     {
@@ -672,16 +721,24 @@ public sealed class VerticalColonyNativeProbe : GameComponent
     private void TestProfiler()
     {
         Require(VerticalProfiler.Start(out var reason, 30), "Native profiler installation: " + reason);
-        Require(VerticalProfilerPatches.InstalledCount == 23, "Native profiler hook count");
+        Require(VerticalProfilerPatches.InstalledCount == 34, "Native profiler hook count");
+        var site = Find.World.GetComponent<VerticalSiteWorldComponent>().Sites.First();
+        Current.Game.GetComponent<GameComponent_VerticalColony>().Wealth(site);
+        VerticalRouteUtility.Find(worker, worker.Map, worker.Position, surface.Map, new IntVec3(23, 0, 24), PathEndMode.OnCell);
         for (var tick = 0; tick < 200; tick++) Find.TickManager.DoSingleTick();
         VerticalProfiler.Stop("routing-probe");
         var snapshot = VerticalProfiler.Snapshot();
         Require(snapshot != null && snapshot.Ticks == 200, "Native profiler tick count");
+        Require(snapshot.Find(-1, VerticalProfileMetric.TaskMaintenance)?.Calls > 0
+            && snapshot.Find(-1, VerticalProfileMetric.UtilityMaintenance)?.Calls > 0
+            && snapshot.Find(-1, VerticalProfileMetric.ColonyAccounting)?.Calls > 0
+            && snapshot.Rows.Any(r => r.Key.Metric == VerticalProfileMetric.RoutePlanning && r.Stats.Calls > 0),
+            "Missing mod-system profile coverage");
         foreach (var map in new[] { surface.Map, middle.Map, bottom.Map, upper.Map })
             Require(snapshot.Rows.Any(r => r.Key.MapId == map.uniqueID && r.Stats.Calls > 0), "Missing hidden-floor profiling rows");
         Require(File.Exists(VerticalProfiler.LastCsvPath) && File.Exists(VerticalProfiler.LastTextPath)
             && VerticalProfilerPatches.InstalledCount == 0, "Profiler exports/cleanup");
-        Log.Message("[COLONY PROBE] Native profiler: four floors, 23 hooks, 200 ticks, exports and cleanup PASS");
+        Log.Message("[COLONY PROBE] Native profiler: four floors, 34 hooks, mod-system attribution, 200 ticks, exports and cleanup PASS");
     }
     private void TestDraftTransfer()
     {

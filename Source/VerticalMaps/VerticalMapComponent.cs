@@ -62,7 +62,7 @@ public sealed class VerticalMapComponent : MapComponent
     public override void MapComponentOnGUI()
     {
         base.MapComponentOnGUI();
-        if (!VerticalRuntime.Settings.showNavigator || Current.ProgramState != ProgramState.Playing || Find.CurrentMap != map)
+        if (Current.ProgramState != ProgramState.Playing || Find.CurrentMap != map)
         {
             return;
         }
@@ -77,7 +77,7 @@ public sealed class VerticalMapComponent : MapComponent
 
         HandleHotkeys(component);
         DrawToggleButton();
-        if (navigatorVisible)
+        if (VerticalRuntime.Settings.showNavigator && navigatorVisible)
         {
             DrawNavigatorWindow(component);
         }
@@ -122,6 +122,7 @@ public sealed class VerticalMapComponent : MapComponent
         {
             VerticalProfilerWindow.Open();
         }
+        if (!VerticalRuntime.Settings.showNavigator) return;
         var buttonRect = new Rect(Screen.width - 116f, Screen.height - 118f, 52f, 32f);
         if (Widgets.ButtonText(buttonRect, navigatorVisible ? "LVL-" : "LVL+"))
         {

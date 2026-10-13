@@ -8,6 +8,9 @@ using DeepRim.Vertical.VerticalRouting;
 using DeepRim.Vertical.VerticalState;
 using DeepRim.Vertical.VerticalSupports;
 using DeepRim.Vertical.VerticalTemperature;
+using DeepRim.Vertical.VerticalColony;
+using DeepRim.Vertical.VerticalConstruction;
+using DeepRim.Vertical.VerticalUtilities;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -33,7 +36,7 @@ public static class VerticalProfilerPatches
             {
                 Metrics.Add(hook.Method, hook.Metric);
                 ProfilerHarmony.Patch(hook.Method,
-                    prefix: new HarmonyMethod(hook.Prefix) { priority = Priority.First },
+                    prefix: new HarmonyMethod(hook.Prefix) { priority = Priority.First + 1 },
                     finalizer: new HarmonyMethod(hook.Finalizer) { priority = Priority.Last });
             }
         }
@@ -50,6 +53,10 @@ public static class VerticalProfilerPatches
         void Add(Type type, string methodName, VerticalProfileMetric metric, string prefix, string finalizer = nameof(Finalizer))
         {
             var method = AccessTools.Method(type, methodName) ?? throw new MissingMethodException(type.FullName, methodName);
+            // Harmony/Mono requires the actual declaration for inherited entry points.
+            if (method.ReflectedType != method.DeclaringType)
+                method = AccessTools.DeclaredMethod(method.DeclaringType, method.Name,
+                    Array.ConvertAll(method.GetParameters(), parameter => parameter.ParameterType));
             hooks.Add(new VerticalProfileHook(method, metric,
                 AccessTools.Method(typeof(VerticalProfilerPatches), prefix), AccessTools.Method(typeof(VerticalProfilerPatches), finalizer)));
         }
@@ -76,15 +83,30 @@ public static class VerticalProfilerPatches
         Add(typeof(SectionLayer_LowerLevel), nameof(SectionLayer_LowerLevel.Regenerate), VerticalProfileMetric.UnderlayRebuild, nameof(PrivateMapPrefix));
         Add(typeof(VerticalSectionRenderState), nameof(VerticalSectionRenderState.RebuildWorkers), VerticalProfileMetric.WorkerScan, nameof(FirstMapPrefix));
         Add(typeof(VerticalGhostRenderer), nameof(VerticalGhostRenderer.DrawFor), VerticalProfileMetric.GhostDraw, nameof(FirstMapPrefix));
+        Add(typeof(Root), "OnGUI", VerticalProfileMetric.GuiCpu, nameof(GlobalPrefix));
+        Add(typeof(VerticalProfilerWindow), nameof(VerticalProfilerWindow.DoWindowContents), VerticalProfileMetric.ProfilerUi, nameof(GlobalPrefix));
+        Add(typeof(SectionLayer_UpperVoidBase), nameof(SectionLayer_UpperVoidBase.Regenerate), VerticalProfileMetric.NeutralBaseRebuild, nameof(PrivateMapPrefix));
+        Add(typeof(VerticalWorkSearch), nameof(VerticalWorkSearch.Find), VerticalProfileMetric.WorkPlanning, nameof(WorkPrefix));
+        Add(typeof(VerticalRouteUtility), nameof(VerticalRouteUtility.Find), VerticalProfileMetric.RoutePlanning, nameof(WorkPrefix));
+        Add(typeof(GameComponent_VerticalTasks), nameof(GameComponent_VerticalTasks.GameComponentTick), VerticalProfileMetric.TaskMaintenance, nameof(GlobalPrefix));
+        Add(typeof(GameComponent_VerticalUtilities), nameof(GameComponent_VerticalUtilities.GameComponentTick), VerticalProfileMetric.UtilityMaintenance, nameof(GlobalPrefix));
+        Add(typeof(GameComponent_VerticalColony), nameof(GameComponent_VerticalColony.Wealth), VerticalProfileMetric.ColonyAccounting, nameof(GlobalPrefix));
+        Add(typeof(VerticalCeilingComponent), nameof(VerticalCeilingComponent.MapComponentTick), VerticalProfileMetric.CeilingSync, nameof(PrivateMapPrefix));
+        Add(typeof(DubsHygieneAdapter), nameof(DubsHygieneAdapter.RefreshSites), VerticalProfileMetric.PlumbingRefresh, nameof(GlobalPrefix));
+        Add(typeof(GameComponent_VerticalUtilities), nameof(GameComponent_VerticalUtilities.GetPowerGroup), VerticalProfileMetric.PowerGraph, nameof(GlobalPrefix));
         return hooks;
     }
 
     public static void Uninstall()
     {
         // Remove only this owner; the mod's functional patches and other profilers remain intact.
+        List<Exception> failures = null;
         foreach (var original in new List<MethodBase>(Metrics.Keys))
-            ProfilerHarmony.Unpatch(original, HarmonyPatchType.All, HarmonyId);
-        Metrics.Clear();
+        {
+            try { ProfilerHarmony.Unpatch(original, HarmonyPatchType.All, HarmonyId); Metrics.Remove(original); }
+            catch (Exception error) { (failures ??= new()).Add(error); }
+        }
+        if (failures != null) throw new AggregateException("Profiler hooks could not all be removed; failed hooks remain tracked for retry", failures);
     }
 
     public static void VerticalTaskPrefix(VerticalTaskRecord __0, MethodBase __originalMethod, out VerticalProfileScope __state) =>
@@ -108,8 +130,8 @@ public static class VerticalProfilerPatches
     public static void FirstMapPrefix(Map __0, MethodBase __originalMethod, out VerticalProfileScope __state) =>
         __state = VerticalProfiler.CapturingOnCurrentThread ? VerticalProfiler.Begin(__0, Metrics[__originalMethod]) : default;
 
-    public static void WorkPrefix(Pawn pawn, out VerticalProfileScope __state) =>
-        __state = VerticalProfiler.CapturingOnCurrentThread ? VerticalProfiler.Begin(pawn?.MapHeld, VerticalProfileMetric.JobSearch) : default;
+    public static void WorkPrefix(Pawn pawn, MethodBase __originalMethod, out VerticalProfileScope __state) =>
+        __state = VerticalProfiler.CapturingOnCurrentThread ? VerticalProfiler.Begin(pawn?.MapHeld, Metrics[__originalMethod]) : default;
 
     public static void TerrainPrefix(UpperLevelTerrainGrid __instance, bool ___dirty, out VerticalProfileScope __state) =>
         __state = ___dirty && VerticalProfiler.CapturingOnCurrentThread ? VerticalProfiler.Begin(__instance.Map, VerticalProfileMetric.TerrainRebuild) : default;

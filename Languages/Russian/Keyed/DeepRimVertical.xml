@@ -140,4 +140,15 @@
   <DeepRimVertical.Combat.Attack>Межэтажная атака</DeepRimVertical.Combat.Attack>
   <DeepRimVertical.Combat.AttackDescription>Приказать стрелять по видимой враждебной цели на другом этаже. Все пересекаемые полы, крыши и стены должны пропускать выстрел.</DeepRimVertical.Combat.AttackDescription>
   <DeepRimVertical.Combat.NoTargets>Нет целей через открытые этажи</DeepRimVertical.Combat.NoTargets>
+  <DeepRimVertical.Profiler.Metric.GuiCpu>Интерфейс: CPU</DeepRimVertical.Profiler.Metric.GuiCpu>
+  <DeepRimVertical.Profiler.Metric.ProfilerUi>Расходы окна профиля</DeepRimVertical.Profiler.Metric.ProfilerUi>
+  <DeepRimVertical.Profiler.Metric.NeutralBaseRebuild>Пересборка нейтральной подложки</DeepRimVertical.Profiler.Metric.NeutralBaseRebuild>
+  <DeepRimVertical.Profiler.Metric.WorkPlanning>Планирование межэтажной работы</DeepRimVertical.Profiler.Metric.WorkPlanning>
+  <DeepRimVertical.Profiler.Metric.RoutePlanning>Поиск маршрута лестниц</DeepRimVertical.Profiler.Metric.RoutePlanning>
+  <DeepRimVertical.Profiler.Metric.TaskMaintenance>Обслуживание заданий (общее)</DeepRimVertical.Profiler.Metric.TaskMaintenance>
+  <DeepRimVertical.Profiler.Metric.UtilityMaintenance>Инженерные связи (общие)</DeepRimVertical.Profiler.Metric.UtilityMaintenance>
+  <DeepRimVertical.Profiler.Metric.ColonyAccounting>Бухгалтерия колонии (общая)</DeepRimVertical.Profiler.Metric.ColonyAccounting>
+  <DeepRimVertical.Profiler.Metric.CeilingSync>Синхронизация потолка</DeepRimVertical.Profiler.Metric.CeilingSync>
+  <DeepRimVertical.Profiler.Metric.PlumbingRefresh>Пересборка труб DBH (общая)</DeepRimVertical.Profiler.Metric.PlumbingRefresh>
+  <DeepRimVertical.Profiler.Metric.PowerGraph>Граф электросетей (общий)</DeepRimVertical.Profiler.Metric.PowerGraph>
 </LanguageData>

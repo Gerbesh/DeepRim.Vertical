@@ -38,8 +38,8 @@ public static class Map_IncidentTargetTags_Patch
     }
 }
 
-[HarmonyPatch(typeof(IncidentWorker), "CanFireNowSub")]
-public static class IncidentWorker_CanFireNowSub_Patch
+[HarmonyPatch(typeof(IncidentWorker), nameof(IncidentWorker.CanFireNow))]
+public static class VerticalRaidAvailabilityPatch
 {
     public static bool Prefix(IncidentWorker __instance, IncidentParms parms, ref bool __result)
     {
@@ -51,7 +51,7 @@ public static class IncidentWorker_CanFireNowSub_Patch
         if (parms?.target is Map map
             && VerticalSiteWorldComponent.TryGet(out var component)
             && component.TryGetFloor(map, out _, out var floor)
-            && floor.levelIndex < 0)
+            && floor.levelIndex != 0)
         {
             __result = false;
             return false;

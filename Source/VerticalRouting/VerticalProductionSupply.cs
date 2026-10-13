@@ -11,7 +11,7 @@ namespace DeepRim.Vertical.VerticalRouting;
 
 public static class VerticalProductionSupply
 {
-    public static bool BillValid(VerticalTaskRecord task) => task.bill != null && task.destination is IBillGiver giver
+    public static bool BillValid(VerticalTaskRecord task) => VerticalRuntime.Settings.allowCrossLevelBills && task.bill != null && task.destination is IBillGiver giver
         && giver.BillStack.Bills.Contains(task.bill) && task.bill.ShouldDoNow() && task.bill.PawnAllowedToStartAnew(task.pawn);
     private static bool Ingredient(Pawn pawn, Bill bill, IngredientCount ingredient, Thing thing) => ingredient.filter.Allows(thing)
         && bill.IsFixedOrAllowedIngredient(thing) && VerticalWorkSearch.SourceUsable(pawn, thing);
@@ -21,6 +21,7 @@ public static class VerticalProductionSupply
     private static float Value(Bill bill, ThingDef def) => bill.recipe.IngredientValueGetter.ValuePerUnitOf(def);
     public static VerticalTaskRecord Find(Pawn pawn, VerticalSiteRecord site, WorkGiver_DoBill scanner)
     {
+        if (!VerticalRuntime.Settings.allowCrossLevelBills) return null;
         foreach (var map in VerticalColonyUtility.Maps(site))
         foreach (var bench in VerticalWorkSearch.Scan(map.listerThings.ThingsMatching(scanner.PotentialWorkThingRequest), 32, pawn))
         {

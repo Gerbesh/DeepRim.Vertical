@@ -83,4 +83,5 @@ internal static class ColonyQueryScope
 {
     [ThreadStatic] public static int Resources;
     [ThreadStatic] public static int Disease;
+    [ThreadStatic] public static int ExplicitQuest;
 }

@@ -140,4 +140,15 @@
   <DeepRimVertical.Combat.Attack>Cross-floor attack</DeepRimVertical.Combat.Attack>
   <DeepRimVertical.Combat.AttackDescription>Order fire at a visible hostile target on another floor. Every intervening floor, roof and wall must allow the shot.</DeepRimVertical.Combat.AttackDescription>
   <DeepRimVertical.Combat.NoTargets>No targets across open floors</DeepRimVertical.Combat.NoTargets>
+  <DeepRimVertical.Profiler.Metric.GuiCpu>GUI CPU</DeepRimVertical.Profiler.Metric.GuiCpu>
+  <DeepRimVertical.Profiler.Metric.ProfilerUi>Profiler window overhead</DeepRimVertical.Profiler.Metric.ProfilerUi>
+  <DeepRimVertical.Profiler.Metric.NeutralBaseRebuild>Neutral background rebuild</DeepRimVertical.Profiler.Metric.NeutralBaseRebuild>
+  <DeepRimVertical.Profiler.Metric.WorkPlanning>Cross-floor work planning</DeepRimVertical.Profiler.Metric.WorkPlanning>
+  <DeepRimVertical.Profiler.Metric.RoutePlanning>Stair route planning</DeepRimVertical.Profiler.Metric.RoutePlanning>
+  <DeepRimVertical.Profiler.Metric.TaskMaintenance>Task maintenance (global)</DeepRimVertical.Profiler.Metric.TaskMaintenance>
+  <DeepRimVertical.Profiler.Metric.UtilityMaintenance>Utilities (global)</DeepRimVertical.Profiler.Metric.UtilityMaintenance>
+  <DeepRimVertical.Profiler.Metric.ColonyAccounting>Colony wealth accounting (global)</DeepRimVertical.Profiler.Metric.ColonyAccounting>
+  <DeepRimVertical.Profiler.Metric.CeilingSync>Ceiling synchronization</DeepRimVertical.Profiler.Metric.CeilingSync>
+  <DeepRimVertical.Profiler.Metric.PlumbingRefresh>DBH plumbing rebuild (global)</DeepRimVertical.Profiler.Metric.PlumbingRefresh>
+  <DeepRimVertical.Profiler.Metric.PowerGraph>Power graph (global)</DeepRimVertical.Profiler.Metric.PowerGraph>
 </LanguageData>

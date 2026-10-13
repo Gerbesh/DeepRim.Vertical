@@ -97,7 +97,7 @@ public static class Thing_DeSpawn_VerticalInvalidationPatch
     public static void Prefix(Thing __instance, out DeSpawnState __state)
     {
         // Projectiles are dynamic drawables and never change floor support or static overlays.
-        __state = __instance is Projectile ? default : new DeSpawnState(__instance.Map, __instance.OccupiedRect());
+        __state = __instance is Pawn or Plant or Mote or Projectile ? default : new DeSpawnState(__instance.Map, __instance.OccupiedRect());
     }
 
     public static void Postfix(DeSpawnState __state)

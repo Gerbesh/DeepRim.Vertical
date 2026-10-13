@@ -8,4 +8,6 @@ The probe creates four real floors and tests native wealth/world/history account
 
 Read `result.txt` and the log after the game quits. Keep logs and saves for diagnosis; remove the temporary mod afterward. This controlled probe does not benchmark colony-scale acceleration, test every incident execution, or establish compatibility with all third-party mods.
 
+October 13 regression adds 34-hook attribution to mod systems, nested quest isolation, bill setting, lost-ceiling recovery, roof-removal refusal and 25 underlay mesh regenerations with stable identities/count. The fixture retries a bounded rotating haul scan rather than assuming every candidate appears in its first window. Run the same probe in a second isolated `native-smoke-colony` directory with only Harmony/Core/DeepRim/probe to check optional DLC/DBH behavior.
+
 Construction UI acceptance tests native material/cost queries and the material-presence helper without constructing FloatMenu outside OnGUI. A real visual/mouse test remains separate. The competing-storage fixture presents a valid local wood haul to a normal stockpile and verifies that remote steel delivery to a critical stockpile wins; temporary wood is removed before conservation assertions.

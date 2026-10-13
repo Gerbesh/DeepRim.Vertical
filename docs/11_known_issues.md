@@ -2,6 +2,8 @@
 
 Current implementation and acceptance: [unified colony guide](unified_colony_test_plan.md). The [original colony systems audit](colony_systems_audit.md) remains a historical inventory of broader goals.
 
+Current cross-system audit and concrete residual defects: [October 13 audit](mod_logic_audit_2026-10-13.md).
+
 ## P0 / blocking for release
 
 - Multi-hop stair movement and first mining/construction/stockpile adapters are implemented; large-colony performance and broader routing/reservation compatibility remain to be accepted.
@@ -14,7 +16,7 @@ Current implementation and acceptance: [unified colony guide](unified_colony_tes
 ## P1 / important
 
 - Stairs up/down are buildable under Architect -> Structure. Excavation currently happens as part of Construction work; dedicated Mining jobs and shaft construction UX are not implemented.
-- `+` floors have a selective lower-floor overlay prototype. The current renderer drops vanilla global draw passes, has incomplete invalidation coverage and does not apply the planned depth tint correctly. See [the current rendering audit](wiki/Rendering-audit.md).
+- `+` floors retain native draw passes and reuse owned overlay meshes. Depth tint and multi-cell clipping remain incomplete; see the current audit above. Earlier [rendering audit](wiki/Rendering-audit.md) is a historical baseline.
 - Floors share one colonist-bar group and their internal world objects are hidden. Physical maps retain native pawn/item ownership; caravan/trader inventories still require staging on the surface.
 - No verified in-workspace image-generation pipeline is configured; any art assets are currently expected to be produced manually via the web workflow if needed.
 - Ordinary colony events target the surface anchor once; infestation, deep-drill infestation, short circuit and crop blight can select a viable real floor. Explicit quest targets are preserved. Broader incident execution needs gameplay acceptance.

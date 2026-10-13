@@ -8,7 +8,7 @@ $utilityManaged=Join-Path $RimWorldDir 'RimWorldWin64_Data/Managed'
 foreach($dll in @('UnityEngine.CoreModule.dll','UnityEngine.IMGUIModule.dll','UnityEngine.dll','Assembly-CSharp.dll')) {
     [void][Reflection.Assembly]::LoadFrom((Join-Path $utilityManaged $dll))
 }
-[void][Reflection.Assembly]::LoadFrom('C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll')
+[void][Reflection.Assembly]::LoadFrom('C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\1.6\Assemblies\0Harmony.dll')
 $utilityAssembly=[Reflection.Assembly]::LoadFrom((Join-Path $utilityRoot '1.6/Assemblies/DeepRim.Vertical.dll'))
 function Assert-Utility([bool]$pass,[string]$message) { if(-not $pass){throw $message} }
 function Near-Utility([double]$a,[double]$b,[double]$epsilon=.0001) { [Math]::Abs($a-$b) -le $epsilon }
@@ -85,6 +85,9 @@ try {
     [DeepRim.Vertical.VerticalRuntime]::Settings=$settings
     Assert-Utility ([DeepRim.Vertical.VerticalTemperature.DepthTemperatureUtility]::EvaluateGeologicalTarget(-4) -eq -20) 'Cold geothermal band changed.'
     Assert-Utility ([DeepRim.Vertical.VerticalTemperature.DepthTemperatureUtility]::EvaluateGeologicalTarget(-15) -eq 60) 'Hot geothermal band changed.'
+    $settings.coldDepthLevel=0; $settings.hotDepthLevel=0
+    Assert-Utility ([DeepRim.Vertical.VerticalTemperature.DepthTemperatureUtility]::EvaluateGeologicalTarget(-1) -eq -20) 'Invalid cold depth divides by zero.'
+    Assert-Utility ([DeepRim.Vertical.VerticalTemperature.DepthTemperatureUtility]::EvaluateGeologicalTarget(-2) -eq 60) 'Hot depth must remain deeper than the cold band.'
     $settings.enableDepthThermalProfile=$false
     $dummyMap=[Runtime.Serialization.FormatterServices]::GetUninitializedObject([Verse.Map])
     $level=0; $target=[float]0
