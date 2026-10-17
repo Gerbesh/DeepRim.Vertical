@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <KeyBindingDef>
+    <defName>DeepRimVertical_ToggleNavigator</defName>
+    <label>toggle vertical floor menu</label>
+    <category>Architect</category>
+  </KeyBindingDef>
+  <KeyBindingDef>
+    <defName>DeepRimVertical_SwitchFloorUp</defName>
+    <label>vertical floor up</label>
+    <category>Architect</category>
+  </KeyBindingDef>
+  <KeyBindingDef>
+    <defName>DeepRimVertical_SwitchFloorDown</defName>
+    <label>vertical floor down</label>
+    <category>Architect</category>
+  </KeyBindingDef>
+</Defs>

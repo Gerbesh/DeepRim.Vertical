@@ -1,5 +1,16 @@
 # 09 Compatibility Matrix
 
+## RimWorld 1.7 / Waylith preview (October 18, 2026)
+
+- Installed game revision observed: **1.7.4981 rev136**. Waylith uses a customized **.NET 10** runtime.
+- Build project: `DeepRim.Vertical.1.7.csproj` (local SDK: `.tools/dotnet10/dotnet.exe`).
+- References: current game's `Assembly-CSharp.dll`, `RimWorld.dll`, `UnityStubs.dll`, `Waylith.dll`, `Waylith.UnityCompat.dll` and the Harmony 1.7 assembly.
+- The navigator switched from the removed `UnityEngine.GUI.Window` overload to a `Verse.Window` implementation.
+- Dedicated `1.7/Assemblies`, `1.7/Defs`, `1.7/Textures` are selected by `LoadFolders.xml`. The 1.6 binary/assets are left unchanged. Shared assets are copied for 1.7 and must be kept in sync when edited.
+- Static packaging and a net10 build succeeded with zero compiler warnings/errors. **No RimWorld 1.7 in-game smoke test has been performed.** Harmony patch attachment, floor generation, persistence, renderer state, cross-floor jobs, saves and DLC support remain unverified for 1.7.
+- Recommended first verification: a separate throwaway 1.7 save with Harmony and DeepRim only; test loading, opening/closing/toggling floor navigator, generating floors above/below, stair routing, hauling, production, roof/terrain rendering, combat and save/reload. Do not overwrite a valuable 1.6 save before a backup.
+- On the current machine RimWorld 1.6 managed reference assemblies are no longer installed, so recompiling the 1.6 project requires restoring the 1.6 assemblies; the previous 1.6 build is preserved.
+
 ## Current audit baseline
 
 - Installed engine inspected October 11, 2026: **RimWorld 1.6.4871 rev590**.

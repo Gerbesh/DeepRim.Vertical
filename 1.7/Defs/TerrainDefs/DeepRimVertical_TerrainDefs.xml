@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>DeepRimVertical_UpperVoid</defName>
+    <label>upper void</label>
+    <description>Invisible upper-level baseline used to reveal lower floors through open cells.</description>
+    <texturePath>Terrain/Surfaces/RoughHewnRock</texturePath>
+    <color>(110,110,110)</color>
+    <edgeType>FadeRough</edgeType>
+    <renderPrecedence>300</renderPrecedence>
+    <dontRender>false</dontRender>
+    <fertility>0</fertility>
+    <pathCost>100000</pathCost>
+    <passability>Impassable</passability>
+    <layerable>false</layerable>
+    <avoidWander>true</avoidWander>
+    <extinguishesFire>true</extinguishesFire>
+    <holdSnowOrSand>false</holdSnowOrSand>
+    <canBePolluted>false</canBePolluted>
+    <takeFootprints>false</takeFootprints>
+    <takeSplashes>false</takeSplashes>
+    <affordances Inherit="False">
+      <li>Walkable</li>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+    </affordances>
+    <statBases>
+      <Beauty>0</Beauty>
+      <WorkToBuild>0</WorkToBuild>
+      <Flammability>0</Flammability>
+    </statBases>
+  </TerrainDef>
+
+  <TerrainDef ParentName="FloorBase">
+    <defName>DeepRimVertical_UpperDeck</defName>
+    <label>upper deck</label>
+    <description>Structural deck terrain used only where an upper floor is supported.</description>
+    <texturePath>Terrain/Surfaces/RoughHewnRock</texturePath>
+    <color>(132,135,132)</color>
+    <renderPrecedence>50</renderPrecedence>
+    <edgeType>FadeRough</edgeType>
+    <terrainAffordanceNeeded>Walkable</terrainAffordanceNeeded>
+    <isFoundation>true</isFoundation>
+    <pathCost>1</pathCost>
+    <holdSnowOrSand>false</holdSnowOrSand>
+    <takeFootprints>false</takeFootprints>
+    <takeSplashes>false</takeSplashes>
+    <affordances Inherit="False">
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <li>Walkable</li>
+    </affordances>
+    <statBases>
+      <Beauty>1</Beauty>
+      <WorkToBuild>1100</WorkToBuild>
+      <CleaningTimeFactor>0.8</CleaningTimeFactor>
+    </statBases>
+  </TerrainDef>
+</Defs>

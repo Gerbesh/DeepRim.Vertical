@@ -15,10 +15,7 @@ namespace DeepRim.Vertical.VerticalMaps;
 
 public sealed class VerticalMapComponent : MapComponent
 {
-    private static Rect navigatorRect = new(280f, 120f, 265f, 340f);
-    private static float navigatorContentHeight = 340f;
     private static bool navigatorVisible = true;
-    private const int NavigatorWindowId = 0x44525631;
 
     public string siteId;
     public int levelIndex;
@@ -78,9 +75,14 @@ public sealed class VerticalMapComponent : MapComponent
 
         HandleHotkeys(component);
         DrawToggleButton();
-        if (VerticalRuntime.Settings.showNavigator && navigatorVisible)
+        var navigatorWindow = Find.WindowStack.WindowOfType<VerticalNavigatorWindow>();
+        if (!VerticalRuntime.Settings.showNavigator || !navigatorVisible)
         {
-            DrawNavigatorWindow(component);
+            navigatorWindow?.Close(false);
+        }
+        else if (navigatorWindow == null)
+        {
+            Find.WindowStack.Add(new VerticalNavigatorWindow());
         }
     }
 
@@ -131,15 +133,12 @@ public sealed class VerticalMapComponent : MapComponent
         }
     }
 
-    private void DrawNavigatorWindow(VerticalSiteWorldComponent component)
+    internal static void NavigatorClosed()
     {
-        navigatorRect.height = Mathf.Clamp(navigatorContentHeight, 240f, UI.screenHeight - 85f);
-        navigatorRect.x = Mathf.Clamp(navigatorRect.x, 0f, UI.screenWidth - navigatorRect.width);
-        navigatorRect.y = Mathf.Clamp(navigatorRect.y, 35f, UI.screenHeight - navigatorRect.height);
-        navigatorRect = GUI.Window(NavigatorWindowId, navigatorRect, _ => DrawNavigatorContents(component), "DeepRimVertical.Navigator.Title".Translate().ToString());
+        navigatorVisible = false;
     }
 
-    private void DrawNavigatorContents(VerticalSiteWorldComponent component)
+    internal void DrawNavigatorContents(VerticalSiteWorldComponent component, Rect inRect)
     {
         if (!component.TryGetFloor(map, out _, out var currentFloor))
         {
@@ -147,7 +146,7 @@ public sealed class VerticalMapComponent : MapComponent
         }
 
         var floors = component.GetOrderedFloors(map).ToList();
-        var listingRect = new Rect(10f, 34f, navigatorRect.width - 20f, navigatorRect.height - 44f);
+        var listingRect = new Rect(0f, 0f, inRect.width, inRect.height);
         var listing = new Listing_Standard();
         listing.Begin(listingRect);
         listing.Label("DeepRimVertical.Navigator.CurrentFloor".Translate(VerticalFloorLabel.Format(currentFloor.levelIndex)));
@@ -233,9 +232,7 @@ public sealed class VerticalMapComponent : MapComponent
             }
         }
 
-        navigatorContentHeight = listing.CurHeight + 44f + desiredListHeight - viewRect.height;
         listing.End();
-        GUI.DragWindow(new Rect(0f, 0f, navigatorRect.width, 28f));
     }
 
     private void TryJumpRelative(VerticalSiteWorldComponent component, int delta)

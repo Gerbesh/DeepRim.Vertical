@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'DeepRim.Vertical.1.7'">
+    <BaseIntermediateOutputPath>obj\1.7\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>

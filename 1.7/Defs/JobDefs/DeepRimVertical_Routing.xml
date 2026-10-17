@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef>
+    <defName>DeepRimVertical_Travel</defName>
+    <driverClass>DeepRim.Vertical.VerticalRouting.JobDriver_VerticalTravel</driverClass>
+    <reportString>moving between floors.</reportString>
+    <casualInterruptible>true</casualInterruptible>
+    <carryThingAfterJob>true</carryThingAfterJob>
+    <dropThingBeforeJob>false</dropThingBeforeJob>
+    <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+  </JobDef>
+  <JobDef>
+    <defName>DeepRimVertical_Pickup</defName>
+    <driverClass>DeepRim.Vertical.VerticalRouting.JobDriver_VerticalPickup</driverClass>
+    <reportString>collecting resources for another floor.</reportString>
+    <carryThingAfterJob>true</carryThingAfterJob>
+    <dropThingBeforeJob>false</dropThingBeforeJob>
+    <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+  </JobDef>
+  <JobDef>
+    <defName>DeepRimVertical_Deliver</defName>
+    <driverClass>DeepRim.Vertical.VerticalRouting.JobDriver_VerticalDeliver</driverClass>
+    <reportString>storing resources from another floor.</reportString>
+    <dropThingBeforeJob>false</dropThingBeforeJob>
+    <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+  </JobDef>
+  <JobDef>
+    <defName>DeepRimVertical_DeliverIngredient</defName>
+    <driverClass>DeepRim.Vertical.VerticalRouting.JobDriver_VerticalDeliverIngredient</driverClass>
+    <reportString>delivering ingredients to another floor.</reportString>
+    <dropThingBeforeJob>false</dropThingBeforeJob>
+    <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+  </JobDef>
+  <JobDef>
+    <defName>DeepRimVertical_RefuelCarried</defName>
+    <driverClass>DeepRim.Vertical.VerticalRouting.JobDriver_VerticalRefuelCarried</driverClass>
+    <reportString>refueling with resources from another floor.</reportString>
+    <dropThingBeforeJob>false</dropThingBeforeJob>
+    <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+  </JobDef>
+</Defs>
