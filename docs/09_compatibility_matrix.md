@@ -7,7 +7,7 @@
 - References: current game's `Assembly-CSharp.dll`, `RimWorld.dll`, `UnityStubs.dll`, `Waylith.dll`, `Waylith.UnityCompat.dll` and the Harmony 1.7 assembly.
 - The navigator switched from the removed `UnityEngine.GUI.Window` overload to a `Verse.Window` implementation.
 - Dedicated `1.7/Assemblies`, `1.7/Defs`, `1.7/Textures` are selected by `LoadFolders.xml`. The 1.6 binary/assets are left unchanged. Shared assets are copied for 1.7 and must be kept in sync when edited.
-- Static packaging and a net10 build succeeded with zero compiler warnings/errors. **No RimWorld 1.7 in-game smoke test has been performed.** Harmony patch attachment, floor generation, persistence, renderer state, cross-floor jobs, saves and DLC support remain unverified for 1.7.
+- Static packaging and net10 compilation succeeded. **Real 1.7 native gameplay and rendered five-floor smoke tests passed**, including multi-floor jobs, combat, three save/reload cycles, profiler, navigator and overlay screenshots. [Observed results and limitations](waylith_1_7_validation_2026-10-18.md). DLC, third-party compatibility and long-play stability remain unverified.
 - Recommended first verification: a separate throwaway 1.7 save with Harmony and DeepRim only; test loading, opening/closing/toggling floor navigator, generating floors above/below, stair routing, hauling, production, roof/terrain rendering, combat and save/reload. Do not overwrite a valuable 1.6 save before a backup.
 - On the current machine RimWorld 1.6 managed reference assemblies are no longer installed, so recompiling the 1.6 project requires restoring the 1.6 assemblies; the previous 1.6 build is preserved.
 
