@@ -7,8 +7,8 @@
   <DeepRimVertical.Stairs.RetryConnectionDescription>Повторить создание выхода после устранения препятствия на соседнем уровне.</DeepRimVertical.Stairs.RetryConnectionDescription>
   <DeepRimVertical.SettingsCategory>DeepRim Vertical</DeepRimVertical.SettingsCategory>
   <DeepRimVertical.Settings.Foundation>Основа</DeepRimVertical.Settings.Foundation>
-  <DeepRimVertical.Settings.ShowNavigator>Показывать навигатор этажей</DeepRimVertical.Settings.ShowNavigator>
-  <DeepRimVertical.Settings.EnableDevButtons>Показывать кнопки создания этажей в навигаторе</DeepRimVertical.Settings.EnableDevButtons>
+  <DeepRimVertical.Settings.ShowNavigator>Показывать компактный переключатель этажей</DeepRimVertical.Settings.ShowNavigator>
+  <DeepRimVertical.Settings.EnableDevButtons>Показывать создание этажей в меню выбора этажа</DeepRimVertical.Settings.EnableDevButtons>
   <DeepRimVertical.Settings.AdoptSurfaceMap>Автоматически привязывать текущую карту к vertical site при первом использовании</DeepRimVertical.Settings.AdoptSurfaceMap>
   <DeepRimVertical.Settings.FloorBounds>Настроенные пределы этажей: вверх {0}, вниз {1}</DeepRimVertical.Settings.FloorBounds>
   <DeepRimVertical.Settings.Temperature>Температурный профиль глубины</DeepRimVertical.Settings.Temperature>
@@ -31,9 +31,14 @@
   <DeepRimVertical.Settings.UpperFloorOverlayMode>Режим overlay: {0}</DeepRimVertical.Settings.UpperFloorOverlayMode>
   <DeepRimVertical.Settings.CycleUpperFloorOverlayMode>Переключить режим overlay</DeepRimVertical.Settings.CycleUpperFloorOverlayMode>
   <DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>Включить debug-логирование upper overlay</DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>
-  <DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>Показывать debug-информацию upper overlay в навигаторе</DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>Показывать debug-информацию upper overlay при наведении на номер этажа</DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>
   <DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>Включить подробное debug-логирование upper overlay</DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>
   <DeepRimVertical.Settings.ResetDefaults>Сбросить настройки</DeepRimVertical.Settings.ResetDefaults>
+
+  <DeepRimVertical.Hud.Level>Этаж {0}</DeepRimVertical.Hud.Level>
+  <DeepRimVertical.Hud.Up>На этаж выше</DeepRimVertical.Hud.Up>
+  <DeepRimVertical.Hud.Down>На этаж ниже</DeepRimVertical.Hud.Down>
+  <DeepRimVertical.Hud.Select>Выбрать этаж и открыть дополнительные действия</DeepRimVertical.Hud.Select>
 
   <DeepRimVertical.Navigator.Title>Этажи колонии</DeepRimVertical.Navigator.Title>
   <DeepRimVertical.Navigator.LogisticsButton>Склады и материалы: справка</DeepRimVertical.Navigator.LogisticsButton>

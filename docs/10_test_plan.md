@@ -10,10 +10,10 @@
 
 - [x] Compile project
 - [ ] Boot game with mod and Harmony only
-- [ ] Open colony map, verify navigator appears
-- [ ] Create `-1` floor from navigator
+- [ ] Open colony map, verify compact floor controls, not a persistent window
+- [ ] Create -1 floor from the native floor dropdown
 - [ ] Jump back and forth with buttons
-- [ ] Toggle navigator from bottom-right button
+- [ ] Open native floor dropdown, verify the floor list and camera preservation
 - [ ] Toggle navigator from dedicated keybinding
 - [ ] Save/load and verify floor registry persists
 

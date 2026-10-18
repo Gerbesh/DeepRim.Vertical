@@ -7,8 +7,8 @@
   <DeepRimVertical.Stairs.RetryConnectionDescription>Retry opening the landing after removing the obstacle on the adjacent level.</DeepRimVertical.Stairs.RetryConnectionDescription>
   <DeepRimVertical.SettingsCategory>DeepRim Vertical</DeepRimVertical.SettingsCategory>
   <DeepRimVertical.Settings.Foundation>Foundation</DeepRimVertical.Settings.Foundation>
-  <DeepRimVertical.Settings.ShowNavigator>Show floor navigator</DeepRimVertical.Settings.ShowNavigator>
-  <DeepRimVertical.Settings.EnableDevButtons>Show floor creation buttons in navigator</DeepRimVertical.Settings.EnableDevButtons>
+  <DeepRimVertical.Settings.ShowNavigator>Show compact floor switcher</DeepRimVertical.Settings.ShowNavigator>
+  <DeepRimVertical.Settings.EnableDevButtons>Show floor creation options in floor dropdown</DeepRimVertical.Settings.EnableDevButtons>
   <DeepRimVertical.Settings.AdoptSurfaceMap>Adopt current map into a vertical site on first use</DeepRimVertical.Settings.AdoptSurfaceMap>
   <DeepRimVertical.Settings.FloorBounds>Configured floor bounds: above {0}, below {1}</DeepRimVertical.Settings.FloorBounds>
   <DeepRimVertical.Settings.Temperature>Depth temperature profile</DeepRimVertical.Settings.Temperature>
@@ -31,9 +31,14 @@
   <DeepRimVertical.Settings.UpperFloorOverlayMode>Overlay mode: {0}</DeepRimVertical.Settings.UpperFloorOverlayMode>
   <DeepRimVertical.Settings.CycleUpperFloorOverlayMode>Cycle overlay mode</DeepRimVertical.Settings.CycleUpperFloorOverlayMode>
   <DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>Enable upper overlay debug logging</DeepRimVertical.Settings.EnableUpperOverlayDebugLogging>
-  <DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>Show upper overlay debug info in navigator</DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>
+  <DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>Show upper overlay debug info in floor label tooltip</DeepRimVertical.Settings.EnableUpperOverlayDebugOverlay>
   <DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>Enable verbose upper overlay debug logging</DeepRimVertical.Settings.EnableUpperOverlayDebugVerbose>
   <DeepRimVertical.Settings.ResetDefaults>Reset defaults</DeepRimVertical.Settings.ResetDefaults>
+
+  <DeepRimVertical.Hud.Level>Floor {0}</DeepRimVertical.Hud.Level>
+  <DeepRimVertical.Hud.Up>Go one floor up</DeepRimVertical.Hud.Up>
+  <DeepRimVertical.Hud.Down>Go one floor down</DeepRimVertical.Hud.Down>
+  <DeepRimVertical.Hud.Select>Choose a floor and more actions</DeepRimVertical.Hud.Select>
 
   <DeepRimVertical.Navigator.Title>Colony floors</DeepRimVertical.Navigator.Title>
   <DeepRimVertical.Navigator.LogisticsButton>Storage and materials: help</DeepRimVertical.Navigator.LogisticsButton>

@@ -1,12 +1,21 @@
 # 08 UI UX
 
-## Implemented now
+## Implemented now (2026-10-18)
 
-- toggleable draggable floor navigator window drawn from the active map
-- dedicated navigator toggle binding path
-- bottom-right button that shows or hides the navigator
-- optional floor creation buttons for development/foundation testing
-- current-cell portal summary
+- Compact native HUD in the lower right: ▲ Floor +N ▼, three Verse.Widgets buttons, no persistent navigator window.
+- Up/down arrows are disabled if the adjacent floor does not exist; camera zoom and focus are preserved.
+- Click the central floor label for RimWorld's native FloatMenu: known floors, optional floor creation, upper overlay actions, profiler, logistics help.
+- Existing hotkeys, save data, settings and bilingual support remain compatible. HUD may be hidden without disabling floor hotkeys.
+- Overlay development diagnostics are available through the label tooltip when enabled.
+- Net10 / Waylith compilation and five rendered visual smoke captures passed with zero reported GUI exceptions.
+- An isolated native-menu game probe also passed: the center floor control creates a real RimWorld FloatMenu in WindowStack; reproducible test source is under tools/validation/native-menu/.
+
+## Further interactive acceptance
+
+- [ ] Click arrows and the floor dropdown; verify disabled directions and camera preservation.
+- [ ] Create floors and select distant levels through the menu.
+- [ ] Verify profiler/help and overlay actions from the menu.
+- [ ] Verify HUD toggle key and 100/125/150% UI scales.
 
 ## Missing for later stages
 

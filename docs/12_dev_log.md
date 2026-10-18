@@ -1,5 +1,14 @@
 # 12 Dev Log
 
+## 2026-10-18 - Native compact floor HUD
+
+- Removed the oversized Verse window; arrow buttons around a central floor label now switch levels in the game HUD.
+- Central button opens a native FloatMenu, with extra actions hidden until requested.
+- Preserved keyboard navigation, camera behavior, settings and save schema.
+- On RimWorld 1.7 Waylith: net10 build clean; five rendered screenshot captures passed without GUI exceptions.
+- Native game menu creation check passed using the reusable tools/validation/native-menu/ probe. Actual pointer click/hotkey interactions and varying UI scales remain manual acceptance items.
+
+
 ## 2026-03-22 - Stage 0 research
 
 - Confirmed local game version `1.6.4633 rev1260`.
