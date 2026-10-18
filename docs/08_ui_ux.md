@@ -3,6 +3,7 @@
 ## Implemented now (2026-10-18)
 
 - Compact native HUD in the lower right: ▲ Floor +N ▼, three Verse.Widgets buttons, no persistent navigator window.
+- Placement after the 2026-10-18 HUD overlap fix: anchor the control 285 UI pixels from the right edge and 40 UI pixels above the bottom menu, keeping it clear of the vanilla lower-right status/action icons.
 - Up/down arrows are disabled if the adjacent floor does not exist; camera zoom and focus are preserved.
 - Click the central floor label for RimWorld's native FloatMenu: known floors, optional floor creation, upper overlay actions, profiler, logistics help.
 - Existing hotkeys, save data, settings and bilingual support remain compatible. HUD may be hidden without disabling floor hotkeys.

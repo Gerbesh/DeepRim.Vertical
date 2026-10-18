@@ -30,11 +30,14 @@ public static class VerticalFloorHud
         var below = site.TryGetAdjacentFloor(map, -1, out _, out var lower) ? lower?.Map : null;
         var focusCell = UI.MouseCell().InBounds(map) ? UI.MouseCell() : map.Center;
 
-        // Same lower-right HUD region as the original LVL button, but with
-        // no extra profiler button and no occlusion of the game map.
+        // Keep the selector left of the vanilla lower-right icon/status cluster,
+        // with a small gap above the bottom menu bar. Anchor to screen edges
+        // so it stays in place at different resolutions.
+        const float RightHudClearance = 285f;
+        const float BottomMenuClearance = 40f;
         var totalWidth = ArrowWidth * 2f + LabelWidth + Gap * 2f;
-        var x = Mathf.Max(8f, UI.screenWidth - totalWidth - 65f);
-        var y = Mathf.Max(8f, UI.screenHeight - ButtonHeight - 86f);
+        var x = Mathf.Max(8f, UI.screenWidth - totalWidth - RightHudClearance);
+        var y = Mathf.Max(8f, UI.screenHeight - ButtonHeight - BottomMenuClearance);
         var upRect = new Rect(x, y, ArrowWidth, ButtonHeight);
         var levelRect = new Rect(x + ArrowWidth + Gap, y, LabelWidth, ButtonHeight);
         var downRect = new Rect(levelRect.xMax + Gap, y, ArrowWidth, ButtonHeight);
