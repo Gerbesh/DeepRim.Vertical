@@ -9,6 +9,11 @@ namespace DeepRim.Vertical.VerticalRendering;
 public static class VerticalSectionRenderPatches
 {
     private static readonly Dictionary<int, VerticalSectionRenderState> RenderStatesByMapId = new();
+    private static readonly AccessTools.FieldRef<MapDrawer, Map> DrawerMapField =
+        AccessTools.FieldRefAccess<MapDrawer, Map>("map");
+    private static readonly AccessTools.FieldRef<MapDrawer, Section[,]> SectionsField =
+        AccessTools.FieldRefAccess<MapDrawer, Section[,]>("sections");
+    public static Map MapForDrawer(MapDrawer drawer) => drawer == null ? null : DrawerMapField(drawer);
     private static int renderingMapId = -999999;
     private static int lastLevelDiff;
 
@@ -29,7 +34,7 @@ public static class VerticalSectionRenderPatches
     {
         if (VerticalRenderContextService.GetLevel(map) > 0) DrawSelectiveLowerUnderlay(map, viewRect);
 
-        var sections = Traverse.Create(map.mapDrawer).Field("sections").GetValue<Section[,]>();
+        var sections = map.mapDrawer == null ? null : SectionsField(map.mapDrawer);
         foreach (var (x, y) in EnumerateVisibleSections(viewRect, sections))
         {
             var section = sections[x, y];
@@ -237,12 +242,12 @@ public static class MapDrawer_DrawMapMesh_VerticalSectionRender_Patch
 {
     public static void Postfix(MapDrawer __instance)
     {
-        if (Find.CurrentMap != null && Traverse.Create(__instance).Field("map").GetValue<Map>() == Find.CurrentMap)
+        if (Find.CurrentMap != null && VerticalSectionRenderPatches.MapForDrawer(__instance) == Find.CurrentMap)
             VerticalOverlay.VerticalGhostRenderer.DrawFor(Find.CurrentMap);
     }
     public static bool Prefix(MapDrawer __instance)
     {
-        var map = Traverse.Create(__instance).Field("map").GetValue<Map>();
+        var map = VerticalSectionRenderPatches.MapForDrawer(__instance);
         return VerticalSectionRenderPatches.RenderMapMeshRecursively(map);
     }
 }
@@ -252,7 +257,7 @@ public static class MapDrawer_MapMeshDirty_VerticalSectionRender_Patch
 {
     public static void Postfix(MapDrawer __instance, IntVec3 loc)
     {
-        var map = Traverse.Create(__instance).Field("map").GetValue<Map>();
+        var map = VerticalSectionRenderPatches.MapForDrawer(__instance);
         VerticalSectionRenderPatches.DirtyRenderingMapCells(map, loc);
     }
 }

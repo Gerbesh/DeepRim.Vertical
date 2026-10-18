@@ -1,5 +1,4 @@
 using HarmonyLib;
-using System.Reflection;
 using Verse;
 
 namespace DeepRim.Vertical.VerticalTemperature;
@@ -68,26 +67,20 @@ public static class RoomTempTracker_DeepEqualizationTempChangePerInterval_Patch
 
 internal static class MapTemperatureAccess
 {
-    private static readonly FieldInfo MapField = AccessTools.Field(typeof(MapTemperature), "map");
+    // Cache private field accessors for .NET 10 rather than reflecting every temperature read.
+    private static readonly AccessTools.FieldRef<MapTemperature, Map> MapField =
+        AccessTools.FieldRefAccess<MapTemperature, Map>("map");
 
-    public static Map Map(MapTemperature instance)
-    {
-        return (Map)MapField.GetValue(instance);
-    }
+    public static Map Map(MapTemperature instance) => instance == null ? null : MapField(instance);
 }
 
 internal static class RoomTempTrackerAccess
 {
-    private static readonly FieldInfo RoomField = AccessTools.Field(typeof(RoomTempTracker), "room");
-    private static readonly FieldInfo ThickRoofCoverageField = AccessTools.Field(typeof(RoomTempTracker), "thickRoofCoverage");
+    private static readonly AccessTools.FieldRef<RoomTempTracker, Room> RoomField =
+        AccessTools.FieldRefAccess<RoomTempTracker, Room>("room");
+    private static readonly AccessTools.FieldRef<RoomTempTracker, float> ThickRoofCoverageField =
+        AccessTools.FieldRefAccess<RoomTempTracker, float>("thickRoofCoverage");
 
-    public static Room Room(RoomTempTracker instance)
-    {
-        return (Room)RoomField.GetValue(instance);
-    }
-
-    public static float ThickRoofCoverage(RoomTempTracker instance)
-    {
-        return (float)ThickRoofCoverageField.GetValue(instance);
-    }
+    public static Room Room(RoomTempTracker instance) => instance == null ? null : RoomField(instance);
+    public static float ThickRoofCoverage(RoomTempTracker instance) => instance == null ? 0f : ThickRoofCoverageField(instance);
 }

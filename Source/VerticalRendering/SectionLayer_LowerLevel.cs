@@ -9,8 +9,16 @@ namespace DeepRim.Vertical.VerticalRendering;
 [StaticConstructorOnStartup]
 public sealed class SectionLayer_LowerLevel : SectionLayer
 {
+#if DEEPRIM_WAYLITH_17
+    // 1.7 Assets.zip no longer includes the old polluted snow/sand textures.
+    // Use supported base resources as the polluted shader's secondary inputs;
+    // per-cell pollution/snow colors are still supplied by GenerateColorMeshes.
+    private static readonly CachedTexture PollutedSnowTex = new("Other/Snow");
+    private static readonly CachedTexture PollutedSandTex = new("Other/Sand");
+#else
     private static readonly CachedTexture PollutedSnowTex = new("Other/SnowPolluted");
     private static readonly CachedTexture PollutedSandTex = new("Other/WindsweptSandPolluted");
+#endif
 
     private readonly CellTerrain[] adjTerrains = new CellTerrain[8];
     private readonly HashSet<CellTerrain> adjDifferentTerrainCells = [];

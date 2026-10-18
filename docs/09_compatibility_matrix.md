@@ -2,6 +2,9 @@
 
 ## RimWorld 1.7 / Waylith preview (October 18, 2026)
 
+- **Additional Waylith API, Harmony 3 and packed asset audit**: [2026-10-18 results](waylith_1_7_compat_audit_2026-10-18.md). Five hot-path field delegates are checked against the installed 1.7 ABI. Snow/sand resource fallback is 1.7-only.
+
+
 - Installed game revision observed: **1.7.4981 rev136**. Waylith uses a customized **.NET 10** runtime.
 - Build project: `DeepRim.Vertical.1.7.csproj` (local SDK: `.tools/dotnet10/dotnet.exe`).
 - References: current game's `Assembly-CSharp.dll`, `RimWorld.dll`, `UnityStubs.dll`, `Waylith.dll`, `Waylith.UnityCompat.dll` and the Harmony 1.7 assembly.

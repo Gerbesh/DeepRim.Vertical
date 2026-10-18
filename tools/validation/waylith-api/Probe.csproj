@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+<TargetFramework>net10.0</TargetFramework>
+<OutputType>Exe</OutputType>
+<LangVersion>latest</LangVersion>
+<Nullable>enable</Nullable>
+<ImplicitUsings>enable</ImplicitUsings>
+<RimWorldDir Condition="'$(RimWorldDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldDir>
+<HarmonyAssembly Condition="'$(HarmonyAssembly)' == ''">C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\1.7\Assemblies\0Harmony.dll</HarmonyAssembly>
+</PropertyGroup>
+<ItemGroup>
+<Reference Include="Assembly-CSharp"><HintPath>$(RimWorldDir)\Assembly-CSharp.dll</HintPath></Reference>
+<Reference Include="Waylith"><HintPath>$(RimWorldDir)\Waylith.dll</HintPath></Reference>
+<Reference Include="UnityStubs"><HintPath>$(RimWorldDir)\UnityStubs.dll</HintPath></Reference>
+<Reference Include="RimWorld"><HintPath>$(RimWorldDir)\RimWorld.dll</HintPath></Reference>
+<Reference Include="Waylith.UnityCompat"><HintPath>$(RimWorldDir)\Waylith.UnityCompat.dll</HintPath></Reference>
+<Reference Include="0Harmony"><HintPath>$(HarmonyAssembly)</HintPath></Reference>
+</ItemGroup>
+</Project>
