@@ -236,7 +236,9 @@ public static class VerticalSectionLayerUtility
     {
         if (thing.Position.x == cell.x
             && thing.Position.z == cell.z
-            && thing.def.drawerType is not DrawerType.None)
+            // Some Waylith blueprint/frame defs do not use ordinary static
+            // drawer types, but their Print override still creates a ghost mesh.
+            && (thing is Blueprint or Frame || thing.def.drawerType is not DrawerType.None))
         {
             return thing.def.seeThroughFog || !map.fogGrid.IsFogged(thing.Position);
         }

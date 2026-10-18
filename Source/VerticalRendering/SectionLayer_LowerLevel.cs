@@ -100,6 +100,9 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
             if (roofBlocked)
             {
                 GenerateRoofMeshes(cell);
+                // Show placed construction plans and frames above a covered lower
+                // floor as ghost silhouettes; the roof itself remains opaque.
+                PrintLowerConstructionGhosts(map, cell);
                 SetupColoredSubMeshes(
                     transparent: true,
                     null,
@@ -369,6 +372,20 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
         adjDifferentTerrainCells.Clear();
     }
 
+    private void PrintLowerConstructionGhosts(Map map, IntVec3 cell)
+    {
+        var things = map.thingGrid.ThingsListAt(cell);
+        for (var i = 0; i < things.Count; i++)
+        {
+            var thing = things[i];
+            if (thing is not (Blueprint or Frame)
+                || !VerticalSectionLayerUtility.ShouldPrintThing(map, cell, thing))
+                continue;
+            try { thing.Print(this); }
+            catch (Exception error) { Log.Error($"Failed to render covered lower construction {thing}: {error}"); }
+        }
+    }
+
     private void PrintVisibleLowerThings(Map map, IntVec3 cell)
     {
         var things = map.thingGrid.ThingsListAt(cell);
@@ -385,11 +402,14 @@ public sealed class SectionLayer_LowerLevel : SectionLayer
                 continue;
             }
 
-            var hideBySnow = VerticalSectionLayerUtility.HideBySnowOrSand(map, thing);
-            var hideFrozenPlant = VerticalSectionLayerUtility.PlantNotShowInFrozenWater(map, thing);
-            if (!VerticalSectionLayerUtility.NotInAnyStorage(thing) || hideBySnow || hideFrozenPlant)
+            // Construction previews must remain recognizable through the lower
+            // floor overlay, regardless of static-item snow/storage filtering.
+            if (thing is not (Blueprint or Frame))
             {
-                continue;
+                var hideBySnow = VerticalSectionLayerUtility.HideBySnowOrSand(map, thing);
+                var hideFrozenPlant = VerticalSectionLayerUtility.PlantNotShowInFrozenWater(map, thing);
+                if (!VerticalSectionLayerUtility.NotInAnyStorage(thing) || hideBySnow || hideFrozenPlant)
+                    continue;
             }
 
             try

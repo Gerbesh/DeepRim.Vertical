@@ -43,9 +43,16 @@ public static class LowerLevelCellSampler
         while (map != null)
         {
             if (cell.Fogged(map)) return default;
-            if (map.roofGrid.RoofAt(cell) != null)
+            var roof = map.roofGrid.RoofAt(cell);
+            if (roof != null)
             {
-                return new LowerLevelCellSample(map, terrain, usedRecursiveVoidChain, roofBlocked: true);
+                // Rock roofs are natural geology, not a painted construction
+                // ceiling. Let the lower map's real rock/terrain/blueprint mesh
+                // show through the upper ghost overlay. The old TempRoof quad
+                // made huge solid grey patches around natural mountain ranges.
+                var naturalRoof = roof == RoofDefOf.RoofRockThick || roof == RoofDefOf.RoofRockThin;
+                if (!naturalRoof)
+                    return new LowerLevelCellSample(map, terrain, usedRecursiveVoidChain, roofBlocked: true);
             }
 
             if (HasVisibleContentAt(map, cell, terrain, upperVoid))

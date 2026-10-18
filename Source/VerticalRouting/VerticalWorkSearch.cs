@@ -94,7 +94,10 @@ public static class VerticalWorkSearch
         foreach (var frame in Scan(Maps(site).Where(m => m != pawn.Map).SelectMany(m => m.listerThings.ThingsInGroup(ThingRequestGroup.BuildingFrame)).OfType<Frame>(), 64, pawn))
         {
             if (!frame.IsCompleted() || frame.Faction != pawn.Faction || !FreeTarget(pawn, frame)) continue;
-            if (pawn.skills.GetSkill(SkillDefOf.Construction).Level < frame.BuildDef.constructionSkillPrerequisite) continue;
+            // In 1.7, some pawns have no Construction skill record (disabled skill / modded race).
+            // A null SkillRecord or partially initialized frame must not break their whole think tree.
+            if (frame.BuildDef == null || pawn.skills?.GetSkill(SkillDefOf.Construction) is not { } construction
+                || construction.Level < frame.BuildDef.constructionSkillPrerequisite) continue;
             if (RouteTo(pawn, frame)) return Work(pawn, frame, giver);
         }
         return null;
